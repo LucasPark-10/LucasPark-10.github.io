@@ -2,30 +2,30 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>http://localhost:1313/data-analysis/</loc>
+    <loc>https://lucaspark-10.github.io/data-analysis/</loc>
     <lastmod>2026-07-02T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/</loc>
+    <loc>https://lucaspark-10.github.io/</loc>
     <lastmod>2026-07-02T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/data-analysis/python_data_analysis_01/</loc>
+    <loc>https://lucaspark-10.github.io/data-analysis/python_data_analysis_01/</loc>
     <lastmod>2026-07-02T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/</loc>
+    <loc>https://lucaspark-10.github.io/posts/</loc>
     <lastmod>2026-05-31T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/about-this-blog/</loc>
+    <loc>https://lucaspark-10.github.io/posts/about-this-blog/</loc>
     <lastmod>2026-05-31T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/first-post/</loc>
+    <loc>https://lucaspark-10.github.io/posts/first-post/</loc>
     <lastmod>2026-05-30T20:25:00+09:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/atmospheric-environment/</loc>
+    <loc>https://lucaspark-10.github.io/atmospheric-environment/</loc>
   </url><url>
-    <loc>http://localhost:1313/categories/</loc>
+    <loc>https://lucaspark-10.github.io/categories/</loc>
   </url><url>
-    <loc>http://localhost:1313/gold-analysis/</loc>
+    <loc>https://lucaspark-10.github.io/gold-news-and-analysis/</loc>
   </url><url>
-    <loc>http://localhost:1313/tags/</loc>
+    <loc>https://lucaspark-10.github.io/tags/</loc>
   </url>
 </urlset>
