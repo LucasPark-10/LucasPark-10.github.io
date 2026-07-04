@@ -1,8 +1,1 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-    <channel>
-        <title>Tags on LucasPark Blog</title>
-        <link>https://lucaspark-10.github.io/tags/</link>
-        <description>Recent content in Tags on LucasPark Blog</description>
-        <generator>Hugo -- gohugo.io</generator>
-        <language>ko-kr</language><atom:link href="https://lucaspark-10.github.io/tags/index.xml" rel="self" type="application/rss+xml" /></channel>
-</rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Tags on LucasPark Blog</title><link>https://lucaspark-10.github.io/tags/</link><description>Recent content in Tags on LucasPark Blog</description><generator>Hugo -- gohugo.io</generator><language>ko-kr</language><lastBuildDate>Sat, 04 Jul 2026 13:56:26 +0900</lastBuildDate><atom:link href="https://lucaspark-10.github.io/tags/index.xml" rel="self" type="application/rss+xml"/><item><title>Analysis</title><link>https://lucaspark-10.github.io/tags/analysis/</link><pubDate>Sat, 04 Jul 2026 13:56:26 +0900</pubDate><guid>https://lucaspark-10.github.io/tags/analysis/</guid><description/></item><item><title>Gold</title><link>https://lucaspark-10.github.io/tags/gold/</link><pubDate>Sat, 04 Jul 2026 13:56:26 +0900</pubDate><guid>https://lucaspark-10.github.io/tags/gold/</guid><description/></item><item><title>Price</title><link>https://lucaspark-10.github.io/tags/price/</link><pubDate>Sat, 04 Jul 2026 13:56:26 +0900</pubDate><guid>https://lucaspark-10.github.io/tags/price/</guid><description/></item></channel></rss>
