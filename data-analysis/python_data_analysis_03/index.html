@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="ko-kr" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="들어가며 지난 글 [Python 조건문·반복문·함수] 조건문, 반복문, 제어문(break), 함수를 살펴봤습니다.\n오늘은 Numpy 행렬과 연산을 정리하였습니다.\n1. Numpy 행렬 (Numpy Array) 라이브러리란? 라이브러리는 개발자들이 만들어 놓은 클래스나 함수의 모음집으로, 필요할 때 언제든 호출해서 사용할 수 있습니다. import문으로 불러오며, as 명령어로 별칭(줄임말)을 지정할 수 있습니다.\nimport numpy as np 이후 numpy.array() 대신 np.array()처럼 짧게 사용할 수 있습니다.\n데이터 분석에서 자주 쓰는 대표적인 라이브러리로는 Numpy, Pandas, Matplotlib, Seaborn 등이 있습니다.\nNumPy → np Pandas → pd Matplotlib → plt Seaborn → sns\n">
+<title>Numpy 기초</title>
+
+
+<link rel="canonical" href="https://lucaspark-10.github.io/data-analysis/python_data_analysis_03/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
+
+
+<link rel="stylesheet" href="/scss/style.min.e62e09c60ba428a627e03568fa3df938f6a8224f815b5846f00816c17d4a0be4.css"><meta property='og:title' content="Numpy 기초">
+<meta property='og:description' content="들어가며 지난 글 [Python 조건문·반복문·함수] 조건문, 반복문, 제어문(break), 함수를 살펴봤습니다.\n오늘은 Numpy 행렬과 연산을 정리하였습니다.\n1. Numpy 행렬 (Numpy Array) 라이브러리란? 라이브러리는 개발자들이 만들어 놓은 클래스나 함수의 모음집으로, 필요할 때 언제든 호출해서 사용할 수 있습니다. import문으로 불러오며, as 명령어로 별칭(줄임말)을 지정할 수 있습니다.\nimport numpy as np 이후 numpy.array() 대신 np.array()처럼 짧게 사용할 수 있습니다.\n데이터 분석에서 자주 쓰는 대표적인 라이브러리로는 Numpy, Pandas, Matplotlib, Seaborn 등이 있습니다.\nNumPy → np Pandas → pd Matplotlib → plt Seaborn → sns\n">
+<meta property='og:url' content='https://lucaspark-10.github.io/data-analysis/python_data_analysis_03/'>
+<meta property='og:site_name' content='LucasPark Blog'>
+<meta property='og:type' content='article'><meta property='article:section' content='Data-Analysis' /><meta property='article:published_time' content='2026-07-04T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2026-07-04T00:00:00&#43;00:00'/>
+<meta name="twitter:title" content="Numpy 기초">
+<meta name="twitter:description" content="들어가며 지난 글 [Python 조건문·반복문·함수] 조건문, 반복문, 제어문(break), 함수를 살펴봤습니다.\n오늘은 Numpy 행렬과 연산을 정리하였습니다.\n1. Numpy 행렬 (Numpy Array) 라이브러리란? 라이브러리는 개발자들이 만들어 놓은 클래스나 함수의 모음집으로, 필요할 때 언제든 호출해서 사용할 수 있습니다. import문으로 불러오며, as 명령어로 별칭(줄임말)을 지정할 수 있습니다.\nimport numpy as np 이후 numpy.array() 대신 np.array()처럼 짧게 사용할 수 있습니다.\n데이터 분석에서 자주 쓰는 대표적인 라이브러리로는 Numpy, Pandas, Matplotlib, Seaborn 등이 있습니다.\nNumPy → np Pandas → pd Matplotlib → plt Seaborn → sns\n">
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-EVK5B22CB3"></script>
+      <script>
+        var doNotTrack = false;
+        if ( true ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-EVK5B22CB3');
+        }
+      </script>
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column compact"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">LucasPark Blog</a></h1>
+            <h2 class="site-description">Lucas Park의 개인 블로그</h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                <span>Home</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/posts/' >
+                
+                <span>Posts</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/data-analysis/' >
+                
+                <span>Data Analysis</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/gold-news-and-analysis/' >
+                
+                <span>Gold Price Check &amp; Analysis</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/atmospheric-environment/' >
+                
+                <span>Atmospheric Environment</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>Dark Mode</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/data-analysis/python_data_analysis_03/">Numpy 기초</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    
+    
+    
+    
+    
+    
+    <footer class="article-meta">
+        
+            <div class="inline-meta">
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                    <time class="article-time--published" datetime='2026-07-04T00:00:00Z'>2026년 7월 4일 토요일</time>
+                
+
+                
+            </div>
+        
+
+        
+
+        
+    </footer>
+    
+</div>
+
+</header>
+
+    
+
+    <section class="article-content">
+    
+    
+    <h1 id="들어가며">들어가며
+</h1><p>지난 글 [Python 조건문·반복문·함수] 조건문, 반복문, 제어문(break), 함수를 살펴봤습니다.</p>
+<p>오늘은 Numpy 행렬과 연산을 정리하였습니다.</p>
+<hr>
+<h2 id="1-numpy-행렬-numpy-array">1. Numpy 행렬 (Numpy Array)
+</h2><h3 id="라이브러리란">라이브러리란?
+</h3><p>라이브러리는 <strong>개발자들이 만들어 놓은 클래스나 함수의 모음집</strong>으로, 필요할 때 언제든 호출해서 사용할 수 있습니다.
+<code>import</code>문으로 불러오며, <code>as</code> 명령어로 별칭(줄임말)을 지정할 수 있습니다.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> numpy <span style="color:#66d9ef">as</span> np
+</span></span></code></pre></div><p>이후 <code>numpy.array()</code> 대신 <code>np.array()</code>처럼 짧게 사용할 수 있습니다.</p>
+<p>데이터 분석에서 자주 쓰는 대표적인 라이브러리로는 <strong>Numpy, Pandas, Matplotlib, Seaborn</strong> 등이 있습니다.</p>
+<p>NumPy → np
+Pandas → pd
+Matplotlib → plt
+Seaborn → sns</p>
+<h3 id="numpy란">Numpy란?
+</h3><p>컴퓨터 과학을 위한 기본적인 파이썬 패키지로, <strong>다차원의 행렬 데이터를 빠르게 처리</strong>할 수 있게 해줍니다. 일반 리스트의 연산과는 동작 방식이 다릅니다.</p>
+<h4 id="파이썬-리스트">파이썬 리스트
+</h4><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>a <span style="color:#f92672">=</span> [<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">3</span>]
+</span></span><span style="display:flex;"><span>b <span style="color:#f92672">=</span> [<span style="color:#ae81ff">4</span>, <span style="color:#ae81ff">5</span>, <span style="color:#ae81ff">6</span>]
+</span></span><span style="display:flex;"><span>print(a <span style="color:#f92672">+</span> b)
+</span></span><span style="display:flex;"><span>print(a <span style="color:#f92672">*</span> <span style="color:#ae81ff">5</span>)
+</span></span></code></pre></div><p>결과</p>
+<pre tabindex="0"><code>[1, 2, 3, 4, 5, 6]
+[1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3]
+</code></pre><h4 id="numpy-어레이">numpy 어레이
+</h4><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> numpy <span style="color:#66d9ef">as</span> np
+</span></span><span style="display:flex;"><span>a <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>array([<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">3</span>])
+</span></span><span style="display:flex;"><span>b <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>array([<span style="color:#ae81ff">4</span>, <span style="color:#ae81ff">5</span>, <span style="color:#ae81ff">6</span>])
+</span></span><span style="display:flex;"><span>print(a <span style="color:#f92672">+</span> b)
+</span></span><span style="display:flex;"><span>print(a <span style="color:#f92672">*</span> <span style="color:#ae81ff">5</span>)
+</span></span></code></pre></div><p>결과</p>
+<pre tabindex="0"><code>[5 7 9]
+[ 5 10 15]
+</code></pre><p>리스트는 <code>+</code>, <code>*</code> 연산이 이어붙이기/반복이지만, numpy 배열은 <strong>원소별(element-wise) 연산</strong>이 이루어집니다.</p>
+<h3 id="1차원-numpy-행렬-생성">1차원 numpy 행렬 생성
+</h3><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> numpy <span style="color:#66d9ef">as</span> np
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>arr <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>array([<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">3</span>])
+</span></span><span style="display:flex;"><span>arr2 <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>array(range(<span style="color:#ae81ff">5</span>))
+</span></span><span style="display:flex;"><span>print(type(arr))
+</span></span><span style="display:flex;"><span>print(arr)
+</span></span><span style="display:flex;"><span>print(arr2)
+</span></span></code></pre></div><p>결과</p>
+<pre tabindex="0"><code>&lt;class &#39;numpy.ndarray&#39;&gt;
+[1 2 3]
+[0 1 2 3 4]
+</code></pre><h3 id="2차원-3차원-numpy-행렬-생성">2차원, 3차원 numpy 행렬 생성
+</h3><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> numpy <span style="color:#66d9ef">as</span> np
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>arr <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>array([[<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">3</span>],
+</span></span><span style="display:flex;"><span>                 [<span style="color:#ae81ff">4</span>, <span style="color:#ae81ff">5</span>, <span style="color:#ae81ff">6</span>]])
+</span></span><span style="display:flex;"><span>print(arr)
+</span></span></code></pre></div><p>결과</p>
+<pre tabindex="0"><code>[[1 2 3]
+ [4 5 6]]
+</code></pre><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> numpy <span style="color:#66d9ef">as</span> np
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>arr <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>array([[[<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">3</span>], [<span style="color:#ae81ff">4</span>, <span style="color:#ae81ff">5</span>, <span style="color:#ae81ff">6</span>]],
+</span></span><span style="display:flex;"><span>                 [[<span style="color:#ae81ff">7</span>, <span style="color:#ae81ff">8</span>, <span style="color:#ae81ff">9</span>], [<span style="color:#ae81ff">10</span>, <span style="color:#ae81ff">11</span>, <span style="color:#ae81ff">12</span>]]])
+</span></span><span style="display:flex;"><span>print(arr)
+</span></span></code></pre></div><p>결과</p>
+<pre tabindex="0"><code>[[[ 1  2  3]
+  [ 4  5  6]]
+
+ [[ 7  8  9]
+  [10 11 12]]]
+</code></pre><h3 id="차원과-모양-확인-ndim-shape">차원과 모양 확인 (ndim, shape)
+</h3><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> numpy <span style="color:#66d9ef">as</span> np
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>arr <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>array([[[<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">3</span>], [<span style="color:#ae81ff">4</span>, <span style="color:#ae81ff">5</span>, <span style="color:#ae81ff">6</span>]],
+</span></span><span style="display:flex;"><span>                 [[<span style="color:#ae81ff">7</span>, <span style="color:#ae81ff">8</span>, <span style="color:#ae81ff">9</span>], [<span style="color:#ae81ff">10</span>, <span style="color:#ae81ff">11</span>, <span style="color:#ae81ff">12</span>]],
+</span></span><span style="display:flex;"><span>                 [[<span style="color:#ae81ff">13</span>, <span style="color:#ae81ff">14</span>, <span style="color:#ae81ff">15</span>], [<span style="color:#ae81ff">16</span>, <span style="color:#ae81ff">17</span>, <span style="color:#ae81ff">18</span>]],
+</span></span><span style="display:flex;"><span>                 [[<span style="color:#ae81ff">19</span>, <span style="color:#ae81ff">20</span>, <span style="color:#ae81ff">21</span>], [<span style="color:#ae81ff">22</span>, <span style="color:#ae81ff">23</span>, <span style="color:#ae81ff">24</span>]]])
+</span></span><span style="display:flex;"><span>print(arr<span style="color:#f92672">.</span>ndim)
+</span></span><span style="display:flex;"><span>print(arr<span style="color:#f92672">.</span>shape)
+</span></span></code></pre></div><p>결과</p>
+<pre tabindex="0"><code>3
+(4, 2, 3)
+</code></pre><p><code>(4, 2, 3)</code>은 <strong>2행 3열짜리 데이터가 4개</strong> 있다는 의미입니다.</p>
+<h3 id="range와-arange를-통한-numpy-행렬-생성">range와 arange를 통한 numpy 행렬 생성
+</h3><p><code>np.array(range(...))</code>와 <code>np.arange(...)</code>는 동일한 결과를 만듭니다.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> numpy <span style="color:#66d9ef">as</span> np
+</span></span><span style="display:flex;"><span>print(np<span style="color:#f92672">.</span>arange(<span style="color:#ae81ff">10</span>))
+</span></span><span style="display:flex;"><span>print(np<span style="color:#f92672">.</span>arange(<span style="color:#ae81ff">5</span>, <span style="color:#ae81ff">10</span>))
+</span></span><span style="display:flex;"><span>print(np<span style="color:#f92672">.</span>arange(<span style="color:#ae81ff">5</span>, <span style="color:#ae81ff">10</span>, <span style="color:#ae81ff">2</span>))
+</span></span></code></pre></div><p>결과</p>
+<pre tabindex="0"><code>[0 1 2 3 4 5 6 7 8 9]
+[5 6 7 8 9]
+[5 7 9]
+</code></pre><h3 id="모양-변경하기-reshape">모양 변경하기 (reshape)
+</h3><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> numpy <span style="color:#66d9ef">as</span> np
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>na <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>array(range(<span style="color:#ae81ff">10</span>))
+</span></span><span style="display:flex;"><span>print(na)
+</span></span><span style="display:flex;"><span>print(na<span style="color:#f92672">.</span>shape)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>na <span style="color:#f92672">=</span> na<span style="color:#f92672">.</span>reshape(<span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">5</span>)
+</span></span><span style="display:flex;"><span>print(na)
+</span></span><span style="display:flex;"><span>print(na<span style="color:#f92672">.</span>shape)
+</span></span></code></pre></div><p>결과</p>
+<pre tabindex="0"><code>[0 1 2 3 4 5 6 7 8 9]
+(10,)
+[[0 1 2 3 4]
+ [5 6 7 8 9]]
+(2, 5)
+</code></pre>
+    <blockquote>
+        <p><strong>주의</strong>: reshape할 원소 개수와 지정한 모양의 총 개수가 일치해야 합니다.
+예를 들어 원소가 5개인데 <code>(2, 3)</code>으로 reshape하면 <code>ValueError: cannot reshape array of size 5 into shape (2,3)</code> 오류가 발생합니다.</p>
+
+    </blockquote>
+<h3 id="0-행렬-1-행렬-만들기-zeros-ones">0-행렬, 1-행렬 만들기 (zeros, ones)
+</h3><p><code>dtype=</code> 옵션으로 자료형을 지정할 수 있습니다.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> numpy <span style="color:#66d9ef">as</span> np
+</span></span><span style="display:flex;"><span>zero <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>zeros((<span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">2</span>), dtype<span style="color:#f92672">=</span>int)
+</span></span><span style="display:flex;"><span>print(zero)
+</span></span></code></pre></div><p>결과</p>
+<pre tabindex="0"><code>[[[0 0]
+  [0 0]
+  [0 0]]
+
+ [[0 0]
+  [0 0]
+  [0 0]]]
+</code></pre><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> numpy <span style="color:#66d9ef">as</span> np
+</span></span><span style="display:flex;"><span>one <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>ones((<span style="color:#ae81ff">4</span>, <span style="color:#ae81ff">3</span>), dtype<span style="color:#f92672">=</span>int)
+</span></span><span style="display:flex;"><span>print(one)
+</span></span></code></pre></div><p>결과</p>
+<pre tabindex="0"><code>[[1 1 1]
+ [1 1 1]
+ [1 1 1]
+ [1 1 1]]
+</code></pre><h3 id="균등한-확률로-정수-난수-발생-randint">균등한 확률로 정수 난수 발생 (randint)
+</h3><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> numpy <span style="color:#66d9ef">as</span> np
+</span></span><span style="display:flex;"><span>r <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>random<span style="color:#f92672">.</span>randint(<span style="color:#ae81ff">5</span>, <span style="color:#ae81ff">10</span>, size<span style="color:#f92672">=</span>(<span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">3</span>))
+</span></span><span style="display:flex;"><span>print(r)
+</span></span></code></pre></div><p>결과 (예시, 실행할 때마다 달라짐)</p>
+<pre tabindex="0"><code>[[6 5 8]
+ [6 5 7]]
+</code></pre><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> numpy <span style="color:#66d9ef">as</span> np
+</span></span><span style="display:flex;"><span>r <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>random<span style="color:#f92672">.</span>randint(<span style="color:#ae81ff">5</span>, size<span style="color:#f92672">=</span>(<span style="color:#ae81ff">4</span>, <span style="color:#ae81ff">3</span>))
+</span></span><span style="display:flex;"><span>print(r)
+</span></span></code></pre></div><p>결과 (예시)</p>
+<pre tabindex="0"><code>[[4 4 3]
+ [3 1 3]
+ [3 0 2]
+ [0 1 0]]
+</code></pre><h3 id="행렬의-인덱싱">행렬의 인덱싱
+</h3><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> numpy <span style="color:#66d9ef">as</span> np
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>arr <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>array(
+</span></span><span style="display:flex;"><span>    [[[<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">3</span>], [<span style="color:#ae81ff">4</span>, <span style="color:#ae81ff">5</span>, <span style="color:#ae81ff">6</span>]],
+</span></span><span style="display:flex;"><span>     [[<span style="color:#ae81ff">7</span>, <span style="color:#ae81ff">8</span>, <span style="color:#ae81ff">9</span>], [<span style="color:#ae81ff">10</span>, <span style="color:#ae81ff">11</span>, <span style="color:#ae81ff">12</span>]]]
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>print(arr[<span style="color:#ae81ff">1</span>])
+</span></span><span style="display:flex;"><span>print(arr[<span style="color:#ae81ff">0</span>][<span style="color:#ae81ff">1</span>])
+</span></span><span style="display:flex;"><span>print(arr[<span style="color:#ae81ff">1</span>][<span style="color:#ae81ff">0</span>][<span style="color:#ae81ff">2</span>])
+</span></span></code></pre></div><p>결과</p>
+<pre tabindex="0"><code>[[ 7  8  9]
+ [10 11 12]]
+[4 5 6]
+9
+</code></pre><h3 id="행렬의-슬라이싱">행렬의 슬라이싱
+</h3><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> numpy <span style="color:#66d9ef">as</span> np
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>arr <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>array(
+</span></span><span style="display:flex;"><span>    [[[<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">3</span>], [<span style="color:#ae81ff">4</span>, <span style="color:#ae81ff">5</span>, <span style="color:#ae81ff">6</span>]],
+</span></span><span style="display:flex;"><span>     [[<span style="color:#ae81ff">7</span>, <span style="color:#ae81ff">8</span>, <span style="color:#ae81ff">9</span>], [<span style="color:#ae81ff">10</span>, <span style="color:#ae81ff">11</span>, <span style="color:#ae81ff">12</span>]]]
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>print(arr[<span style="color:#ae81ff">1</span>:, :, <span style="color:#ae81ff">1</span>:])
+</span></span></code></pre></div><p>결과</p>
+<pre tabindex="0"><code>[[[ 8  9]
+  [11 12]]]
+</code></pre><h3 id="행렬-데이터-수정">행렬 데이터 수정
+</h3><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> numpy <span style="color:#66d9ef">as</span> np
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>ls <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>array(range(<span style="color:#ae81ff">5</span>))
+</span></span><span style="display:flex;"><span>print(ls)
+</span></span><span style="display:flex;"><span>ls[<span style="color:#ae81ff">2</span>] <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>print(ls)
+</span></span></code></pre></div><p>결과</p>
+<pre tabindex="0"><code>[0 1 2 3 4]
+[0 1 0 3 4]
+</code></pre><p>슬라이싱으로 여러 원소를 한 번에 바꿀 수도 있습니다.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> numpy <span style="color:#66d9ef">as</span> np
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>ls <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>array(range(<span style="color:#ae81ff">5</span>))
+</span></span><span style="display:flex;"><span>print(ls)
+</span></span><span style="display:flex;"><span>ls[<span style="color:#ae81ff">3</span>:] <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>print(ls)
+</span></span></code></pre></div><p>결과</p>
+<pre tabindex="0"><code>[0 1 2 3 4]
+[0 1 2 0 0]
+</code></pre><hr>
+<h2 id="2-numpy-연산">2. Numpy 연산
+</h2><h3 id="행렬의-비교-연산">행렬의 비교 연산
+</h3><p>비교 연산자를 사용하면 각 원소별로 True/False가 담긴 배열이 반환됩니다.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> numpy <span style="color:#66d9ef">as</span> np
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>na <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>array([<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">3</span>])
+</span></span><span style="display:flex;"><span>na2 <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>array([<span style="color:#ae81ff">4</span>, <span style="color:#ae81ff">5</span>, <span style="color:#ae81ff">6</span>])
+</span></span><span style="display:flex;"><span>print(na <span style="color:#f92672">==</span> <span style="color:#ae81ff">2</span>)
+</span></span><span style="display:flex;"><span>print(na2 <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">4</span>)
+</span></span></code></pre></div><p>결과</p>
+<pre tabindex="0"><code>[False  True False]
+[False  True  True]
+</code></pre><h3 id="필터링-filtering">필터링 (Filtering)
+</h3><p>비교 연산 결과를 인덱스처럼 활용하면, 조건에 해당하는 값만 골라낼 수 있습니다.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> numpy <span style="color:#66d9ef">as</span> np
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>na <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>array([<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">3</span>])
+</span></span><span style="display:flex;"><span>na2 <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>array([<span style="color:#ae81ff">4</span>, <span style="color:#ae81ff">5</span>, <span style="color:#ae81ff">6</span>])
+</span></span><span style="display:flex;"><span>print(na[na <span style="color:#f92672">==</span> <span style="color:#ae81ff">2</span>])
+</span></span><span style="display:flex;"><span>print(na2[na2 <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">4</span>])
+</span></span></code></pre></div><p>결과</p>
+<pre tabindex="0"><code>[2]
+[5 6]
+</code></pre><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> numpy <span style="color:#66d9ef">as</span> np
+</span></span><span style="display:flex;"><span>na3 <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>arange(<span style="color:#ae81ff">10</span>)
+</span></span><span style="display:flex;"><span>print(na3[na3 <span style="color:#f92672">%</span> <span style="color:#ae81ff">3</span> <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>])
+</span></span></code></pre></div><p>결과</p>
+<pre tabindex="0"><code>[0 3 6 9]
+</code></pre><p>두 배열을 비교해서 필터링할 수도 있습니다.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> numpy <span style="color:#66d9ef">as</span> np
+</span></span><span style="display:flex;"><span>na4 <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>array([<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">4</span>, <span style="color:#ae81ff">5</span>])
+</span></span><span style="display:flex;"><span>na5 <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>array([<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">5</span>])
+</span></span><span style="display:flex;"><span>print(na4[na4 <span style="color:#f92672">==</span> na5])
+</span></span></code></pre></div><p>결과</p>
+<pre tabindex="0"><code>[1 3 5]
+</code></pre><h3 id="numpy-메소드-min-max-argmin-argmax">Numpy 메소드 (min, max, argmin, argmax)
+</h3><ul>
+<li><code>min()</code> / <code>max()</code>: 최솟값 / 최댓값 반환</li>
+<li><code>argmin()</code> / <code>argmax()</code>: 최솟값 / 최댓값의 <strong>인덱스</strong> 반환</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> numpy <span style="color:#66d9ef">as</span> np
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>na <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>random<span style="color:#f92672">.</span>randint(<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">10</span>, size<span style="color:#f92672">=</span>(<span style="color:#ae81ff">5</span>))
+</span></span><span style="display:flex;"><span>print(na)
+</span></span><span style="display:flex;"><span>print(na<span style="color:#f92672">.</span>min())
+</span></span><span style="display:flex;"><span>print(na<span style="color:#f92672">.</span>max())
+</span></span><span style="display:flex;"><span>print(na<span style="color:#f92672">.</span>argmin())
+</span></span><span style="display:flex;"><span>print(na<span style="color:#f92672">.</span>argmax())
+</span></span></code></pre></div><p>결과 (예시)</p>
+<pre tabindex="0"><code>[5 7 2 3 8]
+2
+8
+2
+4
+</code></pre><h3 id="numpy-메소드-sum">Numpy 메소드 (sum)
+</h3><p><code>axis</code> 옵션으로 합산 방향을 지정할 수 있습니다. <code>axis=0</code>은 열 방향(세로), <code>axis=1</code>은 행 방향(가로) 합입니다.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> numpy <span style="color:#66d9ef">as</span> np
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>na <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>random<span style="color:#f92672">.</span>randint(<span style="color:#ae81ff">10</span>, size<span style="color:#f92672">=</span>(<span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">3</span>))
+</span></span><span style="display:flex;"><span>print(na)
+</span></span><span style="display:flex;"><span>print()
+</span></span><span style="display:flex;"><span>print(np<span style="color:#f92672">.</span>sum(na))
+</span></span><span style="display:flex;"><span>print()
+</span></span><span style="display:flex;"><span>print(np<span style="color:#f92672">.</span>sum(na, axis<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>))
+</span></span><span style="display:flex;"><span>print()
+</span></span><span style="display:flex;"><span>print(np<span style="color:#f92672">.</span>sum(na, axis<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>))
+</span></span></code></pre></div><p>결과 (예시)</p>
+<pre tabindex="0"><code>[[7 8 0]
+ [5 2 6]]
+
+28
+
+[12 10  6]
+
+[15 13]
+</code></pre><h3 id="numpy-메소드-mean-median-var-std">Numpy 메소드 (mean, median, var, std)
+</h3><ul>
+<li><code>mean()</code>: 평균</li>
+<li><code>median()</code>: 중앙값</li>
+<li><code>var()</code>: 분산</li>
+<li><code>std()</code>: 표준편차</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> numpy <span style="color:#66d9ef">as</span> np
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>na <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>random<span style="color:#f92672">.</span>randint(<span style="color:#ae81ff">10</span>, size<span style="color:#f92672">=</span>(<span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">3</span>))
+</span></span><span style="display:flex;"><span>print(na)
+</span></span><span style="display:flex;"><span>print()
+</span></span><span style="display:flex;"><span>print(np<span style="color:#f92672">.</span>mean(na))
+</span></span><span style="display:flex;"><span>print()
+</span></span><span style="display:flex;"><span>print(np<span style="color:#f92672">.</span>median(na))
+</span></span><span style="display:flex;"><span>print()
+</span></span><span style="display:flex;"><span>print(np<span style="color:#f92672">.</span>var(na))
+</span></span><span style="display:flex;"><span>print()
+</span></span><span style="display:flex;"><span>print(np<span style="color:#f92672">.</span>std(na))
+</span></span></code></pre></div><p>결과 (예시)</p>
+<pre tabindex="0"><code>[[5 0 2]
+ [5 3 4]]
+
+3.1666666666666665
+
+3.5
+
+3.1388888888888893
+
+1.7716909687891083
+</code></pre><h3 id="numpy-메소드-all-any">Numpy 메소드 (all, any)
+</h3><ul>
+<li><code>all()</code>: 모든 원소가 조건을 만족하면 <code>True</code></li>
+<li><code>any()</code>: 하나라도 조건을 만족하면 <code>True</code></li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> numpy <span style="color:#66d9ef">as</span> np
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>na1 <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>array([<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">3</span>])
+</span></span><span style="display:flex;"><span>na2 <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>array([<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">3</span>])
+</span></span><span style="display:flex;"><span>na3 <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>array([<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">3</span>])
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>print(np<span style="color:#f92672">.</span>all(na1 <span style="color:#f92672">==</span> na2))
+</span></span><span style="display:flex;"><span>print(np<span style="color:#f92672">.</span>all(na1 <span style="color:#f92672">==</span> na3))
+</span></span><span style="display:flex;"><span>print(np<span style="color:#f92672">.</span>any(na1 <span style="color:#f92672">==</span> na2))
+</span></span><span style="display:flex;"><span>print(np<span style="color:#f92672">.</span>any(na1 <span style="color:#f92672">==</span> na3))
+</span></span></code></pre></div><p>결과</p>
+<pre tabindex="0"><code>True
+False
+True
+True
+</code></pre><hr>
+<h2 id="마무리">마무리
+</h2><p>이번 글에서는 Numpy 행렬과 연산까지 정리했습니다.</p>
+<p>특히 Numpy는 데이터 분석에서 다차원 데이터를 다루는 기본 도구이며, 이후 Pandas의 DataFrame을 이해하는 데도 큰 도움이 됩니다.
+인덱싱, 슬라이싱, 필터링, 통계 메소드(<code>mean</code>, <code>sum</code>, <code>std</code> 등)는 앞으로도 자주 사용하게 됩니다.
+Numpy로 들어오면서 점점 코드양이 많아집니다. 반복과 연습이 최고인거 같습니다.
+다음은 코드가 아닌 빅데이터에 대해서 정리하겠습니다.</p>
+
+</section>
+
+
+    <footer class="article-meta article-footer">
+    
+
+    </footer>
+
+
+    
+        <link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI&#43;WdtXRGWt2kTvGFasHpSy3SV"crossorigin="anonymous"
+            ><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG&#43;vnGctmUb0ZY0l8"crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"integrity="sha384-&#43;VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4&#43;/RRE05"crossorigin="anonymous"
+                defer
+                >
+            </script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        const elementsToRender = [".main-article", ".widget--toc"];
+
+        elementsToRender.forEach(selector => {
+            const element = document.querySelector(selector);
+            if (element) {
+                renderMathInElement(element, {
+                    delimiters: [
+                        { left: "$$", right: "$$", display: true },
+                        { left: "$", right: "$", display: false },
+                        { left: "\\(", right: "\\)", display: false },
+                        { left: "\\[", right: "\\]", display: true }
+                    ],
+                    ignoredClasses: ["gist"]
+                });
+            }
+        });
+    });
+</script>
+    
+</article>
+
+    
+
+    
+
+     
+    
+        
+
+        <div class="disqus-container">
+    
+</div>
+
+<style>
+    .disqus-container {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+</style>
+
+<script>
+    window.addEventListener('onColorSchemeChange', (e) => {
+        if (typeof DISQUS == 'object') {
+            DISQUS.reset({
+                reload: true
+            });
+        }
+    })
+</script>
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2026 LucasPark Blog
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="4.0.3">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+
+
+
+<script type="module">
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script>
+
+    
+
+            </main>
+        </div>
+        
+<script type="text/javascript" src="/ts/main.1ff1e5fdc4e178ed422e50aa407526dc552f26342d729343fded19416194382c.js" defer></script>
+
+
+    </body>
+</html>

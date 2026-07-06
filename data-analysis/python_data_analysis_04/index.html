@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="ko-kr" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="들어가며 오늘은 간단한 이론개념을 간단하게 정리하려고 합니다.\n1. AI와 빅데이터 인공지능 &gt; 머신러닝 &gt; 딥러닝 인공지능 ⊃ 머신러닝 ⊃ 딥러닝 세 개념은 포함 관계입니다.\n인공지능 (Artificial Intelligence) 컴퓨터 시스템이 인간과 유사한 지능을 가지도록 하는 기술 학습, 추론, 인식, 계획, 지각, 개체 조작 능력 문제 등을 다룸 머신러닝 (Machine Learning) 인공지능의 한 분야 데이터를 통해 컴퓨터가 스스로 학습하고 의사결정을 내리는 능력을 갖게 함 지도학습(Supervised Learning): 정답(label)이 있는 데이터로 학습 예 : 강아지/고양이 사진에 라벨을 붙여 분류 모델 학습 비지도학습(Unsupervised Learning): 정답이 없는 데이터로 학습 예 : 라벨 없는 고객 데이터를 그룹으로 클러스터링 딥러닝 (Deep Learning) 사람의 신경망을 모사한 인공 신경망 기반의 머신러닝 한 종류 기존에 풀기 어려웠던 복잡한 문제(이미지 인식, 자연어 처리 등)를 해결 가능 빅데이터 (Big Data) 통상적으로 사용되는 데이터 수집·관리·처리 소프트웨어의 수용 한계를 넘어서는 크기의 데이터\n">
+<title>빅데이터의 이론개념</title>
+
+
+<link rel="canonical" href="https://lucaspark-10.github.io/data-analysis/python_data_analysis_04/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
+
+
+<link rel="stylesheet" href="/scss/style.min.e62e09c60ba428a627e03568fa3df938f6a8224f815b5846f00816c17d4a0be4.css"><meta property='og:title' content="빅데이터의 이론개념">
+<meta property='og:description' content="들어가며 오늘은 간단한 이론개념을 간단하게 정리하려고 합니다.\n1. AI와 빅데이터 인공지능 &gt; 머신러닝 &gt; 딥러닝 인공지능 ⊃ 머신러닝 ⊃ 딥러닝 세 개념은 포함 관계입니다.\n인공지능 (Artificial Intelligence) 컴퓨터 시스템이 인간과 유사한 지능을 가지도록 하는 기술 학습, 추론, 인식, 계획, 지각, 개체 조작 능력 문제 등을 다룸 머신러닝 (Machine Learning) 인공지능의 한 분야 데이터를 통해 컴퓨터가 스스로 학습하고 의사결정을 내리는 능력을 갖게 함 지도학습(Supervised Learning): 정답(label)이 있는 데이터로 학습 예 : 강아지/고양이 사진에 라벨을 붙여 분류 모델 학습 비지도학습(Unsupervised Learning): 정답이 없는 데이터로 학습 예 : 라벨 없는 고객 데이터를 그룹으로 클러스터링 딥러닝 (Deep Learning) 사람의 신경망을 모사한 인공 신경망 기반의 머신러닝 한 종류 기존에 풀기 어려웠던 복잡한 문제(이미지 인식, 자연어 처리 등)를 해결 가능 빅데이터 (Big Data) 통상적으로 사용되는 데이터 수집·관리·처리 소프트웨어의 수용 한계를 넘어서는 크기의 데이터\n">
+<meta property='og:url' content='https://lucaspark-10.github.io/data-analysis/python_data_analysis_04/'>
+<meta property='og:site_name' content='LucasPark Blog'>
+<meta property='og:type' content='article'><meta property='article:section' content='Data-Analysis' /><meta property='article:published_time' content='2026-07-05T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2026-07-05T00:00:00&#43;00:00'/>
+<meta name="twitter:title" content="빅데이터의 이론개념">
+<meta name="twitter:description" content="들어가며 오늘은 간단한 이론개념을 간단하게 정리하려고 합니다.\n1. AI와 빅데이터 인공지능 &gt; 머신러닝 &gt; 딥러닝 인공지능 ⊃ 머신러닝 ⊃ 딥러닝 세 개념은 포함 관계입니다.\n인공지능 (Artificial Intelligence) 컴퓨터 시스템이 인간과 유사한 지능을 가지도록 하는 기술 학습, 추론, 인식, 계획, 지각, 개체 조작 능력 문제 등을 다룸 머신러닝 (Machine Learning) 인공지능의 한 분야 데이터를 통해 컴퓨터가 스스로 학습하고 의사결정을 내리는 능력을 갖게 함 지도학습(Supervised Learning): 정답(label)이 있는 데이터로 학습 예 : 강아지/고양이 사진에 라벨을 붙여 분류 모델 학습 비지도학습(Unsupervised Learning): 정답이 없는 데이터로 학습 예 : 라벨 없는 고객 데이터를 그룹으로 클러스터링 딥러닝 (Deep Learning) 사람의 신경망을 모사한 인공 신경망 기반의 머신러닝 한 종류 기존에 풀기 어려웠던 복잡한 문제(이미지 인식, 자연어 처리 등)를 해결 가능 빅데이터 (Big Data) 통상적으로 사용되는 데이터 수집·관리·처리 소프트웨어의 수용 한계를 넘어서는 크기의 데이터\n">
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-EVK5B22CB3"></script>
+      <script>
+        var doNotTrack = false;
+        if ( true ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-EVK5B22CB3');
+        }
+      </script>
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column compact"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">LucasPark Blog</a></h1>
+            <h2 class="site-description">Lucas Park의 개인 블로그</h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                <span>Home</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/posts/' >
+                
+                <span>Posts</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/data-analysis/' >
+                
+                <span>Data Analysis</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/gold-news-and-analysis/' >
+                
+                <span>Gold Price Check &amp; Analysis</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/atmospheric-environment/' >
+                
+                <span>Atmospheric Environment</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>Dark Mode</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/data-analysis/python_data_analysis_04/">빅데이터의 이론개념</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    
+    
+    
+    
+    
+    
+    <footer class="article-meta">
+        
+            <div class="inline-meta">
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                    <time class="article-time--published" datetime='2026-07-05T00:00:00Z'>2026년 7월 5일 일요일</time>
+                
+
+                
+            </div>
+        
+
+        
+
+        
+    </footer>
+    
+</div>
+
+</header>
+
+    
+
+    <section class="article-content">
+    
+    
+    <h1 id="들어가며">들어가며
+</h1><p>오늘은 간단한 이론개념을 간단하게 정리하려고 합니다.</p>
+<hr>
+<h2 id="1-ai와-빅데이터">1. AI와 빅데이터
+</h2><h3 id="인공지능--머신러닝--딥러닝">인공지능 &gt; 머신러닝 &gt; 딥러닝
+</h3><p><strong>인공지능 ⊃ 머신러닝 ⊃ 딥러닝</strong>
+세 개념은 포함 관계입니다.</p>
+<h4 id="인공지능-artificial-intelligence">인공지능 (Artificial Intelligence)
+</h4><ul>
+<li>컴퓨터 시스템이 인간과 유사한 지능을 가지도록 하는 기술</li>
+<li>학습, 추론, 인식, 계획, 지각, 개체 조작 능력 문제 등을 다룸</li>
+</ul>
+<h4 id="머신러닝-machine-learning">머신러닝 (Machine Learning)
+</h4><ul>
+<li>인공지능의 한 분야</li>
+<li>데이터를 통해 컴퓨터가 스스로 학습하고 의사결정을 내리는 능력을 갖게 함</li>
+<li><strong>지도학습(Supervised Learning)</strong>: 정답(label)이 있는 데이터로 학습
+<ul>
+<li>예 : 강아지/고양이 사진에 라벨을 붙여 분류 모델 학습</li>
+</ul>
+</li>
+<li><strong>비지도학습(Unsupervised Learning)</strong>: 정답이 없는 데이터로 학습
+<ul>
+<li>예 : 라벨 없는 고객 데이터를 그룹으로 클러스터링</li>
+</ul>
+</li>
+</ul>
+<h4 id="딥러닝-deep-learning">딥러닝 (Deep Learning)
+</h4><ul>
+<li>사람의 신경망을 모사한 인공 신경망 기반의 머신러닝 한 종류</li>
+<li>기존에 풀기 어려웠던 복잡한 문제(이미지 인식, 자연어 처리 등)를 해결 가능</li>
+</ul>
+<h3 id="빅데이터-big-data">빅데이터 (Big Data)
+</h3><ul>
+<li>
+<p>통상적으로 사용되는 데이터 수집·관리·처리 소프트웨어의 수용 한계를 넘어서는 크기의 데이터</p>
+</li>
+<li>
+<p>데이터 양이 방대하고 지속적으로 증가하여 전통적인 방법으로는 분석할 수 없는 데이터</p>
+<ul>
+<li>예 : 하루에도 수십억 건씩 쌓이는 SNS 게시글, 실시간 카드 결제 로그, IoT 센서 데이터 등</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="2-빅데이터의-특징">2. 빅데이터의 특징
+</h2><h3 id="빅데이터-3v--4v--5v로-확장">빅데이터 3V → 4V → 5V로 확장
+</h3><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>구분</th>
+          <th>의미</th>
+          <th>설명</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>Volume</strong> (규모)</td>
+          <td>양</td>
+          <td>테라바이트 수준 이상의 규모</td>
+      </tr>
+      <tr>
+          <td><strong>Variety</strong> (다양성)</td>
+          <td>형태</td>
+          <td>정형/비정형의 다양한 형태</td>
+      </tr>
+      <tr>
+          <td><strong>Velocity</strong> (속도)</td>
+          <td>속도</td>
+          <td>실시간으로 생산·처리·유통되는 빠른 데이터</td>
+      </tr>
+      <tr>
+          <td><strong>Value</strong> (가치)*</td>
+          <td>가치</td>
+          <td>함축된 가치를 찾아내는 것이 중요</td>
+      </tr>
+      <tr>
+          <td><strong>Veracity</strong> (진실성)*</td>
+          <td>신뢰성</td>
+          <td>데이터의 신뢰성과 타당성 확보 필요</td>
+      </tr>
+  </tbody>
+</table></div>
+<h3 id="데이터의-종류">데이터의 종류
+</h3><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>종류</th>
+          <th>설명</th>
+          <th>예시</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>정형 데이터</strong> (Structured)</td>
+          <td>열과 행으로 이루어진 테이블 형식의 구조화된 데이터</td>
+          <td>엑셀 표, RDB 테이블</td>
+      </tr>
+      <tr>
+          <td><strong>반정형 데이터</strong> (Semi-structured)</td>
+          <td>정형은 아니지만 어느 정도 구조를 가진 데이터</td>
+          <td>XML, HTML, JSON</td>
+      </tr>
+      <tr>
+          <td><strong>비정형 데이터</strong> (Unstructured)</td>
+          <td>특정 구조를 갖지 않는 데이터</td>
+          <td>비디오, 오디오, 텍스트, 이미지</td>
+      </tr>
+  </tbody>
+</table></div>
+<hr>
+<h2 id="3-데이터-분석-계획">3. 데이터 분석 계획
+</h2><h3 id="데이터-분석이란">데이터 분석이란?
+</h3><ul>
+<li>특정 타깃의 패턴이나 트렌드 같은 유용한 인사이트를 발견하기 위해 데이터를 <strong>수집 → 정리 → 조작 → 분석</strong>하는 전 과정</li>
+<li>통계 분석, 머신러닝, 데이터 마이닝 등의 방법을 사용</li>
+</ul>
+<h3 id="분석-방법론-두-가지">분석 방법론 두 가지
+</h3><ul>
+<li>
+<p><strong>확증적 데이터 분석 (CDA, Confirmatory Data Analysis)</strong>
+가설 설정 → 데이터 수집 → 통계 분석 → 가설 검증 (반복)</p>
+<ul>
+<li>예 : &ldquo;광고 노출이 많을수록 매출이 늘어난다&quot;는 가설을 세우고, 데이터를 통해 검증</li>
+</ul>
+</li>
+<li>
+<p><strong>탐색적 데이터 분석 (EDA, Exploratory Data Analysis)</strong>
+데이터 수집 → 시각화 탐색 → 패턴 도출 → 인사이트 발견 (반복)</p>
+<ul>
+<li>예 :  뚜렷한 가설 없이 판매 데이터를 시각화하며 숨겨진 패턴을 찾아냄</li>
+</ul>
+</li>
+</ul>
+<h3 id="데이터-분석의-장점">데이터 분석의 장점
+</h3><ul>
+<li>효율적인 의사 결정에 도움</li>
+<li>타깃 이해도와 만족도를 높임</li>
+<li>마케팅 최적화를 도움</li>
+<li>업무 효율성을 높임</li>
+<li>예측 가능성을 높여 비즈니스 리스크 관리를 강화함</li>
+</ul>
+<h3 id="데이터-분석-순서-5단계">데이터 분석 순서 (5단계)
+</h3><ol>
+<li><strong>문제 정의</strong>: 가치 있는 문제 탐색 후 분석 대상과 목적을 객관적·구체적으로 설정</li>
+<li><strong>데이터 수집</strong>: 크롤링, Open API 등을 활용해 필요한 데이터 확보</li>
+<li><strong>데이터 전처리</strong>: 수집된 raw data의 이상치·중복값·결측값 처리</li>
+<li><strong>데이터 모델링</strong>: 통계 기반, 머신러닝, 딥러닝 등으로 목적에 맞는 모델 생성</li>
+<li><strong>결과 분석 및 시각화</strong>: 결과를 시각화하고 분석하여 인사이트 도출</li>
+</ol>
+<hr>
+<h2 id="4-빅데이터-활용-기술">4. 빅데이터 활용 기술
+</h2><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>기법</th>
+          <th>설명</th>
+          <th>예시</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>연관 규칙 학습</strong><!-- raw HTML omitted -->(Association rule learning)</td>
+          <td>변수 간의 관계를 발견하는 기법</td>
+          <td>슈퍼마켓에서 (감자, 양파)를 산 사람이 햄버거용 재료도 같이 사더라</td>
+      </tr>
+      <tr>
+          <td><strong>유형(분류) 분석</strong><!-- raw HTML omitted -->(Classification tree analysis)</td>
+          <td>통계적 분류로 사건이 속할 범주를 찾는 기법</td>
+          <td>소득·가족 수·교육 연수에 따라 &ldquo;구매자/비구매자&rdquo; 분류</td>
+      </tr>
+      <tr>
+          <td><strong>유전 알고리즘</strong><!-- raw HTML omitted -->(Genetic algorithms)</td>
+          <td>자연선택·돌연변이 메커니즘으로 최적해를 점진적으로 찾는 기법</td>
+          <td>응급실 의사 배치 최적화, 방송 편성 시간표 최적화</td>
+      </tr>
+      <tr>
+          <td><strong>기계 학습</strong><!-- raw HTML omitted -->(Machine learning)</td>
+          <td>훈련 데이터로 학습한 특성을 활용해 예측하는 기법</td>
+          <td>넷플릭스 영화 추천, 유튜브 알고리즘</td>
+      </tr>
+      <tr>
+          <td><strong>회귀 분석</strong><!-- raw HTML omitted -->(Regression analysis)</td>
+          <td>독립변수 변화에 따른 종속변수 변화를 통해 두 변인의 관계를 파악</td>
+          <td>나이와 구매 차량 타입의 관계, 만족도와 충성도의 관계</td>
+      </tr>
+      <tr>
+          <td><strong>감정 분석</strong><!-- raw HTML omitted -->(Sentiment analysis)</td>
+          <td>자연어 데이터에서 감정 시그널을 추출하는 기법</td>
+          <td>리뷰가 긍정/중립/부정 중 어디에 속하는지 분류</td>
+      </tr>
+      <tr>
+          <td><strong>소셜 네트워크 분석</strong><!-- raw HTML omitted -->(Social network analysis)</td>
+          <td>사회 관계망을 분석해 영향력 있는 사람이나 관계를 파악</td>
+          <td>인플루언서(에너자이저/브로커/커넥터) 파악</td>
+      </tr>
+  </tbody>
+</table></div>
+<hr>
+<h2 id="5-데이터-변환">5. 데이터 변환
+</h2><h3 id="이상치-outlier">이상치 (Outlier)
+</h3><ul>
+<li>
+<p>관측되는 데이터의 범위에서 크게 벗어나는 값</p>
+</li>
+<li>
+<p>결과적으로 잘못된 분석 결과를 초래할 수 있음</p>
+</li>
+<li>
+<p>예 :  데이터 <code>4, 4, 5, 5, 5, 5, 6, 6, 6, 7, 7</code> (평균 5.45, 표준편차 1.04)
+여기에 이상치 <code>300</code>이 추가되면 평균 30.00, 표준편차 85.03로 완전히 왜곡됨
+<strong>적절한 이상치 처리가 필수적!</strong></p>
+</li>
+</ul>
+<h4 id="이상치-발견-방법">이상치 발견 방법
+</h4><ol>
+<li><strong>Box-plot</strong>: Q1(25%)-1.5×IQR ~ Q3(75%)+1.5×IQR 범위를 벗어나면 이상치</li>
+<li><strong>Histogram</strong>: 분포에서 멀리 떨어진 낮은 빈도 구간을 시각적으로 확인</li>
+<li><strong>Scatter Plot</strong>: 산점도 상에서 전체 추세를 벗어나는 점을 확인</li>
+</ol>
+<h4 id="이상치-처리-방법">이상치 처리 방법
+</h4><ol>
+<li><strong>제거</strong>: 이상치 데이터를 아예 삭제</li>
+<li><strong>대체</strong>: 평균값/중앙값 또는 정해진 최댓값·최솟값으로 대체</li>
+</ol>
+<h3 id="결측치-missing-value">결측치 (Missing Value)
+</h3><ul>
+<li>값이 누락된 데이터 (NA, NaN 등으로 표시)</li>
+</ul>
+<h4 id="결측치-처리-방법">결측치 처리 방법
+</h4><ol>
+<li><strong>제거</strong>: 결측치가 있는 행을 삭제</li>
+<li><strong>대체</strong>: 전체 평균(Global Mean) 또는 그룹별 평균(Group Mean) 등으로 대체</li>
+</ol>
+<ul>
+<li>예 : OS가 Android인 행의 결측 매출을 &ldquo;Android 평균 매출&quot;로 채우는 방식이, 전체 평균으로 채우는 것보다 더 정확할 수 있음</li>
+</ul>
+<h2 id="마무리">마무리
+</h2><p>이번 글에서는 데이터에 대한 이론을 정리했습니다.</p>
+<p>데이터 분석은 데이터 기반으로 인사이트를 도출해서 많은 양질의 데이터를 확보하는 것이 중요합니다.
+그리고 이 데이터를 비즈니스의 목표와 핵심 가치를 같이 고려하여 분석해야합니다.
+다음은 데이터 조작 및 분석에 필요한 Pandas에 대해서 정리하겠습니다.</p>
+
+</section>
+
+
+    <footer class="article-meta article-footer">
+    
+
+    </footer>
+
+
+    
+        <link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI&#43;WdtXRGWt2kTvGFasHpSy3SV"crossorigin="anonymous"
+            ><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG&#43;vnGctmUb0ZY0l8"crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"integrity="sha384-&#43;VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4&#43;/RRE05"crossorigin="anonymous"
+                defer
+                >
+            </script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        const elementsToRender = [".main-article", ".widget--toc"];
+
+        elementsToRender.forEach(selector => {
+            const element = document.querySelector(selector);
+            if (element) {
+                renderMathInElement(element, {
+                    delimiters: [
+                        { left: "$$", right: "$$", display: true },
+                        { left: "$", right: "$", display: false },
+                        { left: "\\(", right: "\\)", display: false },
+                        { left: "\\[", right: "\\]", display: true }
+                    ],
+                    ignoredClasses: ["gist"]
+                });
+            }
+        });
+    });
+</script>
+    
+</article>
+
+    
+
+    
+
+     
+    
+        
+
+        <div class="disqus-container">
+    
+</div>
+
+<style>
+    .disqus-container {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+</style>
+
+<script>
+    window.addEventListener('onColorSchemeChange', (e) => {
+        if (typeof DISQUS == 'object') {
+            DISQUS.reset({
+                reload: true
+            });
+        }
+    })
+</script>
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2026 LucasPark Blog
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="4.0.3">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+
+
+
+<script type="module">
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script>
+
+    
+
+            </main>
+        </div>
+        
+<script type="text/javascript" src="/ts/main.1ff1e5fdc4e178ed422e50aa407526dc552f26342d729343fded19416194382c.js" defer></script>
+
+
+    </body>
+</html>
