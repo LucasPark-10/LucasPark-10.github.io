@@ -1,596 +1,87 @@
-<!DOCTYPE html>
-<html lang="ko-kr" dir="ltr">
-    <head><meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="들어가며 이번에는 모델들 중에 긴급히 정리할 내용이 있어서 정리해보려고 합니다. 데이터분석에는 다양한 모델이 있는데, 크게 예측, 분류, 군집, 차원축소 4가지로 나뉩니다. 그중 분류 모델에서 단순히 &ldquo;정확도&quot;만으로는 모델의 진짜 성능을 알기 어려운 이유와, 이를 보완하는 평가 지표(정밀도, 재현율, F1 Score, ROC-AUC 등)를 정리하겠습니다.\n1. 혼동 행렬 (Confusion Matrix) 분류 모델의 성능을 평가하기 위해 사용되는 행렬\n모델이 예측한 값과 실제 데이터를 교차해서 4가지 경우로 나눕니다.\n예측: Positive 예측: Negative 실제: Positive True Positive (TP) False Negative (FN) — Type-2 error 실제: Negative False Positive (FP) — Type-1 error True Negative (TN) Positive (긍정 클래스, 양성): 모델이 관심 있는 클래스 Negative (부정 클래스, 음성): 모델이 관심 없는 클래스 예시: 스팸 메일 분류기의 경우, 스팸 메일 = Positive, 비 스팸 메일 = Negative 이 4가지 값(TP, FN, FP, TN)을 조합해서 아래와 같은 다양한 평가 지표를 계산할 수 있습니다.\n">
-<title>긴급 정리! 분류 알고리즘 평가 지표</title>
-
-
-<link rel="canonical" href="https://lucaspark-10.github.io/data-analysis/python_data_analysis_08/">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
-
-
-<link rel="stylesheet" href="/scss/style.min.e62e09c60ba428a627e03568fa3df938f6a8224f815b5846f00816c17d4a0be4.css"><meta property='og:title' content="긴급 정리! 분류 알고리즘 평가 지표">
-<meta property='og:description' content="들어가며 이번에는 모델들 중에 긴급히 정리할 내용이 있어서 정리해보려고 합니다. 데이터분석에는 다양한 모델이 있는데, 크게 예측, 분류, 군집, 차원축소 4가지로 나뉩니다. 그중 분류 모델에서 단순히 &ldquo;정확도&quot;만으로는 모델의 진짜 성능을 알기 어려운 이유와, 이를 보완하는 평가 지표(정밀도, 재현율, F1 Score, ROC-AUC 등)를 정리하겠습니다.\n1. 혼동 행렬 (Confusion Matrix) 분류 모델의 성능을 평가하기 위해 사용되는 행렬\n모델이 예측한 값과 실제 데이터를 교차해서 4가지 경우로 나눕니다.\n예측: Positive 예측: Negative 실제: Positive True Positive (TP) False Negative (FN) — Type-2 error 실제: Negative False Positive (FP) — Type-1 error True Negative (TN) Positive (긍정 클래스, 양성): 모델이 관심 있는 클래스 Negative (부정 클래스, 음성): 모델이 관심 없는 클래스 예시: 스팸 메일 분류기의 경우, 스팸 메일 = Positive, 비 스팸 메일 = Negative 이 4가지 값(TP, FN, FP, TN)을 조합해서 아래와 같은 다양한 평가 지표를 계산할 수 있습니다.\n">
-<meta property='og:url' content='https://lucaspark-10.github.io/data-analysis/python_data_analysis_08/'>
-<meta property='og:site_name' content='LucasPark Blog'>
-<meta property='og:type' content='article'><meta property='article:section' content='Data-Analysis' /><meta property='article:published_time' content='2026-07-09T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2026-07-09T00:00:00&#43;00:00'/>
-<meta name="twitter:title" content="긴급 정리! 분류 알고리즘 평가 지표">
-<meta name="twitter:description" content="들어가며 이번에는 모델들 중에 긴급히 정리할 내용이 있어서 정리해보려고 합니다. 데이터분석에는 다양한 모델이 있는데, 크게 예측, 분류, 군집, 차원축소 4가지로 나뉩니다. 그중 분류 모델에서 단순히 &ldquo;정확도&quot;만으로는 모델의 진짜 성능을 알기 어려운 이유와, 이를 보완하는 평가 지표(정밀도, 재현율, F1 Score, ROC-AUC 등)를 정리하겠습니다.\n1. 혼동 행렬 (Confusion Matrix) 분류 모델의 성능을 평가하기 위해 사용되는 행렬\n모델이 예측한 값과 실제 데이터를 교차해서 4가지 경우로 나눕니다.\n예측: Positive 예측: Negative 실제: Positive True Positive (TP) False Negative (FN) — Type-2 error 실제: Negative False Positive (FP) — Type-1 error True Negative (TN) Positive (긍정 클래스, 양성): 모델이 관심 있는 클래스 Negative (부정 클래스, 음성): 모델이 관심 없는 클래스 예시: 스팸 메일 분류기의 경우, 스팸 메일 = Positive, 비 스팸 메일 = Negative 이 4가지 값(TP, FN, FP, TN)을 조합해서 아래와 같은 다양한 평가 지표를 계산할 수 있습니다.\n">
-      <script async src="https://www.googletagmanager.com/gtag/js?id=G-EVK5B22CB3"></script>
-      <script>
-        var doNotTrack = false;
-        if ( true ) {
-          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
-          var doNotTrack = (dnt == "1" || dnt == "yes");
-        }
-        if (!doNotTrack) {
-          window.dataLayer = window.dataLayer || [];
-          function gtag(){dataLayer.push(arguments);}
-          gtag('js', new Date());
-          gtag('config', 'G-EVK5B22CB3');
-        }
-      </script>
-    </head>
-    <body class="
-    article-page
-    ">
-    <script>
-        (function() {
-            const colorSchemeKey = 'StackColorScheme';
-            if(!localStorage.getItem(colorSchemeKey)){
-                localStorage.setItem(colorSchemeKey, "auto");
-            }
-        })();
-    </script><script>
-    (function() {
-        const colorSchemeKey = 'StackColorScheme';
-        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
-        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
-
-        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
-            
-
-            document.documentElement.dataset.scheme = 'dark';
-        } else {
-            document.documentElement.dataset.scheme = 'light';
-        }
-    })();
-</script>
-<div class="container main-container flex on-phone--column compact"><aside class="sidebar left-sidebar sticky ">
-    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
-        <span class="hamburger-box">
-            <span class="hamburger-inner"></span>
-        </span>
-    </button>
-
-    <header>
-        
-        
-        <div class="site-meta">
-            <h1 class="site-name"><a href="/">LucasPark Blog</a></h1>
-            <h2 class="site-description">Lucas Park의 개인 블로그</h2>
-        </div>
-    </header><ol class="menu" id="main-menu">
-        
-        
-        
-        <li >
-            <a href='/' >
-                
-                <span>Home</span>
-            </a>
-        </li>
-        
-        
-        <li >
-            <a href='/posts/' >
-                
-                <span>Posts</span>
-            </a>
-        </li>
-        
-        
-        <li >
-            <a href='/data-analysis/' >
-                
-                <span>Data Analysis</span>
-            </a>
-        </li>
-        
-        
-        <li >
-            <a href='/gold-news-and-analysis/' >
-                
-                <span>Gold Price Check &amp; Analysis</span>
-            </a>
-        </li>
-        
-        
-        <li >
-            <a href='/atmospheric-environment/' >
-                
-                <span>Atmospheric Environment</span>
-            </a>
-        </li>
-        
-        <li class="menu-bottom-section">
-            <ol class="menu">
-
-                
-                    <li id="dark-mode-toggle">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-  <path stroke="none" d="M0 0h24v24H0z"/>
-  <circle cx="8" cy="12" r="2" />
-  <rect x="2" y="6" width="20" height="12" rx="6" />
-</svg>
-
-
-
-                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-  <path stroke="none" d="M0 0h24v24H0z"/>
-  <circle cx="16" cy="12" r="2" />
-  <rect x="2" y="6" width="20" height="12" rx="6" />
-</svg>
-
-
-
-                        <span>Dark Mode</span>
-                    </li>
-                
-            </ol>
-        </li>
-    </ol>
-</aside>
-
-    
-
-            <main class="main full-width">
-    <article class="main-article">
-    <header class="article-header">
-
-    <div class="article-details">
-    
-
-    <div class="article-title-wrapper">
-        <h2 class="article-title">
-            <a href="/data-analysis/python_data_analysis_08/">긴급 정리! 분류 알고리즘 평가 지표</a>
-        </h2>
-    
-        
-    </div>
-
-    
-    
-    
-    
-    
-    
-    
-    <footer class="article-meta">
-        
-            <div class="inline-meta">
-                
-                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-  <path stroke="none" d="M0 0h24v24H0z"/>
-  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
-  <circle cx="18" cy="18" r="4" />
-  <path d="M15 3v4" />
-  <path d="M7 3v4" />
-  <path d="M3 11h16" />
-  <path d="M18 16.496v1.504l1 1" />
-</svg>
-                    <time class="article-time--published" datetime='2026-07-09T00:00:00Z'>2026년 7월 9일 목요일</time>
-                
-
-                
-            </div>
-        
-
-        
-
-        
-    </footer>
-    
-</div>
-
-</header>
-
-    
-
-    <section class="article-content">
-    
-    
-    <h1 id="들어가며">들어가며
-</h1><p>이번에는 모델들 중에 긴급히 정리할 내용이 있어서 정리해보려고 합니다.
+<!doctype html><html lang=ko-kr dir=ltr><head><meta charset=utf-8><meta name=viewport content='width=device-width,initial-scale=1'><meta name=description content='들어가며 이번에는 모델들 중에 긴급히 정리할 내용이 있어서 정리해보려고 합니다. 데이터분석에는 다양한 모델이 있는데, 크게 예측, 분류, 군집, 차원축소 4가지로 나뉩니다. 그중 분류 모델에서 단순히 &ldquo;정확도"만으로는 모델의 진짜 성능을 알기 어려운 이유와, 이를 보완하는 평가 지표(정밀도, 재현율, F1 Score, ROC-AUC 등)를 정리하겠습니다.\n1. 혼동 행렬 (Confusion Matrix) 분류 모델의 성능을 평가하기 위해 사용되는 행렬\n모델이 예측한 값과 실제 데이터를 교차해서 4가지 경우로 나눕니다.\n예측: Positive 예측: Negative 실제: Positive True Positive (TP) False Negative (FN) — Type-2 error 실제: Negative False Positive (FP) — Type-1 error True Negative (TN) Positive (긍정 클래스, 양성): 모델이 관심 있는 클래스 Negative (부정 클래스, 음성): 모델이 관심 없는 클래스 예시: 스팸 메일 분류기의 경우, 스팸 메일 = Positive, 비 스팸 메일 = Negative 이 4가지 값(TP, FN, FP, TN)을 조합해서 아래와 같은 다양한 평가 지표를 계산할 수 있습니다.\n'><title>긴급 정리! 분류 알고리즘 평가 지표</title><link rel=canonical href=https://lucaspark-10.github.io/data-analysis/python_data_analysis_08/><link rel=preconnect href=https://fonts.googleapis.com><link rel=preconnect href=https://fonts.gstatic.com crossorigin><link rel=preload as=style href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap"><link rel=stylesheet href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap"><link rel=stylesheet href=/scss/style.min.e62e09c60ba428a627e03568fa3df938f6a8224f815b5846f00816c17d4a0be4.css><meta property='og:title' content="긴급 정리! 분류 알고리즘 평가 지표"><meta property='og:description' content='들어가며 이번에는 모델들 중에 긴급히 정리할 내용이 있어서 정리해보려고 합니다. 데이터분석에는 다양한 모델이 있는데, 크게 예측, 분류, 군집, 차원축소 4가지로 나뉩니다. 그중 분류 모델에서 단순히 &ldquo;정확도"만으로는 모델의 진짜 성능을 알기 어려운 이유와, 이를 보완하는 평가 지표(정밀도, 재현율, F1 Score, ROC-AUC 등)를 정리하겠습니다.\n1. 혼동 행렬 (Confusion Matrix) 분류 모델의 성능을 평가하기 위해 사용되는 행렬\n모델이 예측한 값과 실제 데이터를 교차해서 4가지 경우로 나눕니다.\n예측: Positive 예측: Negative 실제: Positive True Positive (TP) False Negative (FN) — Type-2 error 실제: Negative False Positive (FP) — Type-1 error True Negative (TN) Positive (긍정 클래스, 양성): 모델이 관심 있는 클래스 Negative (부정 클래스, 음성): 모델이 관심 없는 클래스 예시: 스팸 메일 분류기의 경우, 스팸 메일 = Positive, 비 스팸 메일 = Negative 이 4가지 값(TP, FN, FP, TN)을 조합해서 아래와 같은 다양한 평가 지표를 계산할 수 있습니다.\n'><meta property='og:url' content='https://lucaspark-10.github.io/data-analysis/python_data_analysis_08/'><meta property='og:site_name' content='LucasPark Blog'><meta property='og:type' content='article'><meta property='article:section' content='Data-Analysis'><meta property='article:published_time' content='2026-07-09T00:00:00+00:00'><meta property='article:modified_time' content='2026-07-09T00:00:00+00:00'><meta name=twitter:title content="긴급 정리! 분류 알고리즘 평가 지표"><meta name=twitter:description content='들어가며 이번에는 모델들 중에 긴급히 정리할 내용이 있어서 정리해보려고 합니다. 데이터분석에는 다양한 모델이 있는데, 크게 예측, 분류, 군집, 차원축소 4가지로 나뉩니다. 그중 분류 모델에서 단순히 &ldquo;정확도"만으로는 모델의 진짜 성능을 알기 어려운 이유와, 이를 보완하는 평가 지표(정밀도, 재현율, F1 Score, ROC-AUC 등)를 정리하겠습니다.\n1. 혼동 행렬 (Confusion Matrix) 분류 모델의 성능을 평가하기 위해 사용되는 행렬\n모델이 예측한 값과 실제 데이터를 교차해서 4가지 경우로 나눕니다.\n예측: Positive 예측: Negative 실제: Positive True Positive (TP) False Negative (FN) — Type-2 error 실제: Negative False Positive (FP) — Type-1 error True Negative (TN) Positive (긍정 클래스, 양성): 모델이 관심 있는 클래스 Negative (부정 클래스, 음성): 모델이 관심 없는 클래스 예시: 스팸 메일 분류기의 경우, 스팸 메일 = Positive, 비 스팸 메일 = Negative 이 4가지 값(TP, FN, FP, TN)을 조합해서 아래와 같은 다양한 평가 지표를 계산할 수 있습니다.\n'><script async src="https://www.googletagmanager.com/gtag/js?id=G-EVK5B22CB3"></script><script>var doNotTrack=!1,dnt=navigator.doNotTrack||window.doNotTrack||navigator.msDoNotTrack,doNotTrack=dnt=="1"||dnt=="yes";if(!doNotTrack){window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag("js",new Date),gtag("config","G-EVK5B22CB3")}</script></head><body class=article-page><script>(function(){const e="StackColorScheme";localStorage.getItem(e)||localStorage.setItem(e,"auto")})()</script><script>(function(){const t="StackColorScheme",e=localStorage.getItem(t),n=window.matchMedia("(prefers-color-scheme: dark)").matches===!0;e=="dark"||e==="auto"&&n?document.documentElement.dataset.scheme="dark":document.documentElement.dataset.scheme="light"})()</script><div class="container main-container flex on-phone--column compact"><aside class="sidebar left-sidebar sticky"><button class="hamburger hamburger--spin" type=button id=toggle-menu aria-label="Toggle Menu">
+<span class=hamburger-box><span class=hamburger-inner></span></span></button><header><div class=site-meta><h1 class=site-name><a href=/>LucasPark Blog</a></h1><h2 class=site-description>Lucas Park의 개인 블로그</h2></div></header><ol class=menu id=main-menu><li><a href=/><span>Home</span></a></li><li><a href=/posts/><span>Posts</span></a></li><li><a href=/data-analysis/><span>Data Analysis</span></a></li><li><a href=/gold-news-and-analysis/><span>Gold Price Check & Analysis</span></a></li><li><a href=/atmospheric-environment/><span>Atmospheric Environment</span></a></li><li class=menu-bottom-section><ol class=menu><li id=dark-mode-toggle><svg class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="8" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<svg class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="16" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<span>Dark Mode</span></li></ol></li></ol></aside><main class="main full-width"><article class=main-article><header class=article-header><div class=article-details><div class=article-title-wrapper><h2 class=article-title><a href=/data-analysis/python_data_analysis_08/>긴급 정리! 분류 알고리즘 평가 지표</a></h2></div><footer class=article-meta><div class=inline-meta><svg class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M11.795 21H5a2 2 0 01-2-2V7a2 2 0 012-2h12a2 2 0 012 2v4"/><circle cx="18" cy="18" r="4"/><path d="M15 3v4"/><path d="M7 3v4"/><path d="M3 11h16"/><path d="M18 16.496V18l1 1"/></svg>
+<time class=article-time--published datetime=2026-07-09T00:00:00Z>2026년 7월 9일 목요일</time></div></footer></div></header><section class=article-content><h1 id=들어가며>들어가며</h1><p>이번에는 모델들 중에 긴급히 정리할 내용이 있어서 정리해보려고 합니다.
 데이터분석에는 다양한 모델이 있는데, 크게 예측, 분류, 군집, 차원축소 4가지로 나뉩니다.
-그중 분류 모델에서 단순히 &ldquo;정확도&quot;만으로는 모델의 진짜 성능을 알기 어려운 이유와, 이를 보완하는 평가 지표(정밀도, 재현율, F1 Score, ROC-AUC 등)를 정리하겠습니다.</p>
-<hr>
-<h2 id="1-혼동-행렬-confusion-matrix">1. 혼동 행렬 (Confusion Matrix)
-</h2>
-    <blockquote>
-        <p>분류 모델의 성능을 평가하기 위해 사용되는 행렬</p>
-
-    </blockquote>
-<p>모델이 예측한 값과 실제 데이터를 교차해서 4가지 경우로 나눕니다.</p>
-<div class="table-wrapper"><table>
-  <thead>
-      <tr>
-          <th></th>
-          <th>예측: Positive</th>
-          <th>예측: Negative</th>
-      </tr>
-  </thead>
-  <tbody>
-      <tr>
-          <td><strong>실제: Positive</strong></td>
-          <td>True Positive (TP)</td>
-          <td>False Negative (FN) — Type-2 error</td>
-      </tr>
-      <tr>
-          <td><strong>실제: Negative</strong></td>
-          <td>False Positive (FP) — Type-1 error</td>
-          <td>True Negative (TN)</td>
-      </tr>
-  </tbody>
-</table></div>
-<ul>
-<li><strong>Positive (긍정 클래스, 양성)</strong>: 모델이 관심 있는 클래스</li>
-<li><strong>Negative (부정 클래스, 음성)</strong>: 모델이 관심 없는 클래스</li>
-<li>예시: 스팸 메일 분류기의 경우, <strong>스팸 메일 = Positive</strong>, <strong>비 스팸 메일 = Negative</strong></li>
-</ul>
-<p>이 4가지 값(TP, FN, FP, TN)을 조합해서 아래와 같은 다양한 평가 지표를 계산할 수 있습니다.</p>
-<div class="table-wrapper"><table>
-  <thead>
-      <tr>
-          <th>지표</th>
-          <th>공식</th>
-      </tr>
-  </thead>
-  <tbody>
-      <tr>
-          <td>Recall (재현율)</td>
-          <td>TP / (TP + FN)</td>
-      </tr>
-      <tr>
-          <td>Specificity</td>
-          <td>TN / (TN + FP)</td>
-      </tr>
-      <tr>
-          <td>Precision (정밀도)</td>
-          <td>TP / (TP + FP)</td>
-      </tr>
-      <tr>
-          <td>Negative Predictive Value</td>
-          <td>TN / (TN + FN)</td>
-      </tr>
-      <tr>
-          <td>Accuracy (정확도)</td>
-          <td>(TP + TN) / (TP + TN + FP + FN)</td>
-      </tr>
-  </tbody>
-</table></div>
-<hr>
-<h2 id="2-정확도-accuracy">2. 정확도 (Accuracy)
-</h2>
-    <blockquote>
-        <p>전체 데이터 중에서 제대로 분류된 데이터의 비율</p>
-
-    </blockquote>
-<p>$$
+그중 분류 모델에서 단순히 &ldquo;정확도"만으로는 모델의 진짜 성능을 알기 어려운 이유와, 이를 보완하는 평가 지표(정밀도, 재현율, F1 Score, ROC-AUC 등)를 정리하겠습니다.</p><hr><h2 id=1-혼동-행렬-confusion-matrix>1. 혼동 행렬 (Confusion Matrix)</h2><blockquote><p>분류 모델의 성능을 평가하기 위해 사용되는 행렬</p></blockquote><p>모델이 예측한 값과 실제 데이터를 교차해서 4가지 경우로 나눕니다.</p><div class=table-wrapper><table><thead><tr><th></th><th>예측: Positive</th><th>예측: Negative</th></tr></thead><tbody><tr><td><strong>실제: Positive</strong></td><td>True Positive (TP)</td><td>False Negative (FN) — Type-2 error</td></tr><tr><td><strong>실제: Negative</strong></td><td>False Positive (FP) — Type-1 error</td><td>True Negative (TN)</td></tr></tbody></table></div><ul><li><strong>Positive (긍정 클래스, 양성)</strong>: 모델이 관심 있는 클래스</li><li><strong>Negative (부정 클래스, 음성)</strong>: 모델이 관심 없는 클래스</li><li>예시: 스팸 메일 분류기의 경우, <strong>스팸 메일 = Positive</strong>, <strong>비 스팸 메일 = Negative</strong></li></ul><p>이 4가지 값(TP, FN, FP, TN)을 조합해서 아래와 같은 다양한 평가 지표를 계산할 수 있습니다.</p><div class=table-wrapper><table><thead><tr><th>지표</th><th>공식</th></tr></thead><tbody><tr><td>Recall (재현율)</td><td>TP / (TP + FN)</td></tr><tr><td>Specificity</td><td>TN / (TN + FP)</td></tr><tr><td>Precision (정밀도)</td><td>TP / (TP + FP)</td></tr><tr><td>Negative Predictive Value</td><td>TN / (TN + FN)</td></tr><tr><td>Accuracy (정확도)</td><td>(TP + TN) / (TP + TN + FP + FN)</td></tr></tbody></table></div><hr><h2 id=2-정확도-accuracy>2. 정확도 (Accuracy)</h2><blockquote><p>전체 데이터 중에서 제대로 분류된 데이터의 비율</p></blockquote><p>$$
 Accuracy = \frac{TP + TN}{TP + TN + FP + FN}
-$$</p>
-<ul>
-<li>모델이 얼마나 정확하게 분류하는지를 나타냄</li>
-<li>일반적으로 분류 모델의 주요 평가 방법으로 사용</li>
-<li><strong>클래스 비율이 불균형할 경우, 평가 지표의 신뢰성을 잃음</strong></li>
-</ul>
-<h3 id="불균형한-클래스에서의-정확도-문제">불균형한 클래스에서의 정확도 문제
-</h3><p>전체 100만 개의 항공 데이터 중,</p>
-<ul>
-<li>90만 개가 정상 운행 (Negative)</li>
-<li>10만 개만 지연 운행 (Positive)</li>
-</ul>
-<p>인 상황에서, 모델이 <strong>전체 결과를 모두 &ldquo;지연되지 않았다&quot;고 예측</strong>해버려도</p>
-<p>$$
+$$</p><ul><li>모델이 얼마나 정확하게 분류하는지를 나타냄</li><li>일반적으로 분류 모델의 주요 평가 방법으로 사용</li><li><strong>클래스 비율이 불균형할 경우, 평가 지표의 신뢰성을 잃음</strong></li></ul><h3 id=불균형한-클래스에서의-정확도-문제>불균형한 클래스에서의 정확도 문제</h3><p>전체 100만 개의 항공 데이터 중,</p><ul><li>90만 개가 정상 운행 (Negative)</li><li>10만 개만 지연 운행 (Positive)</li></ul><p>인 상황에서, 모델이 <strong>전체 결과를 모두 &ldquo;지연되지 않았다"고 예측</strong>해버려도</p><p>$$
 정확도 = \frac{0개 + 90만개}{100만개} = 90%
-$$</p>
-<p>로 계산됩니다. 정확도만 보면 90%로 꽤 높아 보이지만, 실제로는 지연 운행(관심 클래스)을 단 하나도 맞히지 못한 무의미한 모델입니다. 이처럼 <strong>클래스가 불균형할 때는 정확도만으로 모델을 판단하면 위험</strong>하며, 다양한 평가지표를 함께 고려해야 합니다.</p>
-<hr>
-<h2 id="3-정밀도-precision">3. 정밀도 (Precision)
-</h2>
-    <blockquote>
-        <p>모델이 Positive라고 분류한 데이터 중 <strong>실제로 Positive인 데이터의 비율</strong></p>
-
-    </blockquote>
-<p>$$
+$$</p><p>로 계산됩니다. 정확도만 보면 90%로 꽤 높아 보이지만, 실제로는 지연 운행(관심 클래스)을 단 하나도 맞히지 못한 무의미한 모델입니다. 이처럼 <strong>클래스가 불균형할 때는 정확도만으로 모델을 판단하면 위험</strong>하며, 다양한 평가지표를 함께 고려해야 합니다.</p><hr><h2 id=3-정밀도-precision>3. 정밀도 (Precision)</h2><blockquote><p>모델이 Positive라고 분류한 데이터 중 <strong>실제로 Positive인 데이터의 비율</strong></p></blockquote><p>$$
 Precision = \frac{TP}{TP + FP}
-$$</p>
-<ul>
-<li>모델이 예측한 긍정 사례가 실제로 맞는 비율 (= 예측의 정확도)</li>
-<li>일반적으로 정밀도는 <strong>Type-1 Error를 줄이는 것이 중요한 상황</strong>에서 주로 사용
-<ul>
-<li>Type-1 Error: 실제로는 Negative인데 Positive로 예측한 사례</li>
-</ul>
-</li>
-</ul>
-<h3 id="예시-스팸-메일-판정-문제">예시: 스팸 메일 판정 문제
-</h3><p>정상 메일(Negative)이 스팸(Positive)으로 잘못 분류(False Positive)될 경우, <strong>중요한 메일을 전달받지 못하는</strong> 심각한 상황이 발생합니다. 이런 경우에는 정밀도를 높여 False Positive를 최소화하는 것이 중요합니다.</p>
-<hr>
-<h2 id="4-재현율-recall">4. 재현율 (Recall)
-</h2>
-    <blockquote>
-        <p>실제로 Positive인 데이터 중 <strong>모델이 Positive로 분류한 데이터의 비율</strong></p>
-
-    </blockquote>
-<p>$$
+$$</p><ul><li>모델이 예측한 긍정 사례가 실제로 맞는 비율 (= 예측의 정확도)</li><li>일반적으로 정밀도는 <strong>Type-1 Error를 줄이는 것이 중요한 상황</strong>에서 주로 사용<ul><li>Type-1 Error: 실제로는 Negative인데 Positive로 예측한 사례</li></ul></li></ul><h3 id=예시-스팸-메일-판정-문제>예시: 스팸 메일 판정 문제</h3><p>정상 메일(Negative)이 스팸(Positive)으로 잘못 분류(False Positive)될 경우, <strong>중요한 메일을 전달받지 못하는</strong> 심각한 상황이 발생합니다. 이런 경우에는 정밀도를 높여 False Positive를 최소화하는 것이 중요합니다.</p><hr><h2 id=4-재현율-recall>4. 재현율 (Recall)</h2><blockquote><p>실제로 Positive인 데이터 중 <strong>모델이 Positive로 분류한 데이터의 비율</strong></p></blockquote><p>$$
 Recall = \frac{TP}{TP + FN}
-$$</p>
-<ul>
-<li>모델이 실제 긍정 사례를 놓치지 않는 비율 (= 관심 사례 포착 정도)</li>
-<li>일반적으로 재현율은 <strong>Type-2 Error를 줄이는 것이 중요한 상황</strong>에서 주로 사용
-<ul>
-<li>Type-2 Error: 실제로는 Positive인데 Negative로 예측한 사례</li>
-</ul>
-</li>
-</ul>
-<h3 id="예시-질병-진단-문제">예시: 질병 진단 문제
-</h3><p>암 환자(Positive)를 놓치는 경우(False Negative)는 큰 위험을 초래합니다. 즉, 모델이 실제 환자를 놓치지 않도록 보장해야 하며, <strong>Recall을 높이면 실제 암 환자를 더 많이 포착</strong>하게 되어 놓치는 환자를 최소화할 수 있습니다.</p>
-
-    <blockquote>
-        <p><strong>정밀도 vs 재현율</strong>: 스팸 필터는 정밀도가 중요하고(정상 메일을 스팸으로 오분류하면 안 됨), 암 진단은 재현율이 중요합니다(환자를 놓치면 안 됨). 이처럼 <strong>문제의 특성에 따라 어떤 지표를 우선할지 달라집니다.</strong></p>
-
-    </blockquote>
-<hr>
-<h2 id="5-f1-score">5. F1 Score
-</h2>
-    <blockquote>
-        <p>정밀도와 재현율의 조화 평균</p>
-
-    </blockquote>
-<p>$$
+$$</p><ul><li>모델이 실제 긍정 사례를 놓치지 않는 비율 (= 관심 사례 포착 정도)</li><li>일반적으로 재현율은 <strong>Type-2 Error를 줄이는 것이 중요한 상황</strong>에서 주로 사용<ul><li>Type-2 Error: 실제로는 Positive인데 Negative로 예측한 사례</li></ul></li></ul><h3 id=예시-질병-진단-문제>예시: 질병 진단 문제</h3><p>암 환자(Positive)를 놓치는 경우(False Negative)는 큰 위험을 초래합니다. 즉, 모델이 실제 환자를 놓치지 않도록 보장해야 하며, <strong>Recall을 높이면 실제 암 환자를 더 많이 포착</strong>하게 되어 놓치는 환자를 최소화할 수 있습니다.</p><blockquote><p><strong>정밀도 vs 재현율</strong>: 스팸 필터는 정밀도가 중요하고(정상 메일을 스팸으로 오분류하면 안 됨), 암 진단은 재현율이 중요합니다(환자를 놓치면 안 됨). 이처럼 <strong>문제의 특성에 따라 어떤 지표를 우선할지 달라집니다.</strong></p></blockquote><hr><h2 id=5-f1-score>5. F1 Score</h2><blockquote><p>정밀도와 재현율의 조화 평균</p></blockquote><p>$$
 F1 = \frac{2 \times Precision \times Recall}{Precision + Recall}
-$$</p>
-<ul>
-<li>모델의 정확성과 완전성을 동시에 고려하여 모델의 성능을 평가</li>
-<li><strong>데이터 불균형이 심각할 때</strong> 정밀도와 재현율을 절충해서 보고 싶을 때 사용</li>
-</ul>
-<hr>
-<h2 id="6-fpr-false-positive-rate">6. FPR (False Positive Rate)
-</h2>
-    <blockquote>
-        <p>실제로 Negative인 데이터 중 모델이 Positive로 분류한 데이터의 비율</p>
-
-    </blockquote>
-<p>$$
+$$</p><ul><li>모델의 정확성과 완전성을 동시에 고려하여 모델의 성능을 평가</li><li><strong>데이터 불균형이 심각할 때</strong> 정밀도와 재현율을 절충해서 보고 싶을 때 사용</li></ul><hr><h2 id=6-fpr-false-positive-rate>6. FPR (False Positive Rate)</h2><blockquote><p>실제로 Negative인 데이터 중 모델이 Positive로 분류한 데이터의 비율</p></blockquote><p>$$
 FPR = \frac{FP}{FP + TN}
-$$</p>
-<h3 id="예시-게임-내-비정상-사용자-검출">예시: 게임 내 비정상 사용자 검출
-</h3><p>FPR이 높다는 것은 <strong>정상 사용자를 비정상 사용자로 잘못 검출</strong>하는 경우가 많다는 의미입니다. 이 상태에서 비정상 사용자에게 페널티(제재)를 부여하면, <strong>선의의 정상 사용자가 피해</strong>를 입게 됩니다.</p>
-<hr>
-<h2 id="7-roc-curve와-auc">7. ROC Curve와 AUC
-</h2><ul>
-<li><strong>x축: False Positive Rate</strong>, <strong>y축: Recall(True Positive Rate)</strong> 값으로 시각화한 그래프</li>
-<li>커브가 <strong>왼쪽 위로 당겨질수록</strong> Classifier의 성능이 향상됨을 의미</li>
-<li><strong>AUC (Area Under Curve)</strong> = ROC Curve 아래의 면적
-<ul>
-<li>AUC = 0.5인 대각선 부분은 Classifier의 최하 성능(랜덤 추측 수준)을 의미</li>
-<li>AUC가 1에 가까울수록 좋은 분류기</li>
-</ul>
-</li>
-</ul>
-<hr>
-<h2 id="8-코드로-평가-지표-구현하기">8. 코드로 평가 지표 구현하기
-</h2><p>강의에서 다룬 <code>sklearn.metrics</code>를 활용한 평가 지표 계산 코드입니다. 아래 코드는 <code>model</code>이 이미 학습(fit)까지 완료된 분류 모델이고, <code>X_valid</code>, <code>y_valid</code>는 검증용 데이터라고 가정합니다.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> sklearn.metrics <span style="color:#f92672">import</span> accuracy_score, precision_score, recall_score, f1_score
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># 검증 데이터에 대한 예측</span>
-</span></span><span style="display:flex;"><span>y_pred <span style="color:#f92672">=</span> model<span style="color:#f92672">.</span>predict(X_valid)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># 정확도 계산</span>
-</span></span><span style="display:flex;"><span>accuracy <span style="color:#f92672">=</span> accuracy_score(y_valid, y_pred)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># 정밀도 계산</span>
-</span></span><span style="display:flex;"><span>precision <span style="color:#f92672">=</span> precision_score(y_valid, y_pred)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># 재현율 계산</span>
-</span></span><span style="display:flex;"><span>recall <span style="color:#f92672">=</span> recall_score(y_valid, y_pred)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># F1 Score 계산</span>
-</span></span><span style="display:flex;"><span>f1 <span style="color:#f92672">=</span> f1_score(y_valid, y_pred)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">&#34;Accuracy:&#34;</span>, accuracy)
-</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">&#34;Precision:&#34;</span>, precision)
-</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">&#34;Recall:&#34;</span>, recall)
-</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">&#34;F1 Score:&#34;</span>, f1)
-</span></span></code></pre></div><h3 id="추가-예시---혼동-행렬-직접-확인하기">추가 예시 ① — 혼동 행렬 직접 확인하기
-</h3><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> sklearn.metrics <span style="color:#f92672">import</span> confusion_matrix, ConfusionMatrixDisplay
-</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> matplotlib.pyplot <span style="color:#66d9ef">as</span> plt
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>cm <span style="color:#f92672">=</span> confusion_matrix(y_valid, y_pred)
-</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">&#34;혼동 행렬:</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, cm)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># 시각화</span>
-</span></span><span style="display:flex;"><span>disp <span style="color:#f92672">=</span> ConfusionMatrixDisplay(confusion_matrix<span style="color:#f92672">=</span>cm, display_labels<span style="color:#f92672">=</span>[<span style="color:#e6db74">&#34;Negative&#34;</span>, <span style="color:#e6db74">&#34;Positive&#34;</span>])
-</span></span><span style="display:flex;"><span>disp<span style="color:#f92672">.</span>plot(cmap<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;Blues&#34;</span>)
-</span></span><span style="display:flex;"><span>plt<span style="color:#f92672">.</span>show()
-</span></span></code></pre></div><h3 id="추가-예시---불균형-데이터에서-정확도의-함정-재현하기">추가 예시 ② — 불균형 데이터에서 정확도의 함정 재현하기
-</h3><p>바로 위 2번 섹션에서 다룬 &ldquo;항공 데이터 90%&rdquo; 예시를, 실제 코드로 재현해서 정확도만 보면 안 되는 이유를 직접 확인해봅니다.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> numpy <span style="color:#66d9ef">as</span> np
-</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> sklearn.metrics <span style="color:#f92672">import</span> accuracy_score, precision_score, recall_score, f1_score
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># 항공 데이터 예시: 90만개 정상(0), 10만개 지연(1)</span>
-</span></span><span style="display:flex;"><span>y_true <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>array([<span style="color:#ae81ff">0</span>] <span style="color:#f92672">*</span> <span style="color:#ae81ff">900_000</span> <span style="color:#f92672">+</span> [<span style="color:#ae81ff">1</span>] <span style="color:#f92672">*</span> <span style="color:#ae81ff">100_000</span>)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># 모델이 항상 &#34;정상&#34;이라고만 예측하는 극단적인 경우</span>
-</span></span><span style="display:flex;"><span>y_pred_dummy <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>zeros(<span style="color:#ae81ff">1_000_000</span>)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">&#34;Accuracy:&#34;</span>, accuracy_score(y_true, y_pred_dummy))   <span style="color:#75715e"># 0.9 (90%)</span>
-</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">&#34;Precision:&#34;</span>, precision_score(y_true, y_pred_dummy, zero_division<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>))  <span style="color:#75715e"># 0.0</span>
-</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">&#34;Recall:&#34;</span>, recall_score(y_true, y_pred_dummy, zero_division<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>))        <span style="color:#75715e"># 0.0</span>
-</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">&#34;F1 Score:&#34;</span>, f1_score(y_true, y_pred_dummy, zero_division<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>))          <span style="color:#75715e"># 0.0</span>
-</span></span></code></pre></div><p>정확도는 90%로 높지만, Precision/Recall/F1은 모두 0에 가까워 <strong>이 모델이 사실상 아무것도 예측하지 못하고 있음</strong>을 명확히 보여줍니다.</p>
-<h3 id="추가-예시---roc-curve와-auc-그리기">추가 예시 ③ — ROC Curve와 AUC 그리기
-</h3><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> sklearn.metrics <span style="color:#f92672">import</span> roc_curve, roc_auc_score
-</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> matplotlib.pyplot <span style="color:#66d9ef">as</span> plt
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># 모델이 예측한 Positive 클래스 확률</span>
-</span></span><span style="display:flex;"><span>y_proba <span style="color:#f92672">=</span> model<span style="color:#f92672">.</span>predict_proba(X_valid)[:, <span style="color:#ae81ff">1</span>]
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>fpr, tpr, thresholds <span style="color:#f92672">=</span> roc_curve(y_valid, y_proba)
-</span></span><span style="display:flex;"><span>auc <span style="color:#f92672">=</span> roc_auc_score(y_valid, y_proba)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>plt<span style="color:#f92672">.</span>plot(fpr, tpr, label<span style="color:#f92672">=</span><span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;ROC Curve (AUC = </span><span style="color:#e6db74">{</span>auc<span style="color:#e6db74">:</span><span style="color:#e6db74">.2f</span><span style="color:#e6db74">}</span><span style="color:#e6db74">)&#34;</span>)
-</span></span><span style="display:flex;"><span>plt<span style="color:#f92672">.</span>plot([<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>], [<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>], linestyle<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;--&#34;</span>, color<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;gray&#34;</span>, label<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;Random (AUC = 0.5)&#34;</span>)
-</span></span><span style="display:flex;"><span>plt<span style="color:#f92672">.</span>xlabel(<span style="color:#e6db74">&#34;False Positive Rate&#34;</span>)
-</span></span><span style="display:flex;"><span>plt<span style="color:#f92672">.</span>ylabel(<span style="color:#e6db74">&#34;True Positive Rate (Recall)&#34;</span>)
-</span></span><span style="display:flex;"><span>plt<span style="color:#f92672">.</span>title(<span style="color:#e6db74">&#34;ROC Curve&#34;</span>)
-</span></span><span style="display:flex;"><span>plt<span style="color:#f92672">.</span>legend()
-</span></span><span style="display:flex;"><span>plt<span style="color:#f92672">.</span>show()
-</span></span></code></pre></div><h3 id="추가-예시---classification_report로-한-번에-확인하기">추가 예시 ④ — classification_report로 한 번에 확인하기
-</h3><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> sklearn.metrics <span style="color:#f92672">import</span> classification_report
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># Precision, Recall, F1 Score를 클래스별로 한 번에 확인</span>
-</span></span><span style="display:flex;"><span>print(classification_report(y_valid, y_pred, target_names<span style="color:#f92672">=</span>[<span style="color:#e6db74">&#34;Negative&#34;</span>, <span style="color:#e6db74">&#34;Positive&#34;</span>]))
-</span></span></code></pre></div><hr>
-<h2 id="마무리">마무리
-</h2><p>오늘 정리한 분류 평가 지표를 한 줄로 요약하면 다음과 같습니다.</p>
-<div class="table-wrapper"><table>
-  <thead>
-      <tr>
-          <th>지표</th>
-          <th>핵심 질문</th>
-          <th>중요하게 쓰이는 상황</th>
-      </tr>
-  </thead>
-  <tbody>
-      <tr>
-          <td>Accuracy</td>
-          <td>전체적으로 얼마나 맞혔나?</td>
-          <td>클래스가 균형 잡혀 있을 때</td>
-      </tr>
-      <tr>
-          <td>Precision</td>
-          <td>Positive로 예측한 것 중 진짜는 몇 개?</td>
-          <td>오탐(FP)의 비용이 클 때 (예: 스팸 필터)</td>
-      </tr>
-      <tr>
-          <td>Recall</td>
-          <td>진짜 Positive 중 몇 개를 찾아냈나?</td>
-          <td>미탐(FN)의 비용이 클 때 (예: 질병 진단)</td>
-      </tr>
-      <tr>
-          <td>F1 Score</td>
-          <td>Precision과 Recall의 균형은?</td>
-          <td>데이터가 불균형할 때 종합 평가</td>
-      </tr>
-      <tr>
-          <td>FPR / ROC-AUC</td>
-          <td>Negative를 얼마나 Positive로 착각했나?</td>
-          <td>임계값(threshold)에 따른 전체 성능 비교</td>
-      </tr>
-  </tbody>
-</table></div>
-<p>정확도 하나만 보고 모델을 평가하는 것은 위험하며, <strong>문제 상황에 맞는 지표를 선택</strong>하는 것이 중요합니다.</p>
-
-</section>
-
-
-    <footer class="article-meta article-footer">
-    
-
-    </footer>
-
-
-    
-        <link 
-                rel="stylesheet" 
-                href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI&#43;WdtXRGWt2kTvGFasHpSy3SV"crossorigin="anonymous"
-            ><script 
-                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG&#43;vnGctmUb0ZY0l8"crossorigin="anonymous"
-                defer
-                >
-            </script><script 
-                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"integrity="sha384-&#43;VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4&#43;/RRE05"crossorigin="anonymous"
-                defer
-                >
-            </script><script>
-    window.addEventListener("DOMContentLoaded", () => {
-        const elementsToRender = [".main-article", ".widget--toc"];
-
-        elementsToRender.forEach(selector => {
-            const element = document.querySelector(selector);
-            if (element) {
-                renderMathInElement(element, {
-                    delimiters: [
-                        { left: "$$", right: "$$", display: true },
-                        { left: "$", right: "$", display: false },
-                        { left: "\\(", right: "\\)", display: false },
-                        { left: "\\[", right: "\\]", display: true }
-                    ],
-                    ignoredClasses: ["gist"]
-                });
-            }
-        });
-    });
-</script>
-    
-</article>
-
-    
-
-    
-
-     
-    
-        
-
-        <div class="disqus-container">
-    
-</div>
-
-<style>
-    .disqus-container {
-        background-color: var(--card-background);
-        border-radius: var(--card-border-radius);
-        box-shadow: var(--shadow-l1);
-        padding: var(--card-padding);
-    }
-</style>
-
-<script>
-    window.addEventListener('onColorSchemeChange', (e) => {
-        if (typeof DISQUS == 'object') {
-            DISQUS.reset({
-                reload: true
-            });
-        }
-    })
-</script>
-
-    
-
-    <footer class="site-footer">
-    <section class="copyright">
-        &copy; 
-        
-        2026 LucasPark Blog
-    </section>
-    
-    <section class="powerby">
-        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
-        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="4.0.3">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
-    </section>
-</footer>
-
-
-    
-
-
-
-<script type="module">
+$$</p><h3 id=예시-게임-내-비정상-사용자-검출>예시: 게임 내 비정상 사용자 검출</h3><p>FPR이 높다는 것은 <strong>정상 사용자를 비정상 사용자로 잘못 검출</strong>하는 경우가 많다는 의미입니다. 이 상태에서 비정상 사용자에게 페널티(제재)를 부여하면, <strong>선의의 정상 사용자가 피해</strong>를 입게 됩니다.</p><hr><h2 id=7-roc-curve와-auc>7. ROC Curve와 AUC</h2><ul><li><strong>x축: False Positive Rate</strong>, <strong>y축: Recall(True Positive Rate)</strong> 값으로 시각화한 그래프</li><li>커브가 <strong>왼쪽 위로 당겨질수록</strong> Classifier의 성능이 향상됨을 의미</li><li><strong>AUC (Area Under Curve)</strong> = ROC Curve 아래의 면적<ul><li>AUC = 0.5인 대각선 부분은 Classifier의 최하 성능(랜덤 추측 수준)을 의미</li><li>AUC가 1에 가까울수록 좋은 분류기</li></ul></li></ul><hr><h2 id=8-코드로-평가-지표-구현하기>8. 코드로 평가 지표 구현하기</h2><p>강의에서 다룬 <code>sklearn.metrics</code>를 활용한 평가 지표 계산 코드입니다. 아래 코드는 <code>model</code>이 이미 학습(fit)까지 완료된 분류 모델이고, <code>X_valid</code>, <code>y_valid</code>는 검증용 데이터라고 가정합니다.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#f92672>from</span> sklearn.metrics <span style=color:#f92672>import</span> accuracy_score, precision_score, recall_score, f1_score
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 검증 데이터에 대한 예측</span>
+</span></span><span style=display:flex><span>y_pred <span style=color:#f92672>=</span> model<span style=color:#f92672>.</span>predict(X_valid)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 정확도 계산</span>
+</span></span><span style=display:flex><span>accuracy <span style=color:#f92672>=</span> accuracy_score(y_valid, y_pred)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 정밀도 계산</span>
+</span></span><span style=display:flex><span>precision <span style=color:#f92672>=</span> precision_score(y_valid, y_pred)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 재현율 계산</span>
+</span></span><span style=display:flex><span>recall <span style=color:#f92672>=</span> recall_score(y_valid, y_pred)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># F1 Score 계산</span>
+</span></span><span style=display:flex><span>f1 <span style=color:#f92672>=</span> f1_score(y_valid, y_pred)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>print(<span style=color:#e6db74>&#34;Accuracy:&#34;</span>, accuracy)
+</span></span><span style=display:flex><span>print(<span style=color:#e6db74>&#34;Precision:&#34;</span>, precision)
+</span></span><span style=display:flex><span>print(<span style=color:#e6db74>&#34;Recall:&#34;</span>, recall)
+</span></span><span style=display:flex><span>print(<span style=color:#e6db74>&#34;F1 Score:&#34;</span>, f1)
+</span></span></code></pre></div><h3 id=추가-예시---혼동-행렬-직접-확인하기>추가 예시 ① — 혼동 행렬 직접 확인하기</h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#f92672>from</span> sklearn.metrics <span style=color:#f92672>import</span> confusion_matrix, ConfusionMatrixDisplay
+</span></span><span style=display:flex><span><span style=color:#f92672>import</span> matplotlib.pyplot <span style=color:#66d9ef>as</span> plt
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>cm <span style=color:#f92672>=</span> confusion_matrix(y_valid, y_pred)
+</span></span><span style=display:flex><span>print(<span style=color:#e6db74>&#34;혼동 행렬:</span><span style=color:#ae81ff>\n</span><span style=color:#e6db74>&#34;</span>, cm)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 시각화</span>
+</span></span><span style=display:flex><span>disp <span style=color:#f92672>=</span> ConfusionMatrixDisplay(confusion_matrix<span style=color:#f92672>=</span>cm, display_labels<span style=color:#f92672>=</span>[<span style=color:#e6db74>&#34;Negative&#34;</span>, <span style=color:#e6db74>&#34;Positive&#34;</span>])
+</span></span><span style=display:flex><span>disp<span style=color:#f92672>.</span>plot(cmap<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;Blues&#34;</span>)
+</span></span><span style=display:flex><span>plt<span style=color:#f92672>.</span>show()
+</span></span></code></pre></div><h3 id=추가-예시---불균형-데이터에서-정확도의-함정-재현하기>추가 예시 ② — 불균형 데이터에서 정확도의 함정 재현하기</h3><p>바로 위 2번 섹션에서 다룬 &ldquo;항공 데이터 90%&rdquo; 예시를, 실제 코드로 재현해서 정확도만 보면 안 되는 이유를 직접 확인해봅니다.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#f92672>import</span> numpy <span style=color:#66d9ef>as</span> np
+</span></span><span style=display:flex><span><span style=color:#f92672>from</span> sklearn.metrics <span style=color:#f92672>import</span> accuracy_score, precision_score, recall_score, f1_score
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 항공 데이터 예시: 90만개 정상(0), 10만개 지연(1)</span>
+</span></span><span style=display:flex><span>y_true <span style=color:#f92672>=</span> np<span style=color:#f92672>.</span>array([<span style=color:#ae81ff>0</span>] <span style=color:#f92672>*</span> <span style=color:#ae81ff>900_000</span> <span style=color:#f92672>+</span> [<span style=color:#ae81ff>1</span>] <span style=color:#f92672>*</span> <span style=color:#ae81ff>100_000</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 모델이 항상 &#34;정상&#34;이라고만 예측하는 극단적인 경우</span>
+</span></span><span style=display:flex><span>y_pred_dummy <span style=color:#f92672>=</span> np<span style=color:#f92672>.</span>zeros(<span style=color:#ae81ff>1_000_000</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>print(<span style=color:#e6db74>&#34;Accuracy:&#34;</span>, accuracy_score(y_true, y_pred_dummy))   <span style=color:#75715e># 0.9 (90%)</span>
+</span></span><span style=display:flex><span>print(<span style=color:#e6db74>&#34;Precision:&#34;</span>, precision_score(y_true, y_pred_dummy, zero_division<span style=color:#f92672>=</span><span style=color:#ae81ff>0</span>))  <span style=color:#75715e># 0.0</span>
+</span></span><span style=display:flex><span>print(<span style=color:#e6db74>&#34;Recall:&#34;</span>, recall_score(y_true, y_pred_dummy, zero_division<span style=color:#f92672>=</span><span style=color:#ae81ff>0</span>))        <span style=color:#75715e># 0.0</span>
+</span></span><span style=display:flex><span>print(<span style=color:#e6db74>&#34;F1 Score:&#34;</span>, f1_score(y_true, y_pred_dummy, zero_division<span style=color:#f92672>=</span><span style=color:#ae81ff>0</span>))          <span style=color:#75715e># 0.0</span>
+</span></span></code></pre></div><p>정확도는 90%로 높지만, Precision/Recall/F1은 모두 0에 가까워 <strong>이 모델이 사실상 아무것도 예측하지 못하고 있음</strong>을 명확히 보여줍니다.</p><h3 id=추가-예시---roc-curve와-auc-그리기>추가 예시 ③ — ROC Curve와 AUC 그리기</h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#f92672>from</span> sklearn.metrics <span style=color:#f92672>import</span> roc_curve, roc_auc_score
+</span></span><span style=display:flex><span><span style=color:#f92672>import</span> matplotlib.pyplot <span style=color:#66d9ef>as</span> plt
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 모델이 예측한 Positive 클래스 확률</span>
+</span></span><span style=display:flex><span>y_proba <span style=color:#f92672>=</span> model<span style=color:#f92672>.</span>predict_proba(X_valid)[:, <span style=color:#ae81ff>1</span>]
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>fpr, tpr, thresholds <span style=color:#f92672>=</span> roc_curve(y_valid, y_proba)
+</span></span><span style=display:flex><span>auc <span style=color:#f92672>=</span> roc_auc_score(y_valid, y_proba)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>plt<span style=color:#f92672>.</span>plot(fpr, tpr, label<span style=color:#f92672>=</span><span style=color:#e6db74>f</span><span style=color:#e6db74>&#34;ROC Curve (AUC = </span><span style=color:#e6db74>{</span>auc<span style=color:#e6db74>:</span><span style=color:#e6db74>.2f</span><span style=color:#e6db74>}</span><span style=color:#e6db74>)&#34;</span>)
+</span></span><span style=display:flex><span>plt<span style=color:#f92672>.</span>plot([<span style=color:#ae81ff>0</span>, <span style=color:#ae81ff>1</span>], [<span style=color:#ae81ff>0</span>, <span style=color:#ae81ff>1</span>], linestyle<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;--&#34;</span>, color<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;gray&#34;</span>, label<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;Random (AUC = 0.5)&#34;</span>)
+</span></span><span style=display:flex><span>plt<span style=color:#f92672>.</span>xlabel(<span style=color:#e6db74>&#34;False Positive Rate&#34;</span>)
+</span></span><span style=display:flex><span>plt<span style=color:#f92672>.</span>ylabel(<span style=color:#e6db74>&#34;True Positive Rate (Recall)&#34;</span>)
+</span></span><span style=display:flex><span>plt<span style=color:#f92672>.</span>title(<span style=color:#e6db74>&#34;ROC Curve&#34;</span>)
+</span></span><span style=display:flex><span>plt<span style=color:#f92672>.</span>legend()
+</span></span><span style=display:flex><span>plt<span style=color:#f92672>.</span>show()
+</span></span></code></pre></div><h3 id=추가-예시---classification_report로-한-번에-확인하기>추가 예시 ④ — classification_report로 한 번에 확인하기</h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#f92672>from</span> sklearn.metrics <span style=color:#f92672>import</span> classification_report
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># Precision, Recall, F1 Score를 클래스별로 한 번에 확인</span>
+</span></span><span style=display:flex><span>print(classification_report(y_valid, y_pred, target_names<span style=color:#f92672>=</span>[<span style=color:#e6db74>&#34;Negative&#34;</span>, <span style=color:#e6db74>&#34;Positive&#34;</span>]))
+</span></span></code></pre></div><hr><h2 id=마무리>마무리</h2><p>오늘 정리한 분류 평가 지표를 한 줄로 요약하면 다음과 같습니다.</p><div class=table-wrapper><table><thead><tr><th>지표</th><th>핵심 질문</th><th>중요하게 쓰이는 상황</th></tr></thead><tbody><tr><td>Accuracy</td><td>전체적으로 얼마나 맞혔나?</td><td>클래스가 균형 잡혀 있을 때</td></tr><tr><td>Precision</td><td>Positive로 예측한 것 중 진짜는 몇 개?</td><td>오탐(FP)의 비용이 클 때 (예: 스팸 필터)</td></tr><tr><td>Recall</td><td>진짜 Positive 중 몇 개를 찾아냈나?</td><td>미탐(FN)의 비용이 클 때 (예: 질병 진단)</td></tr><tr><td>F1 Score</td><td>Precision과 Recall의 균형은?</td><td>데이터가 불균형할 때 종합 평가</td></tr><tr><td>FPR / ROC-AUC</td><td>Negative를 얼마나 Positive로 착각했나?</td><td>임계값(threshold)에 따른 전체 성능 비교</td></tr></tbody></table></div><p>정확도 하나만 보고 모델을 평가하는 것은 위험하며, <strong>문제 상황에 맞는 지표를 선택</strong>하는 것이 중요합니다.</p></section><footer class="article-meta article-footer"></footer><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css integrity=sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV crossorigin=anonymous><script src=https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js integrity=sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG+vnGctmUb0ZY0l8 crossorigin=anonymous defer></script><script src=https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js integrity=sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05 crossorigin=anonymous defer></script><script>window.addEventListener("DOMContentLoaded",()=>{const e=[".main-article",".widget--toc"];e.forEach(e=>{const t=document.querySelector(e);t&&renderMathInElement(t,{delimiters:[{left:"$$",right:"$$",display:!0},{left:"$",right:"$",display:!1},{left:"\\(",right:"\\)",display:!1},{left:"\\[",right:"\\]",display:!0}],ignoredClasses:["gist"]})})})</script></article><div class=disqus-container></div><style>.disqus-container{background-color:var(--card-background);border-radius:var(--card-border-radius);box-shadow:var(--shadow-l1);padding:var(--card-padding)}</style><script>window.addEventListener("onColorSchemeChange",e=>{typeof DISQUS=="object"&&DISQUS.reset({reload:!0})})</script><footer class=site-footer><section class=copyright>&copy;
+2026 LucasPark Blog</section><section class=powerby>Built with <a href=https://gohugo.io/ target=_blank rel=noopener>Hugo</a><br>Theme <b><a href=https://github.com/CaiJimmy/hugo-theme-stack target=_blank rel=noopener data-version=4.0.3>Stack</a></b> designed by <a href=https://jimmycai.com target=_blank rel=noopener>Jimmy</a></section></footer><script type=module>
     import gallery from '\/ts\/gallery.js';
 
     const articleContent = document.querySelector('.article-content');
@@ -614,15 +105,4 @@ $$</p>
         });
         lightbox.init();
     }
-</script>
-
-    
-
-            </main>
-        </div>
-        
-<script type="text/javascript" src="/ts/main.1ff1e5fdc4e178ed422e50aa407526dc552f26342d729343fded19416194382c.js" defer></script>
-
-
-    </body>
-</html>
+</script></main></div><script type=text/javascript src=/ts/main.1ff1e5fdc4e178ed422e50aa407526dc552f26342d729343fded19416194382c.js defer></script></body></html>
