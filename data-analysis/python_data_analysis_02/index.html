@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko-kr" dir="ltr">
     <head><meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="들어가며 지난 글 [Python 자료형(Data Type) 이해하기] Python의 기본 자료형을 살펴봤습니다.\n오늘은\n조건문 (if / elif / else) 반복문 (for / while) 제어문 (break) 함수 (function) 을 정리하였습니다.\n데이터 분석의 기초 문법이자, 이후 Pandas와 Numpy를 다룰 때 계속 사용하게 되는 개념들입니다.\n1. 조건문 (Conditional Statement) 조건문은 조건에 따라 실행되는 제어문입니다. 조건이 참(True)이냐 거짓(False)이냐에 따라 실행할 코드를 다르게 지정할 수 있습니다.\nif / else height = 180 if height &gt; 175: print(&#39;175cm 이상입니다. 탑승하세요.&#39;) else: print(&#39;고객님은 탑승할 수 없습니다.&#39;) 결과\n">
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="들어가며 오늘은\n조건문 (if / elif / else) 반복문 (for / while) 제어문 (break) 함수 (function) 을 정리하였습니다.\n데이터 분석의 기초 문법이자, 이후 Pandas와 Numpy를 다룰 때 계속 사용하게 되는 개념들입니다.\n1. 조건문 (Conditional Statement) 조건문은 조건에 따라 실행되는 제어문입니다.\n조건이 참(True)이냐 거짓(False)이냐에 따라 실행할 코드를 다르게 지정할 수 있습니다.\nif / else height = 180 if height &gt; 175: print(&#39;175cm 이상입니다. 탑승하세요.&#39;) else: print(&#39;고객님은 탑승할 수 없습니다.&#39;) 결과\n175cm 이상입니다. 탑승하세요. height = 160 이라면 조건이 거짓이므로 else 블록이 실행됩니다.\n">
 <title>Python 조건문·반복문·함수</title>
 
 
@@ -13,12 +13,12 @@
 
 
 <link rel="stylesheet" href="/scss/style.min.e62e09c60ba428a627e03568fa3df938f6a8224f815b5846f00816c17d4a0be4.css"><meta property='og:title' content="Python 조건문·반복문·함수">
-<meta property='og:description' content="들어가며 지난 글 [Python 자료형(Data Type) 이해하기] Python의 기본 자료형을 살펴봤습니다.\n오늘은\n조건문 (if / elif / else) 반복문 (for / while) 제어문 (break) 함수 (function) 을 정리하였습니다.\n데이터 분석의 기초 문법이자, 이후 Pandas와 Numpy를 다룰 때 계속 사용하게 되는 개념들입니다.\n1. 조건문 (Conditional Statement) 조건문은 조건에 따라 실행되는 제어문입니다. 조건이 참(True)이냐 거짓(False)이냐에 따라 실행할 코드를 다르게 지정할 수 있습니다.\nif / else height = 180 if height &gt; 175: print(&#39;175cm 이상입니다. 탑승하세요.&#39;) else: print(&#39;고객님은 탑승할 수 없습니다.&#39;) 결과\n">
+<meta property='og:description' content="들어가며 오늘은\n조건문 (if / elif / else) 반복문 (for / while) 제어문 (break) 함수 (function) 을 정리하였습니다.\n데이터 분석의 기초 문법이자, 이후 Pandas와 Numpy를 다룰 때 계속 사용하게 되는 개념들입니다.\n1. 조건문 (Conditional Statement) 조건문은 조건에 따라 실행되는 제어문입니다.\n조건이 참(True)이냐 거짓(False)이냐에 따라 실행할 코드를 다르게 지정할 수 있습니다.\nif / else height = 180 if height &gt; 175: print(&#39;175cm 이상입니다. 탑승하세요.&#39;) else: print(&#39;고객님은 탑승할 수 없습니다.&#39;) 결과\n175cm 이상입니다. 탑승하세요. height = 160 이라면 조건이 거짓이므로 else 블록이 실행됩니다.\n">
 <meta property='og:url' content='https://lucaspark-10.github.io/data-analysis/python_data_analysis_02/'>
 <meta property='og:site_name' content='LucasPark Blog'>
 <meta property='og:type' content='article'><meta property='article:section' content='Data-Analysis' /><meta property='article:published_time' content='2026-07-03T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2026-07-03T00:00:00&#43;00:00'/>
 <meta name="twitter:title" content="Python 조건문·반복문·함수">
-<meta name="twitter:description" content="들어가며 지난 글 [Python 자료형(Data Type) 이해하기] Python의 기본 자료형을 살펴봤습니다.\n오늘은\n조건문 (if / elif / else) 반복문 (for / while) 제어문 (break) 함수 (function) 을 정리하였습니다.\n데이터 분석의 기초 문법이자, 이후 Pandas와 Numpy를 다룰 때 계속 사용하게 되는 개념들입니다.\n1. 조건문 (Conditional Statement) 조건문은 조건에 따라 실행되는 제어문입니다. 조건이 참(True)이냐 거짓(False)이냐에 따라 실행할 코드를 다르게 지정할 수 있습니다.\nif / else height = 180 if height &gt; 175: print(&#39;175cm 이상입니다. 탑승하세요.&#39;) else: print(&#39;고객님은 탑승할 수 없습니다.&#39;) 결과\n">
+<meta name="twitter:description" content="들어가며 오늘은\n조건문 (if / elif / else) 반복문 (for / while) 제어문 (break) 함수 (function) 을 정리하였습니다.\n데이터 분석의 기초 문법이자, 이후 Pandas와 Numpy를 다룰 때 계속 사용하게 되는 개념들입니다.\n1. 조건문 (Conditional Statement) 조건문은 조건에 따라 실행되는 제어문입니다.\n조건이 참(True)이냐 거짓(False)이냐에 따라 실행할 코드를 다르게 지정할 수 있습니다.\nif / else height = 180 if height &gt; 175: print(&#39;175cm 이상입니다. 탑승하세요.&#39;) else: print(&#39;고객님은 탑승할 수 없습니다.&#39;) 결과\n175cm 이상입니다. 탑승하세요. height = 160 이라면 조건이 거짓이므로 else 블록이 실행됩니다.\n">
       <script async src="https://www.googletagmanager.com/gtag/js?id=G-EVK5B22CB3"></script>
       <script>
         var doNotTrack = false;
@@ -204,8 +204,7 @@
     
     
     <h1 id="들어가며">들어가며
-</h1><p>지난 글 [Python 자료형(Data Type) 이해하기] Python의 기본 자료형을 살펴봤습니다.</p>
-<p>오늘은</p>
+</h1><p>오늘은</p>
 <ul>
 <li>조건문 (if / elif / else)</li>
 <li>반복문 (for / while)</li>
@@ -216,7 +215,8 @@
 <p>데이터 분석의 기초 문법이자, 이후 Pandas와 Numpy를 다룰 때 계속 사용하게 되는 개념들입니다.</p>
 <hr>
 <h2 id="1-조건문-conditional-statement">1. 조건문 (Conditional Statement)
-</h2><p>조건문은 <strong>조건에 따라 실행되는 제어문</strong>입니다. 조건이 참(True)이냐 거짓(False)이냐에 따라 실행할 코드를 다르게 지정할 수 있습니다.</p>
+</h2><p>조건문은 <strong>조건에 따라 실행되는 제어문</strong>입니다.</p>
+<p>조건이 참(True)이냐 거짓(False)이냐에 따라 실행할 코드를 다르게 지정할 수 있습니다.</p>
 <h3 id="if--else">if / else
 </h3><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>height <span style="color:#f92672">=</span> <span style="color:#ae81ff">180</span>
 </span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> height <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">175</span>:
@@ -228,7 +228,8 @@
 </code></pre><p><code>height = 160</code> 이라면 조건이 거짓이므로 <code>else</code> 블록이 실행됩니다.</p>
 <pre tabindex="0"><code>고객님은 탑승할 수 없습니다.
 </code></pre><h3 id="if--elif--else">if / elif / else
-</h3><p>조건이 여러 개일 때는 <code>elif</code>를 사용합니다. 위에서부터 순서대로 조건을 검사하며, 하나라도 참이면 그 이후 조건은 검사하지 않습니다.</p>
+</h3><p>조건이 여러 개일 때는 <code>elif</code>를 사용합니다.</p>
+<p>위에서부터 순서대로 조건을 검사하며, 하나라도 참이면 그 이후 조건은 검사하지 않습니다.</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>height <span style="color:#f92672">=</span> <span style="color:#ae81ff">170</span>
 </span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> height <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">175</span>:
 </span></span><span style="display:flex;"><span>    print(<span style="color:#e6db74">&#39;175cm 이상입니다. 탑승하세요.&#39;</span>)
@@ -252,13 +253,15 @@
 </span></span><span style="display:flex;"><span>        print(<span style="color:#e6db74">&#39;부모님과 함께 탑승해야 합니다.&#39;</span>)
 </span></span><span style="display:flex;"><span><span style="color:#66d9ef">else</span>:
 </span></span><span style="display:flex;"><span>    print(<span style="color:#e6db74">&#39;고객님은 탑승할 수 없습니다.&#39;</span>)
-</span></span></code></pre></div><p><code>with_parent = 'yes'</code>일 때 결과</p>
+</span></span></code></pre></div><p>165 &lt; height &lt; 175이면서</p>
+<p><code>with_parent = 'yes'</code>일 때 결과</p>
 <pre tabindex="0"><code>부모님과 탑승하세요.
 </code></pre><p><code>with_parent = 'no'</code>일 때 결과</p>
 <pre tabindex="0"><code>부모님과 함께 탑승해야 합니다.
 </code></pre><hr>
 <h2 id="2-반복문-loop">2. 반복문 (Loop)
-</h2><p>반복문은 <strong>프로그램이 특정 코드를 반복하여 실행하도록 하는 제어문</strong>입니다. Python에는 <code>for</code>문과 <code>while</code>문이 있습니다.</p>
+</h2><p>반복문은 <strong>프로그램이 특정 코드를 반복하여 실행하도록 하는 제어문</strong>입니다.</p>
+<p>Python에는 <code>for</code>문과 <code>while</code>문이 있습니다.</p>
 <h3 id="for문과-range">for문과 range()
 </h3><p><code>range(start, end, stride)</code> 형태로 사용하며, <code>range(5)</code>처럼 하나만 넣으면 0부터 4까지(end 미포함) 생성됩니다.</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">5</span>):
@@ -323,9 +326,17 @@
 3
 </code></pre>
     <blockquote>
-        <p><strong>Tip. <code>print</code>의 <code>end=</code> 옵션</strong>
-Python의 <code>print()</code>문은 기본적으로 출력 끝에 줄바꿈(<code>\n</code>)이 포함되어 있습니다.
-줄바꿈을 원하지 않는다면 <code>end=''</code>처럼 원하는 문자를 지정할 수 있습니다.</p>
+        <p><strong>Tip. <code>print</code>의 <code>end=</code> 옵션</strong></p>
+
+    </blockquote>
+
+    <blockquote>
+        <p>Python의 <code>print()</code>문은 기본적으로 출력 끝에 줄바꿈(<code>\n</code>)이 포함되어 있습니다.</p>
+
+    </blockquote>
+
+    <blockquote>
+        <p>줄바꿈을 원하지 않는다면 <code>end=''</code>처럼 원하는 문자를 지정할 수 있습니다.</p>
 
     </blockquote>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">4</span>):
@@ -338,7 +349,8 @@ Python의 <code>print()</code>문은 기본적으로 출력 끝에 줄바꿈(<co
 **2
 **3
 </code></pre><h3 id="while문">while문
-</h3><p><code>while</code> 조건이 참인 동안 반복해서 실행됩니다. 조건이 거짓이 되면 반복문을 빠져나옵니다.</p>
+</h3><p><code>while</code> 조건이 참인 동안 반복해서 실행됩니다.</p>
+<p>조건이 거짓이 되면 반복문을 빠져나옵니다.</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>a <span style="color:#f92672">=</span> <span style="color:#ae81ff">3</span>
 </span></span><span style="display:flex;"><span><span style="color:#66d9ef">while</span> a <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">5</span>:
 </span></span><span style="display:flex;"><span>    a <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
@@ -389,7 +401,8 @@ Python의 <code>print()</code>문은 기본적으로 출력 끝에 줄바꿈(<co
 </ol>
 <hr>
 <h2 id="4-함수-function">4. 함수 (Function)
-</h2><p>함수는 <strong>특정 작업을 수행하기 위해 독립적으로 설계된 코드의 집합</strong>입니다. 같은 코드를 반복해서 작성하지 않고, 필요할 때마다 호출해서 재사용할 수 있습니다.</p>
+</h2><p>함수는 <strong>특정 작업을 수행하기 위해 독립적으로 설계된 코드의 집합</strong>입니다.</p>
+<p>같은 코드를 반복해서 작성하지 않고, 필요할 때마다 호출해서 재사용할 수 있습니다.</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">data_science</span>():
 </span></span><span style="display:flex;"><span>    print(<span style="color:#e6db74">&#34;Hello World&#34;</span>)
 </span></span><span style="display:flex;"><span>
@@ -397,7 +410,8 @@ Python의 <code>print()</code>문은 기본적으로 출력 끝에 줄바꿈(<co
 </span></span></code></pre></div><p>결과</p>
 <pre tabindex="0"><code>Hello World
 </code></pre><h3 id="리턴-return">리턴 (return)
-</h3><p><code>return</code>은 함수를 종료하며 결과 데이터를 반환하는 용도로 사용합니다. <code>return</code>이 없으면 함수는 <code>None</code>을 반환합니다.</p>
+</h3><p><code>return</code>은 함수를 종료하며 결과 데이터를 반환하는 용도로 사용합니다.</p>
+<p><code>return</code>이 없으면 함수는 <code>None</code>을 반환합니다.</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">no_return</span>():
 </span></span><span style="display:flex;"><span>    a <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;hi&#39;</span>
 </span></span><span style="display:flex;"><span>
@@ -426,7 +440,15 @@ Python의 <code>print()</code>문은 기본적으로 출력 끝에 줄바꿈(<co
 </span></span><span style="display:flex;"><span>    print(num1 <span style="color:#f92672">-</span> num2)
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>minus(<span style="color:#ae81ff">2</span>)   <span style="color:#75715e"># num1=2 (입력값), num2=2 (디폴트값)</span>
-</span></span></code></pre></div><p>결과</p>
+</span></span></code></pre></div><p>여기서 num1=3, num2=2는 **&ldquo;만약 호출할 때 값을 안 주면 이걸 쓸게&rdquo;**라는 기본값(디폴트) 설정입니다.</p>
+<p>minus(2) 부르면 파라미터가 하나만 전달됐죠. 파이썬은 순서대로 채웁니다.</p>
+<p>num1 ← 여기에 2가 들어감 (내가 넣어준 값)</p>
+<p>num2 ← 아무 값도 안 줬으니 디폴트값 2가 그대로 들어감</p>
+<p>즉 실제로는 이렇게 실행은</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>pythondef minus(num1<span style="color:#f92672">=</span><span style="color:#ae81ff">2</span>, num2<span style="color:#f92672">=</span><span style="color:#ae81ff">2</span>):  <span style="color:#75715e"># num1은 내가 준 값으로 교체됨</span>
+</span></span><span style="display:flex;"><span>    print(num1 <span style="color:#f92672">-</span> num2)
+</span></span></code></pre></div><p>그래서 계산은 2 - 2 = 0 → 결과 0이 나옵니다.</p>
+<p>결과</p>
 <pre tabindex="0"><code>0
 </code></pre><h3 id="전역-변수와-지역-변수">전역 변수와 지역 변수
 </h3><ul>
@@ -435,23 +457,23 @@ Python의 <code>print()</code>문은 기본적으로 출력 끝에 줄바꿈(<co
 </ul>
 <p>지역 변수를 함수 밖에서 사용하면 오류가 발생합니다.</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">print_lv</span>():
-</span></span><span style="display:flex;"><span>    lv <span style="color:#f92672">=</span> <span style="color:#ae81ff">100</span>
-</span></span><span style="display:flex;"><span>    print(lv)
+</span></span><span style="display:flex;"><span>    lv <span style="color:#f92672">=</span> <span style="color:#ae81ff">100</span>        <span style="color:#75715e"># &lt;-- 지역 변수 (함수 안에서만 존재)</span>
+</span></span><span style="display:flex;"><span>    print(lv)       <span style="color:#75715e"># &lt;-- 지역 변수 사용 (함수 안이라 OK)</span>
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>print_lv()
-</span></span><span style="display:flex;"><span>print(lv)   <span style="color:#75715e"># 함수 밖에서 지역 변수 lv 사용 → 오류</span>
+</span></span><span style="display:flex;"><span>print(lv)   <span style="color:#75715e"># &lt;-- 오류! lv는 함수 밖에서는 존재하지 않음 (지역 변수라서 함수가 끝나면 사라짐)</span>
 </span></span></code></pre></div><p>결과</p>
 <pre tabindex="0"><code>100
 NameError: name &#39;lv&#39; is not defined
 </code></pre><p>전역 변수와 같은 이름의 지역 변수를 함수 안에서 선언하면, 함수 안에서는 지역 변수가 우선 사용됩니다.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>gv <span style="color:#f92672">=</span> <span style="color:#ae81ff">10</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>gv <span style="color:#f92672">=</span> <span style="color:#ae81ff">10</span>                 <span style="color:#75715e"># &lt;-- 전역 변수 (파일 전체 어디서든 접근 가능)</span>
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">print_gv</span>():
-</span></span><span style="display:flex;"><span>    gv <span style="color:#f92672">=</span> <span style="color:#ae81ff">100</span>
-</span></span><span style="display:flex;"><span>    print(gv)
+</span></span><span style="display:flex;"><span>    gv <span style="color:#f92672">=</span> <span style="color:#ae81ff">100</span>            <span style="color:#75715e"># &lt;-- 지역 변수 (전역 변수 gv와 이름은 같지만 별개의 변수!)</span>
+</span></span><span style="display:flex;"><span>    print(gv)           <span style="color:#75715e"># &lt;-- 여기선 지역 변수 gv(=100)가 우선 사용됨</span>
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>print_gv()
-</span></span><span style="display:flex;"><span>print(gv)
+</span></span><span style="display:flex;"><span>print(gv)               <span style="color:#75715e"># &lt;-- 함수 밖이므로 전역 변수 gv(=10)가 출력됨 (함수 안의 gv=100은 영향 없음)</span>
 </span></span></code></pre></div><p>결과</p>
 <pre tabindex="0"><code>100
 10
