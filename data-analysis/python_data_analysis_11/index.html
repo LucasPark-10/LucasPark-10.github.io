@@ -1,524 +1,65 @@
-<!DOCTYPE html>
-<html lang="ko-kr" dir="ltr">
-    <head><meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="들어가며 오늘은 행렬(Matrix)의 정의와 기본 연산, 그리고 선형방정식(Linear Equations)을 정리하였습니다.\n1. 행렬의 정의 행렬은 수나 식을 직사각형 모양으로 배열한 것입니다.\n예를 들어 $2 \\times 3$ 행렬이란 행이 2개, 열이 3개로 $2 \\times 3 = 6$ 개의 원소를 가집니다.\n$$ \\begin{pmatrix} 1 &amp; 2 &amp; -1 \\\\ 3 &amp; 2 &amp; -1 \\end{pmatrix}, \\quad \\begin{pmatrix} 3 &amp; 5 &amp; -7 \\\\ 0 &amp; 4 &amp; 1 \\end{pmatrix} $$\n일반적으로 $m \\times n$ 행렬이란 $m$ 개의 행과 $n$ 개의 열을 직사각형 모양으로 배열해서 $m \\times n$ 개의 원소를 가지는 집합입니다.\n">
-<title>[데이터분석 수학] 행렬 이해하기</title>
-
-
-<link rel="canonical" href="https://lucaspark-10.github.io/data-analysis/python_data_analysis_11/">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
-
-
-<link rel="stylesheet" href="/scss/style.min.e62e09c60ba428a627e03568fa3df938f6a8224f815b5846f00816c17d4a0be4.css"><meta property='og:title' content="[데이터분석 수학] 행렬 이해하기">
-<meta property='og:description' content="들어가며 오늘은 행렬(Matrix)의 정의와 기본 연산, 그리고 선형방정식(Linear Equations)을 정리하였습니다.\n1. 행렬의 정의 행렬은 수나 식을 직사각형 모양으로 배열한 것입니다.\n예를 들어 $2 \\times 3$ 행렬이란 행이 2개, 열이 3개로 $2 \\times 3 = 6$ 개의 원소를 가집니다.\n$$ \\begin{pmatrix} 1 &amp; 2 &amp; -1 \\\\ 3 &amp; 2 &amp; -1 \\end{pmatrix}, \\quad \\begin{pmatrix} 3 &amp; 5 &amp; -7 \\\\ 0 &amp; 4 &amp; 1 \\end{pmatrix} $$\n일반적으로 $m \\times n$ 행렬이란 $m$ 개의 행과 $n$ 개의 열을 직사각형 모양으로 배열해서 $m \\times n$ 개의 원소를 가지는 집합입니다.\n">
-<meta property='og:url' content='https://lucaspark-10.github.io/data-analysis/python_data_analysis_11/'>
-<meta property='og:site_name' content='LucasPark Blog'>
-<meta property='og:type' content='article'><meta property='article:section' content='Data-Analysis' /><meta property='article:published_time' content='2026-07-12T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2026-07-12T00:00:00&#43;00:00'/>
-<meta name="twitter:title" content="[데이터분석 수학] 행렬 이해하기">
-<meta name="twitter:description" content="들어가며 오늘은 행렬(Matrix)의 정의와 기본 연산, 그리고 선형방정식(Linear Equations)을 정리하였습니다.\n1. 행렬의 정의 행렬은 수나 식을 직사각형 모양으로 배열한 것입니다.\n예를 들어 $2 \\times 3$ 행렬이란 행이 2개, 열이 3개로 $2 \\times 3 = 6$ 개의 원소를 가집니다.\n$$ \\begin{pmatrix} 1 &amp; 2 &amp; -1 \\\\ 3 &amp; 2 &amp; -1 \\end{pmatrix}, \\quad \\begin{pmatrix} 3 &amp; 5 &amp; -7 \\\\ 0 &amp; 4 &amp; 1 \\end{pmatrix} $$\n일반적으로 $m \\times n$ 행렬이란 $m$ 개의 행과 $n$ 개의 열을 직사각형 모양으로 배열해서 $m \\times n$ 개의 원소를 가지는 집합입니다.\n">
-      <script async src="https://www.googletagmanager.com/gtag/js?id=G-EVK5B22CB3"></script>
-      <script>
-        var doNotTrack = false;
-        if ( true ) {
-          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
-          var doNotTrack = (dnt == "1" || dnt == "yes");
-        }
-        if (!doNotTrack) {
-          window.dataLayer = window.dataLayer || [];
-          function gtag(){dataLayer.push(arguments);}
-          gtag('js', new Date());
-          gtag('config', 'G-EVK5B22CB3');
-        }
-      </script>
-    </head>
-    <body class="
-    article-page
-    ">
-    <script>
-        (function() {
-            const colorSchemeKey = 'StackColorScheme';
-            if(!localStorage.getItem(colorSchemeKey)){
-                localStorage.setItem(colorSchemeKey, "auto");
-            }
-        })();
-    </script><script>
-    (function() {
-        const colorSchemeKey = 'StackColorScheme';
-        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
-        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
-
-        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
-            
-
-            document.documentElement.dataset.scheme = 'dark';
-        } else {
-            document.documentElement.dataset.scheme = 'light';
-        }
-    })();
-</script>
-<div class="container main-container flex on-phone--column compact"><aside class="sidebar left-sidebar sticky ">
-    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
-        <span class="hamburger-box">
-            <span class="hamburger-inner"></span>
-        </span>
-    </button>
-
-    <header>
-        
-        
-        <div class="site-meta">
-            <h1 class="site-name"><a href="/">LucasPark Blog</a></h1>
-            <h2 class="site-description">Lucas Park의 개인 블로그</h2>
-        </div>
-    </header><ol class="menu" id="main-menu">
-        
-        
-        
-        <li >
-            <a href='/' >
-                
-                <span>Home</span>
-            </a>
-        </li>
-        
-        
-        <li >
-            <a href='/posts/' >
-                
-                <span>Posts</span>
-            </a>
-        </li>
-        
-        
-        <li >
-            <a href='/data-analysis/' >
-                
-                <span>Data Analysis</span>
-            </a>
-        </li>
-        
-        
-        <li >
-            <a href='/gold-news-and-analysis/' >
-                
-                <span>Gold Price Check &amp; Analysis</span>
-            </a>
-        </li>
-        
-        
-        <li >
-            <a href='/atmospheric-environment/' >
-                
-                <span>Atmospheric Environment</span>
-            </a>
-        </li>
-        
-        <li class="menu-bottom-section">
-            <ol class="menu">
-
-                
-                    <li id="dark-mode-toggle">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-  <path stroke="none" d="M0 0h24v24H0z"/>
-  <circle cx="8" cy="12" r="2" />
-  <rect x="2" y="6" width="20" height="12" rx="6" />
-</svg>
-
-
-
-                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-  <path stroke="none" d="M0 0h24v24H0z"/>
-  <circle cx="16" cy="12" r="2" />
-  <rect x="2" y="6" width="20" height="12" rx="6" />
-</svg>
-
-
-
-                        <span>Dark Mode</span>
-                    </li>
-                
-            </ol>
-        </li>
-    </ol>
-</aside>
-
-    
-
-            <main class="main full-width">
-    <article class="main-article">
-    <header class="article-header">
-
-    <div class="article-details">
-    
-
-    <div class="article-title-wrapper">
-        <h2 class="article-title">
-            <a href="/data-analysis/python_data_analysis_11/">[데이터분석 수학] 행렬 이해하기</a>
-        </h2>
-    
-        
-    </div>
-
-    
-    
-    
-    
-    
-    
-    
-    <footer class="article-meta">
-        
-            <div class="inline-meta">
-                
-                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-  <path stroke="none" d="M0 0h24v24H0z"/>
-  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
-  <circle cx="18" cy="18" r="4" />
-  <path d="M15 3v4" />
-  <path d="M7 3v4" />
-  <path d="M3 11h16" />
-  <path d="M18 16.496v1.504l1 1" />
-</svg>
-                    <time class="article-time--published" datetime='2026-07-12T00:00:00Z'>2026년 7월 12일 일요일</time>
-                
-
-                
-            </div>
-        
-
-        
-
-        
-    </footer>
-    
-</div>
-
-</header>
-
-    
-
-    <section class="article-content">
-    
-    
-    <h1 id="들어가며">들어가며
-</h1><p>오늘은 <strong>행렬</strong>(Matrix)의 정의와 기본 연산, 그리고 <strong>선형방정식</strong>(Linear Equations)을 정리하였습니다.</p>
-<hr>
-<h2 id="1-행렬의-정의">1. 행렬의 정의
-</h2><p>행렬은 수나 식을 직사각형 모양으로 배열한 것입니다.</p>
-<p>예를 들어 $2 \times 3$ 행렬이란 행이 2개, 열이 3개로 $2 \times 3 = 6$ 개의 원소를 가집니다.</p>
-<p>$$
-\begin{pmatrix} 1 &amp; 2 &amp; -1 \\ 3 &amp; 2 &amp; -1 \end{pmatrix}, \quad
-\begin{pmatrix} 3 &amp; 5 &amp; -7 \\ 0 &amp; 4 &amp; 1 \end{pmatrix}
-$$</p>
-<p>일반적으로 $m \times n$ 행렬이란 $m$ 개의 행과 $n$ 개의 열을 직사각형 모양으로 배열해서 $m \times n$ 개의 원소를 가지는 집합입니다.</p>
-<p>$$
+<!doctype html><html lang=ko-kr dir=ltr><head><meta charset=utf-8><meta name=viewport content='width=device-width,initial-scale=1'><meta name=description content="들어가며 오늘은 행렬(Matrix)의 정의와 기본 연산, 그리고 선형방정식(Linear Equations)을 정리하였습니다.\n1. 행렬의 정의 행렬은 수나 식을 직사각형 모양으로 배열한 것입니다.\n예를 들어 $2 \\times 3$ 행렬이란 행이 2개, 열이 3개로 $2 \\times 3 = 6$ 개의 원소를 가집니다.\n$$ \\begin{pmatrix} 1 & 2 & -1 \\\\ 3 & 2 & -1 \\end{pmatrix}, \\quad \\begin{pmatrix} 3 & 5 & -7 \\\\ 0 & 4 & 1 \\end{pmatrix} $$\n일반적으로 $m \\times n$ 행렬이란 $m$ 개의 행과 $n$ 개의 열을 직사각형 모양으로 배열해서 $m \\times n$ 개의 원소를 가지는 집합입니다.\n"><title>[데이터분석 수학] 행렬 이해하기</title><link rel=canonical href=https://lucaspark-10.github.io/data-analysis/python_data_analysis_11/><link rel=preconnect href=https://fonts.googleapis.com><link rel=preconnect href=https://fonts.gstatic.com crossorigin><link rel=preload as=style href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap"><link rel=stylesheet href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap"><link rel=stylesheet href=/scss/style.min.e62e09c60ba428a627e03568fa3df938f6a8224f815b5846f00816c17d4a0be4.css><meta property='og:title' content="[데이터분석 수학] 행렬 이해하기"><meta property='og:description' content="들어가며 오늘은 행렬(Matrix)의 정의와 기본 연산, 그리고 선형방정식(Linear Equations)을 정리하였습니다.\n1. 행렬의 정의 행렬은 수나 식을 직사각형 모양으로 배열한 것입니다.\n예를 들어 $2 \\times 3$ 행렬이란 행이 2개, 열이 3개로 $2 \\times 3 = 6$ 개의 원소를 가집니다.\n$$ \\begin{pmatrix} 1 & 2 & -1 \\\\ 3 & 2 & -1 \\end{pmatrix}, \\quad \\begin{pmatrix} 3 & 5 & -7 \\\\ 0 & 4 & 1 \\end{pmatrix} $$\n일반적으로 $m \\times n$ 행렬이란 $m$ 개의 행과 $n$ 개의 열을 직사각형 모양으로 배열해서 $m \\times n$ 개의 원소를 가지는 집합입니다.\n"><meta property='og:url' content='https://lucaspark-10.github.io/data-analysis/python_data_analysis_11/'><meta property='og:site_name' content='LucasPark Blog'><meta property='og:type' content='article'><meta property='article:section' content='Data-Analysis'><meta property='article:published_time' content='2026-07-12T00:00:00+00:00'><meta property='article:modified_time' content='2026-07-12T00:00:00+00:00'><meta name=twitter:title content="[데이터분석 수학] 행렬 이해하기"><meta name=twitter:description content="들어가며 오늘은 행렬(Matrix)의 정의와 기본 연산, 그리고 선형방정식(Linear Equations)을 정리하였습니다.\n1. 행렬의 정의 행렬은 수나 식을 직사각형 모양으로 배열한 것입니다.\n예를 들어 $2 \\times 3$ 행렬이란 행이 2개, 열이 3개로 $2 \\times 3 = 6$ 개의 원소를 가집니다.\n$$ \\begin{pmatrix} 1 & 2 & -1 \\\\ 3 & 2 & -1 \\end{pmatrix}, \\quad \\begin{pmatrix} 3 & 5 & -7 \\\\ 0 & 4 & 1 \\end{pmatrix} $$\n일반적으로 $m \\times n$ 행렬이란 $m$ 개의 행과 $n$ 개의 열을 직사각형 모양으로 배열해서 $m \\times n$ 개의 원소를 가지는 집합입니다.\n"><script async src="https://www.googletagmanager.com/gtag/js?id=G-EVK5B22CB3"></script><script>var doNotTrack=!1,dnt=navigator.doNotTrack||window.doNotTrack||navigator.msDoNotTrack,doNotTrack=dnt=="1"||dnt=="yes";if(!doNotTrack){window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag("js",new Date),gtag("config","G-EVK5B22CB3")}</script></head><body class=article-page><script>(function(){const e="StackColorScheme";localStorage.getItem(e)||localStorage.setItem(e,"auto")})()</script><script>(function(){const t="StackColorScheme",e=localStorage.getItem(t),n=window.matchMedia("(prefers-color-scheme: dark)").matches===!0;e=="dark"||e==="auto"&&n?document.documentElement.dataset.scheme="dark":document.documentElement.dataset.scheme="light"})()</script><div class="container main-container flex on-phone--column compact"><aside class="sidebar left-sidebar sticky"><button class="hamburger hamburger--spin" type=button id=toggle-menu aria-label="Toggle Menu">
+<span class=hamburger-box><span class=hamburger-inner></span></span></button><header><div class=site-meta><h1 class=site-name><a href=/>LucasPark Blog</a></h1><h2 class=site-description>Lucas Park의 개인 블로그</h2></div></header><ol class=menu id=main-menu><li><a href=/><span>Home</span></a></li><li><a href=/posts/><span>Posts</span></a></li><li><a href=/data-analysis/><span>Data Analysis</span></a></li><li><a href=/gold-news-and-analysis/><span>Gold Price Check & Analysis</span></a></li><li><a href=/atmospheric-environment/><span>Atmospheric Environment</span></a></li><li class=menu-bottom-section><ol class=menu><li id=dark-mode-toggle><svg class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="8" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<svg class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="16" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<span>Dark Mode</span></li></ol></li></ol></aside><main class="main full-width"><article class=main-article><header class=article-header><div class=article-details><div class=article-title-wrapper><h2 class=article-title><a href=/data-analysis/python_data_analysis_11/>[데이터분석 수학] 행렬 이해하기</a></h2></div><footer class=article-meta><div class=inline-meta><svg class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M11.795 21H5a2 2 0 01-2-2V7a2 2 0 012-2h12a2 2 0 012 2v4"/><circle cx="18" cy="18" r="4"/><path d="M15 3v4"/><path d="M7 3v4"/><path d="M3 11h16"/><path d="M18 16.496V18l1 1"/></svg>
+<time class=article-time--published datetime=2026-07-12T00:00:00Z>2026년 7월 12일 일요일</time></div></footer></div></header><section class=article-content><h1 id=들어가며>들어가며</h1><p>오늘은 <strong>행렬</strong>(Matrix)의 정의와 기본 연산, 그리고 <strong>선형방정식</strong>(Linear Equations)을 정리하였습니다.</p><hr><h2 id=1-행렬의-정의>1. 행렬의 정의</h2><p>행렬은 수나 식을 직사각형 모양으로 배열한 것입니다.</p><p>예를 들어 $2 \times 3$ 행렬이란 행이 2개, 열이 3개로 $2 \times 3 = 6$ 개의 원소를 가집니다.</p><p>$$
+\begin{pmatrix} 1 & 2 & -1 \\ 3 & 2 & -1 \end{pmatrix}, \quad
+\begin{pmatrix} 3 & 5 & -7 \\ 0 & 4 & 1 \end{pmatrix}
+$$</p><p>일반적으로 $m \times n$ 행렬이란 $m$ 개의 행과 $n$ 개의 열을 직사각형 모양으로 배열해서 $m \times n$ 개의 원소를 가지는 집합입니다.</p><p>$$
 A = (a_{ij}) ; \text{또는} ; A =
 \begin{pmatrix}
-a_{11} &amp; a_{12} &amp; \cdots &amp; a_{1n} \\
-a_{21} &amp; a_{22} &amp; \cdots &amp; a_{2n} \\
-\vdots &amp; \vdots &amp; &amp; \vdots \\
-a_{m1} &amp; a_{m2} &amp; \cdots &amp; a_{mn}
+a_{11} & a_{12} & \cdots & a_{1n} \\
+a_{21} & a_{22} & \cdots & a_{2n} \\
+\vdots & \vdots & & \vdots \\
+a_{m1} & a_{m2} & \cdots & a_{mn}
 \end{pmatrix}
-$$</p>
-<p>여기서 $a_{ij}$ 를 <strong>성분</strong>(component)이라 부르며, 같은 수의 행과 열을 갖는 행렬( $n \times n$ )을 <strong>정방행렬</strong>(square matrix)이라 합니다.</p>
-<p>집합 $M_{m \times n}$ 을 $m \times n$ 행렬의 모임이라고 하면:
-$$M_{m \times n} = {A \mid A \text{ is a } m \times n \text{ matrix}}$$</p>
-<h3 id="벡터와-전치연산자">벡터와 전치연산자
-</h3><ul>
-<li>$1 \times n$ 행렬과 $n \times 1$ 행렬을 보통 <strong>벡터</strong>라고 부릅니다.</li>
-<li>$(x_1, x_2, \cdots, x_n)$ 은 $1 \times n$ 행렬로 <strong>행벡터</strong>라 부릅니다.</li>
-<li>$n \times 1$ 행렬은 <strong>열벡터</strong>라 부릅니다.</li>
-</ul>
-<p>전치연산자(Transpose operator) $\top$ 는 행벡터를 열벡터로, 열벡터를 행벡터로 변환합니다.</p>
-<p>$$(1, 2, 3)^\top = \begin{pmatrix}1\\2\\3\end{pmatrix}, \quad \begin{pmatrix}a\\b\\c\end{pmatrix}^\top = (a, b, c)$$</p>
-<p>일반 행렬의 전치도 같은 방식입니다:</p>
-<p>$$A = \begin{pmatrix} a &amp; b &amp; c \\ x &amp; y &amp; z \end{pmatrix}, \quad A^\top = \begin{pmatrix} a &amp; x \\ b &amp; y \\ c &amp; z \end{pmatrix}$$</p>
-<h3 id="두-행렬의-같음">두 행렬의 같음
-</h3><p>두 개의 $m \times n$ 행렬 $A = (a_{ij})$, $B = (b_{ij})$ 에 대하여:</p>
-<p>$$A = B \iff a_{ij} = b_{ij}, ; \forall , i = 1, \cdots, m, ; j = 1, \cdots, n$$</p>
-<p>즉, 각각의 성분들이 같으면 &ldquo;두 행렬은 같다&quot;라고 합니다.</p>
-<h3 id="행렬의-덧셈-뺄셈-스칼라-곱셈">행렬의 덧셈, 뺄셈, 스칼라 곱셈
-</h3><p>크기가 같은 두 행렬은 자연스럽게 덧셈과 뺄셈을 정의할 수 있습니다.</p>
-<p>$$
-\begin{pmatrix} 1 &amp; 2 &amp; -1 \\ 3 &amp; 2 &amp; -1 \end{pmatrix} +
-\begin{pmatrix} 3 &amp; 5 &amp; -7 \\ 0 &amp; 4 &amp; 1 \end{pmatrix} =
-\begin{pmatrix} 4 &amp; 7 &amp; -8 \\ 3 &amp; 6 &amp; 0 \end{pmatrix}
-$$</p>
-<p>스칼라 곱 연산:</p>
-<p>$$3\begin{pmatrix} 1 &amp; 2 &amp; -1 \\ 3 &amp; 2 &amp; -1 \end{pmatrix} =
-\begin{pmatrix} 3 &amp; 6 &amp; -3 \\ 9 &amp; 6 &amp; -3 \end{pmatrix}$$</p>
-<p><strong>요점</strong>: 크기가 같은 두 행렬의 덧셈과 스칼라 곱은 벡터 개념이 확장된 것입니다.</p>
-<p>$$
-\begin{pmatrix} a_{11} &amp; a_{12} \\ a_{21} &amp; a_{22} \end{pmatrix} +
-\begin{pmatrix} b_{11} &amp; b_{12} \\ b_{21} &amp; b_{22} \end{pmatrix} =
-\begin{pmatrix} a_{11}+b_{11} &amp; a_{12}+b_{12} \\ a_{21}+b_{21} &amp; a_{22}+b_{22} \end{pmatrix}
-$$</p>
-<p>$$
-\lambda \begin{pmatrix} a_{11} &amp; a_{12} \\ a_{21} &amp; a_{22} \end{pmatrix} =
-\begin{pmatrix} \lambda a_{11} &amp; \lambda a_{12} \\ \lambda a_{21} &amp; \lambda a_{22} \end{pmatrix}, \quad \lambda \in \mathbb{R}
-$$</p>
-<hr>
-<h2 id="2-행렬의-곱셈-matrix-multiplication">2. 행렬의 곱셈 (Matrix Multiplication)
-</h2><p>$A$ 가 $m \times r$ 행렬, $B$ 가 $r \times n$ 행렬이면 곱행렬 $AB$ 는 $m \times n$ 행렬입니다.</p>
-
-    <blockquote>
-        <p><strong>주의</strong>: 앞 행렬 $A$ 의 열의 개수와 뒤 행렬 $B$ 의 행의 개수가 같아야 합니다.
-$(2,3) \times (3,2) = (2,2)$</p>
-
-    </blockquote>
-<h3 id="곱셈-규칙-정리">곱셈 규칙 정리
-</h3><p><strong>규칙 1</strong>: 행벡터 × 열벡터 → 스칼라(1×1)
-$$(a;b)\begin{pmatrix}x\\y\end{pmatrix} = (ax+by)$$</p>
-<p><strong>규칙 2</strong>: 행벡터 × 행렬 → 행벡터
-$$(a;b)\begin{pmatrix}x&amp;z\\y&amp;w\end{pmatrix} = (ax+by ;; az+bw)$$</p>
-<p><strong>규칙 3</strong>: 행렬 × 열벡터 → 열벡터
-$$\begin{pmatrix}a&amp;b\\c&amp;d\end{pmatrix}\begin{pmatrix}x\\y\end{pmatrix} = \begin{pmatrix}ax+by\\cx+dy\end{pmatrix}$$</p>
-<p><strong>규칙 4</strong>: 행렬 × 행렬 (일반적인 경우)
-$$\begin{pmatrix}a&amp;b\\c&amp;d\end{pmatrix}\begin{pmatrix}x&amp;u\\y&amp;v\end{pmatrix} = \begin{pmatrix}ax+by &amp; au+bv\\cx+dy &amp; cu+dv\end{pmatrix}$$</p>
-<p><strong>규칙 5</strong>: 열벡터 × 행벡터 (외적)
-$$\begin{pmatrix}a\\b\end{pmatrix}(x;y) = \begin{pmatrix}ax&amp;ay\\bx&amp;by\end{pmatrix}$$</p>
-<h3 id="일반화">일반화
-</h3><p>$A = (a_{ij})_{m \times n}$, $B = (b_{ij})_{n \times p}$ 일 때 $AB = C = (c_{ij})_{m \times p}$ 이며:</p>
-<p>$$c_{ij} = a_{i1}b_{1j} + a_{i2}b_{2j} + \cdots + a_{in}b_{nj} = \sum_{k=1}^{n} a_{ik}b_{kj}$$</p>
-<h3 id="전치행렬과-대칭행렬">전치행렬과 대칭행렬
-</h3><p>$A = A^\top$ 인 행렬을 <strong>대칭행렬</strong>(symmetric matrix)이라고 하며, 여러 이론에 많이 등장합니다.</p>
-<p>예: $B = \begin{pmatrix}2&amp;4&amp;0\\4&amp;1&amp;6\\0&amp;6&amp;3\end{pmatrix}$ 는 대칭행렬입니다.</p>
-<h3 id="행렬-곱셈의-결합법칙">행렬 곱셈의 결합법칙
-</h3><p>행렬의 곱셈에는 결합법칙이 성립합니다: $ABC = (AB)C = A(BC)$</p>
-<p>예시: $A = \begin{pmatrix}2&amp;1\\-1&amp;2\end{pmatrix}$, $x = \begin{pmatrix}x\\y\end{pmatrix}$ 일 때</p>
-<p>$$x^\top A x = x^\top(Ax) = 2x^2 + 2y^2$$</p>
-<h3 id="행렬의-내적과-외적">행렬의 내적과 외적
-</h3><p><strong>내적</strong>: $\langle x, y \rangle = xy^\top = x \cdot y$ (결과: 스칼라)</p>
-<p><strong>외적</strong>: 열벡터 × 행벡터 (결과: 행렬)
-$$\begin{pmatrix}1\\2\end{pmatrix}(2;1) = \begin{pmatrix}2&amp;1\\4&amp;2\end{pmatrix}$$</p>
-
-    <blockquote>
-        <p>참고: 외적은 뒤에 나오는 공분산 행렬 계산에 사용됩니다.</p>
-
-    </blockquote>
-<h3 id="단위행렬-identity-matrix">단위행렬 (Identity Matrix)
-</h3><p>행렬 $A$ 가 $n \times n$ 인 정방행렬이고 주 대각성분이 모두 1이고 나머지 성분이 모두 0인 행렬을 <strong>단위행렬</strong>이라 부르며, $I$ 또는 $I_n$ 으로 표시합니다.</p>
-<p>$$A I_n = I_n A = A$$</p>
-<p>즉, 행렬 곱셈 연산에서 항등원 역할을 합니다.</p>
-<p>$$I_2 = \begin{pmatrix}1&amp;0\\0&amp;1\end{pmatrix}, \quad
-I_3 = \begin{pmatrix}1&amp;0&amp;0\\0&amp;1&amp;0\\0&amp;0&amp;1\end{pmatrix}$$</p>
-<h3 id="역행렬-inverse-matrix">역행렬 (Inverse Matrix)
-</h3><p>행렬 $A$ 가 $n \times n$ 인 정방행렬이고, $AB = BA = I$ 를 만족하는 행렬 $B$ 를 행렬 $A$ 의 <strong>역행렬</strong>이라고 하며, $A^{-1}$ 로 표시합니다.</p>
-<p>예: $A = \begin{pmatrix}2&amp;5\\-3&amp;-7\end{pmatrix}$, $B = \begin{pmatrix}-7&amp;-5\\3&amp;2\end{pmatrix}$ 이면 $AB = BA = I_2$ 이므로 $A^{-1} = B$ 입니다.</p>
-<h3 id="행렬식-deta">행렬식 det(A)
-</h3><p>$n \times n$ 정방행렬의 역행렬 존재 여부는 $\det(A)$ 라는 실숫값에 의해 결정됩니다.</p>
-<p><strong>$2 \times 2$ 행렬의 행렬식</strong>:
-$$\det(A) = \begin{vmatrix}a&amp;b\\c&amp;d\end{vmatrix} = ad - bc$$</p>
-<p>$$A^{-1} = \frac{1}{ad-bc}\begin{pmatrix}d&amp;-b\\-c&amp;a\end{pmatrix}$$</p>
-<p>따라서 $A$ 의 역행렬은 $\det(A) = ad - bc \neq 0$ 일 때만 정의됩니다.</p>
-<hr>
-<h2 id="3-선형방정식-linear-equations">3. 선형방정식 (Linear Equations)
-</h2><h3 id="연립-일차-방정식과-행렬">연립 일차 방정식과 행렬
-</h3><p>평면에서 두 직선의 교점을 구하는 문제:
-$$a_1 x + b_1 y = c_1, \quad a_2 x + b_2 y = c_2$$</p>
-<p>공간에서 세 평면의 교점을 구하는 문제:
+$$</p><p>여기서 $a_{ij}$ 를 <strong>성분</strong>(component)이라 부르며, 같은 수의 행과 열을 갖는 행렬( $n \times n$ )을 <strong>정방행렬</strong>(square matrix)이라 합니다.</p><p>집합 $M_{m \times n}$ 을 $m \times n$ 행렬의 모임이라고 하면:
+$$M_{m \times n} = {A \mid A \text{ is a } m \times n \text{ matrix}}$$</p><h3 id=벡터와-전치연산자>벡터와 전치연산자</h3><ul><li>$1 \times n$ 행렬과 $n \times 1$ 행렬을 보통 <strong>벡터</strong>라고 부릅니다.</li><li>$(x_1, x_2, \cdots, x_n)$ 은 $1 \times n$ 행렬로 <strong>행벡터</strong>라 부릅니다.</li><li>$n \times 1$ 행렬은 <strong>열벡터</strong>라 부릅니다.</li></ul><p>전치연산자(Transpose operator) $\top$ 는 행벡터를 열벡터로, 열벡터를 행벡터로 변환합니다.</p><p>$$(1, 2, 3)^\top = \begin{pmatrix}1\\2\\3\end{pmatrix}, \quad \begin{pmatrix}a\\b\\c\end{pmatrix}^\top = (a, b, c)$$</p><p>일반 행렬의 전치도 같은 방식입니다:</p><p>$$A = \begin{pmatrix} a & b & c \\ x & y & z \end{pmatrix}, \quad A^\top = \begin{pmatrix} a & x \\ b & y \\ c & z \end{pmatrix}$$</p><h3 id=두-행렬의-같음>두 행렬의 같음</h3><p>두 개의 $m \times n$ 행렬 $A = (a_{ij})$, $B = (b_{ij})$ 에 대하여:</p><p>$$A = B \iff a_{ij} = b_{ij}, ; \forall , i = 1, \cdots, m, ; j = 1, \cdots, n$$</p><p>즉, 각각의 성분들이 같으면 &ldquo;두 행렬은 같다"라고 합니다.</p><h3 id=행렬의-덧셈-뺄셈-스칼라-곱셈>행렬의 덧셈, 뺄셈, 스칼라 곱셈</h3><p>크기가 같은 두 행렬은 자연스럽게 덧셈과 뺄셈을 정의할 수 있습니다.</p><p>$$
+\begin{pmatrix} 1 & 2 & -1 \\ 3 & 2 & -1 \end{pmatrix} +
+\begin{pmatrix} 3 & 5 & -7 \\ 0 & 4 & 1 \end{pmatrix} =
+\begin{pmatrix} 4 & 7 & -8 \\ 3 & 6 & 0 \end{pmatrix}
+$$</p><p>스칼라 곱 연산:</p><p>$$3\begin{pmatrix} 1 & 2 & -1 \\ 3 & 2 & -1 \end{pmatrix} =
+\begin{pmatrix} 3 & 6 & -3 \\ 9 & 6 & -3 \end{pmatrix}$$</p><p><strong>요점</strong>: 크기가 같은 두 행렬의 덧셈과 스칼라 곱은 벡터 개념이 확장된 것입니다.</p><p>$$
+\begin{pmatrix} a_{11} & a_{12} \\ a_{21} & a_{22} \end{pmatrix} +
+\begin{pmatrix} b_{11} & b_{12} \\ b_{21} & b_{22} \end{pmatrix} =
+\begin{pmatrix} a_{11}+b_{11} & a_{12}+b_{12} \\ a_{21}+b_{21} & a_{22}+b_{22} \end{pmatrix}
+$$</p><p>$$
+\lambda \begin{pmatrix} a_{11} & a_{12} \\ a_{21} & a_{22} \end{pmatrix} =
+\begin{pmatrix} \lambda a_{11} & \lambda a_{12} \\ \lambda a_{21} & \lambda a_{22} \end{pmatrix}, \quad \lambda \in \mathbb{R}
+$$</p><hr><h2 id=2-행렬의-곱셈-matrix-multiplication>2. 행렬의 곱셈 (Matrix Multiplication)</h2><p>$A$ 가 $m \times r$ 행렬, $B$ 가 $r \times n$ 행렬이면 곱행렬 $AB$ 는 $m \times n$ 행렬입니다.</p><blockquote><p><strong>주의</strong>: 앞 행렬 $A$ 의 열의 개수와 뒤 행렬 $B$ 의 행의 개수가 같아야 합니다.
+$(2,3) \times (3,2) = (2,2)$</p></blockquote><h3 id=곱셈-규칙-정리>곱셈 규칙 정리</h3><p><strong>규칙 1</strong>: 행벡터 × 열벡터 → 스칼라(1×1)
+$$(a;b)\begin{pmatrix}x\\y\end{pmatrix} = (ax+by)$$</p><p><strong>규칙 2</strong>: 행벡터 × 행렬 → 행벡터
+$$(a;b)\begin{pmatrix}x&amp;z\\y&amp;w\end{pmatrix} = (ax+by ;; az+bw)$$</p><p><strong>규칙 3</strong>: 행렬 × 열벡터 → 열벡터
+$$\begin{pmatrix}a&amp;b\\c&amp;d\end{pmatrix}\begin{pmatrix}x\\y\end{pmatrix} = \begin{pmatrix}ax+by\\cx+dy\end{pmatrix}$$</p><p><strong>규칙 4</strong>: 행렬 × 행렬 (일반적인 경우)
+$$\begin{pmatrix}a&amp;b\\c&amp;d\end{pmatrix}\begin{pmatrix}x&amp;u\\y&amp;v\end{pmatrix} = \begin{pmatrix}ax+by & au+bv\\cx+dy & cu+dv\end{pmatrix}$$</p><p><strong>규칙 5</strong>: 열벡터 × 행벡터 (외적)
+$$\begin{pmatrix}a\\b\end{pmatrix}(x;y) = \begin{pmatrix}ax&amp;ay\\bx&amp;by\end{pmatrix}$$</p><h3 id=일반화>일반화</h3><p>$A = (a_{ij})_{m \times n}$, $B = (b_{ij})_{n \times p}$ 일 때 $AB = C = (c_{ij})_{m \times p}$ 이며:</p><p>$$c_{ij} = a_{i1}b_{1j} + a_{i2}b_{2j} + \cdots + a_{in}b_{nj} = \sum_{k=1}^{n} a_{ik}b_{kj}$$</p><h3 id=전치행렬과-대칭행렬>전치행렬과 대칭행렬</h3><p>$A = A^\top$ 인 행렬을 <strong>대칭행렬</strong>(symmetric matrix)이라고 하며, 여러 이론에 많이 등장합니다.</p><p>예: $B = \begin{pmatrix}2&amp;4&amp;0\\4&amp;1&amp;6\\0&amp;6&amp;3\end{pmatrix}$ 는 대칭행렬입니다.</p><h3 id=행렬-곱셈의-결합법칙>행렬 곱셈의 결합법칙</h3><p>행렬의 곱셈에는 결합법칙이 성립합니다: $ABC = (AB)C = A(BC)$</p><p>예시: $A = \begin{pmatrix}2&amp;1\\-1&amp;2\end{pmatrix}$, $x = \begin{pmatrix}x\\y\end{pmatrix}$ 일 때</p><p>$$x^\top A x = x^\top(Ax) = 2x^2 + 2y^2$$</p><h3 id=행렬의-내적과-외적>행렬의 내적과 외적</h3><p><strong>내적</strong>: $\langle x, y \rangle = xy^\top = x \cdot y$ (결과: 스칼라)</p><p><strong>외적</strong>: 열벡터 × 행벡터 (결과: 행렬)
+$$\begin{pmatrix}1\\2\end{pmatrix}(2;1) = \begin{pmatrix}2&amp;1\\4&amp;2\end{pmatrix}$$</p><blockquote><p>참고: 외적은 뒤에 나오는 공분산 행렬 계산에 사용됩니다.</p></blockquote><h3 id=단위행렬-identity-matrix>단위행렬 (Identity Matrix)</h3><p>행렬 $A$ 가 $n \times n$ 인 정방행렬이고 주 대각성분이 모두 1이고 나머지 성분이 모두 0인 행렬을 <strong>단위행렬</strong>이라 부르며, $I$ 또는 $I_n$ 으로 표시합니다.</p><p>$$A I_n = I_n A = A$$</p><p>즉, 행렬 곱셈 연산에서 항등원 역할을 합니다.</p><p>$$I_2 = \begin{pmatrix}1&amp;0\\0&amp;1\end{pmatrix}, \quad
+I_3 = \begin{pmatrix}1&amp;0&amp;0\\0&amp;1&amp;0\\0&amp;0&amp;1\end{pmatrix}$$</p><h3 id=역행렬-inverse-matrix>역행렬 (Inverse Matrix)</h3><p>행렬 $A$ 가 $n \times n$ 인 정방행렬이고, $AB = BA = I$ 를 만족하는 행렬 $B$ 를 행렬 $A$ 의 <strong>역행렬</strong>이라고 하며, $A^{-1}$ 로 표시합니다.</p><p>예: $A = \begin{pmatrix}2&amp;5\\-3&-7\end{pmatrix}$, $B = \begin{pmatrix}-7&-5\\3&amp;2\end{pmatrix}$ 이면 $AB = BA = I_2$ 이므로 $A^{-1} = B$ 입니다.</p><h3 id=행렬식-deta>행렬식 det(A)</h3><p>$n \times n$ 정방행렬의 역행렬 존재 여부는 $\det(A)$ 라는 실숫값에 의해 결정됩니다.</p><p><strong>$2 \times 2$ 행렬의 행렬식</strong>:
+$$\det(A) = \begin{vmatrix}a&amp;b\\c&amp;d\end{vmatrix} = ad - bc$$</p><p>$$A^{-1} = \frac{1}{ad-bc}\begin{pmatrix}d&-b\\-c&amp;a\end{pmatrix}$$</p><p>따라서 $A$ 의 역행렬은 $\det(A) = ad - bc \neq 0$ 일 때만 정의됩니다.</p><hr><h2 id=3-선형방정식-linear-equations>3. 선형방정식 (Linear Equations)</h2><h3 id=연립-일차-방정식과-행렬>연립 일차 방정식과 행렬</h3><p>평면에서 두 직선의 교점을 구하는 문제:
+$$a_1 x + b_1 y = c_1, \quad a_2 x + b_2 y = c_2$$</p><p>공간에서 세 평면의 교점을 구하는 문제:
 $$a_1 x + b_1 y + c_1 z = d_1$$
 $$a_2 x + b_2 y + c_2 z = d_2$$
-$$a_3 x + b_3 y + c_3 z = d_3$$</p>
-<p>이는 행렬을 이용하여 $Ax = b$ 형태로 표현할 수 있습니다.</p>
-<h3 id="m--n-연립-일차-방정식">m × n 연립 일차 방정식
-</h3><p>일반적으로 $n$ 개의 미지수 $x_1, x_2, \cdots, x_n$ 에 관한 연립 일차 방정식:</p>
-<p>$$a_{11}x_1 + a_{12}x_2 + \cdots + a_{1n}x_n = b_1$$
+$$a_3 x + b_3 y + c_3 z = d_3$$</p><p>이는 행렬을 이용하여 $Ax = b$ 형태로 표현할 수 있습니다.</p><h3 id=m--n-연립-일차-방정식>m × n 연립 일차 방정식</h3><p>일반적으로 $n$ 개의 미지수 $x_1, x_2, \cdots, x_n$ 에 관한 연립 일차 방정식:</p><p>$$a_{11}x_1 + a_{12}x_2 + \cdots + a_{1n}x_n = b_1$$
 $$a_{21}x_1 + a_{22}x_2 + \cdots + a_{2n}x_n = b_2$$
 $$\vdots$$
-$$a_{m1}x_1 + a_{m2}x_2 + \cdots + a_{mn}x_n = b_m$$</p>
-<p>이를 미지수 $x_1, \cdots, x_n$ 에 관한 $m \times n$ 연립 일차 방정식이라 부릅니다.</p>
-<p>계수와 상수항만 나열한 행렬을 <strong>첨가행렬</strong>(Augmented matrix)이라 합니다:</p>
-<p>$$
+$$a_{m1}x_1 + a_{m2}x_2 + \cdots + a_{mn}x_n = b_m$$</p><p>이를 미지수 $x_1, \cdots, x_n$ 에 관한 $m \times n$ 연립 일차 방정식이라 부릅니다.</p><p>계수와 상수항만 나열한 행렬을 <strong>첨가행렬</strong>(Augmented matrix)이라 합니다:</p><p>$$
 \begin{pmatrix}
-a_{11} &amp; a_{12} &amp; \cdots &amp; a_{1n} &amp; b_1 \\
-a_{21} &amp; a_{22} &amp; \cdots &amp; a_{2n} &amp; b_2 \\
-\vdots &amp; \vdots &amp; &amp; \vdots &amp; \vdots \\
-a_{m1} &amp; a_{m2} &amp; \cdots &amp; a_{mn} &amp; b_m
+a_{11} & a_{12} & \cdots & a_{1n} & b_1 \\
+a_{21} & a_{22} & \cdots & a_{2n} & b_2 \\
+\vdots & \vdots & & \vdots & \vdots \\
+a_{m1} & a_{m2} & \cdots & a_{mn} & b_m
 \end{pmatrix}
-$$</p>
-<p>행렬 표현: $Ax = b$</p>
-<h3 id="gauss-소거법">Gauss 소거법
-</h3><p>연립방정식을 푸는 가장 기본적인 생각은 미지수의 숫자를 줄여나가는 것입니다.</p>
-<p><strong>예제</strong>:
+$$</p><p>행렬 표현: $Ax = b$</p><h3 id=gauss-소거법>Gauss 소거법</h3><p>연립방정식을 푸는 가장 기본적인 생각은 미지수의 숫자를 줄여나가는 것입니다.</p><p><strong>예제</strong>:
 $$3x + 7y + 3z = 2 ; \cdots ; ①$$
 $$x + 2y + z = 1 ; \cdots ; ②$$
-$$4x + 8y + 2z = 8 ; \cdots ; ③$$</p>
-<p><strong>풀이 과정</strong>:</p>
-<ol>
-<li>①식과 ②식을 바꾼다.</li>
-<li>①식에 $-3$ 을 곱하여 ②식에 더한다: $y = -1$ 을 얻음</li>
-<li>①식에 $-4$ 를 곱하여 ③식에 더한다: $-2z = 4$ 를 얻음</li>
-</ol>
-<p>최종적으로 사다리꼴 형태의 행렬:
-$$\begin{bmatrix}1&amp;2&amp;1&amp;1\\0&amp;1&amp;0&amp;-1\\0&amp;0&amp;-2&amp;4\end{bmatrix}$$</p>
-<p>결과: $z = -2$, $y = -1$, $x = 1 - 2(-1) - (-2) = 5$</p>
-<h3 id="gauss-jordan-소거법">Gauss-Jordan 소거법
-</h3><p>Gauss 소거법으로 얻은 사다리꼴 행렬을 더 변형하여 대각 성분 외 모든 성분을 0으로 만드는 방법입니다.</p>
-<p><strong>예제</strong>: 위 사다리꼴 행렬 $\begin{pmatrix}1&amp;-1&amp;1&amp;2\\0&amp;1&amp;-1&amp;1\\0&amp;0&amp;1&amp;-3\end{pmatrix}$ 에서 추가 소거 진행</p>
-<ul>
-<li>②식에 ③식을 더함</li>
-<li>①식에 ②식을 더함</li>
-<li>①식에서 ③식을 뺌</li>
-</ul>
-<p>최종 결과:
-$$\begin{pmatrix}1&amp;0&amp;0&amp;3\\0&amp;1&amp;0&amp;-2\\0&amp;0&amp;1&amp;-3\end{pmatrix}$$</p>
-<p>즉, $x = 3$, $y = -2$, $z = -3$</p>
-<p>이렇게 Gauss-Jordan 소거법으로 얻은 행렬을 <strong>줄어든 사다리꼴 행렬</strong>(Reduced Row Echelon Form, RREF)이라 부릅니다.</p>
-<h3 id="연습-문제-정리">연습 문제 정리
-</h3><p><strong>예제 1</strong>:
+$$4x + 8y + 2z = 8 ; \cdots ; ③$$</p><p><strong>풀이 과정</strong>:</p><ol><li>①식과 ②식을 바꾼다.</li><li>①식에 $-3$ 을 곱하여 ②식에 더한다: $y = -1$ 을 얻음</li><li>①식에 $-4$ 를 곱하여 ③식에 더한다: $-2z = 4$ 를 얻음</li></ol><p>최종적으로 사다리꼴 형태의 행렬:
+$$\begin{bmatrix}1&amp;2&amp;1&amp;1\\0&amp;1&amp;0&-1\\0&amp;0&-2&amp;4\end{bmatrix}$$</p><p>결과: $z = -2$, $y = -1$, $x = 1 - 2(-1) - (-2) = 5$</p><h3 id=gauss-jordan-소거법>Gauss-Jordan 소거법</h3><p>Gauss 소거법으로 얻은 사다리꼴 행렬을 더 변형하여 대각 성분 외 모든 성분을 0으로 만드는 방법입니다.</p><p><strong>예제</strong>: 위 사다리꼴 행렬 $\begin{pmatrix}1&-1&amp;1&amp;2\\0&amp;1&-1&amp;1\\0&amp;0&amp;1&-3\end{pmatrix}$ 에서 추가 소거 진행</p><ul><li>②식에 ③식을 더함</li><li>①식에 ②식을 더함</li><li>①식에서 ③식을 뺌</li></ul><p>최종 결과:
+$$\begin{pmatrix}1&amp;0&amp;0&amp;3\\0&amp;1&amp;0&-2\\0&amp;0&amp;1&-3\end{pmatrix}$$</p><p>즉, $x = 3$, $y = -2$, $z = -3$</p><p>이렇게 Gauss-Jordan 소거법으로 얻은 행렬을 <strong>줄어든 사다리꼴 행렬</strong>(Reduced Row Echelon Form, RREF)이라 부릅니다.</p><h3 id=연습-문제-정리>연습 문제 정리</h3><p><strong>예제 1</strong>:
 $$2x - y + z = 2, \quad x - 3y + 4z = -9, \quad 3x + 2y - z = 5$$
-→ $x = 2, y = -3, z = -5$</p>
-<p><strong>예제 2</strong>:
+→ $x = 2, y = -3, z = -5$</p><p><strong>예제 2</strong>:
 $$x + 2y - z = 1, \quad 4x + 9y - 3z = 8, \quad -2x - 3y + 7z = 10$$
-→ $x = -1, y = 2, z = 2$</p>
-<hr>
-<h2 id="마무리">마무리
-</h2><p>오늘 행렬과 선형방정식에 대해서 정리하였습니다.</p>
-<p>내용을 요약하면 다음과 같습니다.</p>
-<div class="table-wrapper"><table>
-  <thead>
-      <tr>
-          <th>개념</th>
-          <th>핵심 내용</th>
-      </tr>
-  </thead>
-  <tbody>
-      <tr>
-          <td>행렬</td>
-          <td>$m \times n$ 개의 원소를 직사각형으로 배열한 것</td>
-      </tr>
-      <tr>
-          <td>전치행렬</td>
-          <td>행과 열을 바꾼 행렬, $A^\top$</td>
-      </tr>
-      <tr>
-          <td>대칭행렬</td>
-          <td>$A = A^\top$ 을 만족하는 행렬</td>
-      </tr>
-      <tr>
-          <td>단위행렬</td>
-          <td>곱셈의 항등원, $AI = IA = A$</td>
-      </tr>
-      <tr>
-          <td>역행렬</td>
-          <td>$AB = BA = I$ 를 만족하는 $B = A^{-1}$</td>
-      </tr>
-      <tr>
-          <td>행렬식</td>
-          <td>역행렬 존재 여부를 결정하는 값, $\det(A)$</td>
-      </tr>
-      <tr>
-          <td>Gauss 소거법</td>
-          <td>행 연산으로 사다리꼴 행렬을 만들어 해를 구하는 방법</td>
-      </tr>
-      <tr>
-          <td>Gauss-Jordan 소거법</td>
-          <td>사다리꼴 행렬을 RREF로 변형해 해를 직접 구하는 방법</td>
-      </tr>
-  </tbody>
-</table></div>
-<p>다음은 수학적 공간 내용을 정리하겠습니다.</p>
-
-</section>
-
-
-    <footer class="article-meta article-footer">
-    
-
-    </footer>
-
-
-    
-        <link 
-                rel="stylesheet" 
-                href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI&#43;WdtXRGWt2kTvGFasHpSy3SV"crossorigin="anonymous"
-            ><script 
-                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG&#43;vnGctmUb0ZY0l8"crossorigin="anonymous"
-                defer
-                >
-            </script><script 
-                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"integrity="sha384-&#43;VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4&#43;/RRE05"crossorigin="anonymous"
-                defer
-                >
-            </script><script>
-    window.addEventListener("DOMContentLoaded", () => {
-        const elementsToRender = [".main-article", ".widget--toc"];
-
-        elementsToRender.forEach(selector => {
-            const element = document.querySelector(selector);
-            if (element) {
-                renderMathInElement(element, {
-                    delimiters: [
-                        { left: "$$", right: "$$", display: true },
-                        { left: "$", right: "$", display: false },
-                        { left: "\\(", right: "\\)", display: false },
-                        { left: "\\[", right: "\\]", display: true }
-                    ],
-                    ignoredClasses: ["gist"]
-                });
-            }
-        });
-    });
-</script>
-    
-</article>
-
-    
-
-    
-
-     
-    
-        
-
-        <div class="disqus-container">
-    
-</div>
-
-<style>
-    .disqus-container {
-        background-color: var(--card-background);
-        border-radius: var(--card-border-radius);
-        box-shadow: var(--shadow-l1);
-        padding: var(--card-padding);
-    }
-</style>
-
-<script>
-    window.addEventListener('onColorSchemeChange', (e) => {
-        if (typeof DISQUS == 'object') {
-            DISQUS.reset({
-                reload: true
-            });
-        }
-    })
-</script>
-
-    
-
-    <footer class="site-footer">
-    <section class="copyright">
-        &copy; 
-        
-        2026 LucasPark Blog
-    </section>
-    
-    <section class="powerby">
-        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
-        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="4.0.3">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
-    </section>
-</footer>
-
-
-    
-
-
-
-<script type="module">
+→ $x = -1, y = 2, z = 2$</p><hr><h2 id=마무리>마무리</h2><p>오늘 행렬과 선형방정식에 대해서 정리하였습니다.</p><p>내용을 요약하면 다음과 같습니다.</p><div class=table-wrapper><table><thead><tr><th>개념</th><th>핵심 내용</th></tr></thead><tbody><tr><td>행렬</td><td>$m \times n$ 개의 원소를 직사각형으로 배열한 것</td></tr><tr><td>전치행렬</td><td>행과 열을 바꾼 행렬, $A^\top$</td></tr><tr><td>대칭행렬</td><td>$A = A^\top$ 을 만족하는 행렬</td></tr><tr><td>단위행렬</td><td>곱셈의 항등원, $AI = IA = A$</td></tr><tr><td>역행렬</td><td>$AB = BA = I$ 를 만족하는 $B = A^{-1}$</td></tr><tr><td>행렬식</td><td>역행렬 존재 여부를 결정하는 값, $\det(A)$</td></tr><tr><td>Gauss 소거법</td><td>행 연산으로 사다리꼴 행렬을 만들어 해를 구하는 방법</td></tr><tr><td>Gauss-Jordan 소거법</td><td>사다리꼴 행렬을 RREF로 변형해 해를 직접 구하는 방법</td></tr></tbody></table></div><p>다음은 수학적 공간 내용을 정리하겠습니다.</p></section><footer class="article-meta article-footer"></footer><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css integrity=sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV crossorigin=anonymous><script src=https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js integrity=sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG+vnGctmUb0ZY0l8 crossorigin=anonymous defer></script><script src=https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js integrity=sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05 crossorigin=anonymous defer></script><script>window.addEventListener("DOMContentLoaded",()=>{const e=[".main-article",".widget--toc"];e.forEach(e=>{const t=document.querySelector(e);t&&renderMathInElement(t,{delimiters:[{left:"$$",right:"$$",display:!0},{left:"$",right:"$",display:!1},{left:"\\(",right:"\\)",display:!1},{left:"\\[",right:"\\]",display:!0}],ignoredClasses:["gist"]})})})</script></article><div class=disqus-container></div><style>.disqus-container{background-color:var(--card-background);border-radius:var(--card-border-radius);box-shadow:var(--shadow-l1);padding:var(--card-padding)}</style><script>window.addEventListener("onColorSchemeChange",e=>{typeof DISQUS=="object"&&DISQUS.reset({reload:!0})})</script><footer class=site-footer><section class=copyright>&copy;
+2026 LucasPark Blog</section><section class=powerby>Built with <a href=https://gohugo.io/ target=_blank rel=noopener>Hugo</a><br>Theme <b><a href=https://github.com/CaiJimmy/hugo-theme-stack target=_blank rel=noopener data-version=4.0.3>Stack</a></b> designed by <a href=https://jimmycai.com target=_blank rel=noopener>Jimmy</a></section></footer><script type=module>
     import gallery from '\/ts\/gallery.js';
 
     const articleContent = document.querySelector('.article-content');
@@ -542,15 +83,4 @@ $$x + 2y - z = 1, \quad 4x + 9y - 3z = 8, \quad -2x - 3y + 7z = 10$$
         });
         lightbox.init();
     }
-</script>
-
-    
-
-            </main>
-        </div>
-        
-<script type="text/javascript" src="/ts/main.1ff1e5fdc4e178ed422e50aa407526dc552f26342d729343fded19416194382c.js" defer></script>
-
-
-    </body>
-</html>
+</script></main></div><script type=text/javascript src=/ts/main.1ff1e5fdc4e178ed422e50aa407526dc552f26342d729343fded19416194382c.js defer></script></body></html>

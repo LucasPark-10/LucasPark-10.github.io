@@ -1,681 +1,180 @@
-<!DOCTYPE html>
-<html lang="ko-kr" dir="ltr">
-    <head><meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="EDA(탐색적 데이터 분석) 정리 이번 글에서는 EDA(Exploratory Data Analysis) 의 개념부터 특성 엔지니어링까지 실습 코드와 함께 정리하려고 합니다.\n1. 데이터 시각화 EDA(Exploratory Data Analysis) 는 수학자 존 튜키가 제안한 개념으로, 데이터를 다양한 방법으로 확인하고 이해하는 과정입니다.\n시각화를 통해 자료를 직관적으로 바라볼 수 있으며, 여기서 얻은 지식은 이후 통계 분석이나 모델링에 활용됩니다.\n데이터 시각화란 그래프, 차트, 맵과 같은 시각적 요소를 사용해 데이터를 나타내는 프로세스로, 수치 데이터만으로는 발견하지 못한 패턴이나 인사이트를 찾도록 도와줍니다.\n">
-<title>EDA(탐색적 데이터 분석) 정리 - 시각화부터 전처리까지</title>
-
-
-<link rel="canonical" href="https://lucaspark-10.github.io/data-analysis/python_data_analysis_07/">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
-
-
-<link rel="stylesheet" href="/scss/style.min.e62e09c60ba428a627e03568fa3df938f6a8224f815b5846f00816c17d4a0be4.css"><meta property='og:title' content="EDA(탐색적 데이터 분석) 정리 - 시각화부터 전처리까지">
-<meta property='og:description' content="EDA(탐색적 데이터 분석) 정리 이번 글에서는 EDA(Exploratory Data Analysis) 의 개념부터 특성 엔지니어링까지 실습 코드와 함께 정리하려고 합니다.\n1. 데이터 시각화 EDA(Exploratory Data Analysis) 는 수학자 존 튜키가 제안한 개념으로, 데이터를 다양한 방법으로 확인하고 이해하는 과정입니다.\n시각화를 통해 자료를 직관적으로 바라볼 수 있으며, 여기서 얻은 지식은 이후 통계 분석이나 모델링에 활용됩니다.\n데이터 시각화란 그래프, 차트, 맵과 같은 시각적 요소를 사용해 데이터를 나타내는 프로세스로, 수치 데이터만으로는 발견하지 못한 패턴이나 인사이트를 찾도록 도와줍니다.\n">
-<meta property='og:url' content='https://lucaspark-10.github.io/data-analysis/python_data_analysis_07/'>
-<meta property='og:site_name' content='LucasPark Blog'>
-<meta property='og:type' content='article'><meta property='article:section' content='Data-Analysis' /><meta property='article:published_time' content='2026-07-08T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2026-07-08T00:00:00&#43;00:00'/>
-<meta name="twitter:title" content="EDA(탐색적 데이터 분석) 정리 - 시각화부터 전처리까지">
-<meta name="twitter:description" content="EDA(탐색적 데이터 분석) 정리 이번 글에서는 EDA(Exploratory Data Analysis) 의 개념부터 특성 엔지니어링까지 실습 코드와 함께 정리하려고 합니다.\n1. 데이터 시각화 EDA(Exploratory Data Analysis) 는 수학자 존 튜키가 제안한 개념으로, 데이터를 다양한 방법으로 확인하고 이해하는 과정입니다.\n시각화를 통해 자료를 직관적으로 바라볼 수 있으며, 여기서 얻은 지식은 이후 통계 분석이나 모델링에 활용됩니다.\n데이터 시각화란 그래프, 차트, 맵과 같은 시각적 요소를 사용해 데이터를 나타내는 프로세스로, 수치 데이터만으로는 발견하지 못한 패턴이나 인사이트를 찾도록 도와줍니다.\n">
-      <script async src="https://www.googletagmanager.com/gtag/js?id=G-EVK5B22CB3"></script>
-      <script>
-        var doNotTrack = false;
-        if ( true ) {
-          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
-          var doNotTrack = (dnt == "1" || dnt == "yes");
-        }
-        if (!doNotTrack) {
-          window.dataLayer = window.dataLayer || [];
-          function gtag(){dataLayer.push(arguments);}
-          gtag('js', new Date());
-          gtag('config', 'G-EVK5B22CB3');
-        }
-      </script>
-    </head>
-    <body class="
-    article-page
-    ">
-    <script>
-        (function() {
-            const colorSchemeKey = 'StackColorScheme';
-            if(!localStorage.getItem(colorSchemeKey)){
-                localStorage.setItem(colorSchemeKey, "auto");
-            }
-        })();
-    </script><script>
-    (function() {
-        const colorSchemeKey = 'StackColorScheme';
-        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
-        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
-
-        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
-            
-
-            document.documentElement.dataset.scheme = 'dark';
-        } else {
-            document.documentElement.dataset.scheme = 'light';
-        }
-    })();
-</script>
-<div class="container main-container flex on-phone--column compact"><aside class="sidebar left-sidebar sticky ">
-    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
-        <span class="hamburger-box">
-            <span class="hamburger-inner"></span>
-        </span>
-    </button>
-
-    <header>
-        
-        
-        <div class="site-meta">
-            <h1 class="site-name"><a href="/">LucasPark Blog</a></h1>
-            <h2 class="site-description">Lucas Park의 개인 블로그</h2>
-        </div>
-    </header><ol class="menu" id="main-menu">
-        
-        
-        
-        <li >
-            <a href='/' >
-                
-                <span>Home</span>
-            </a>
-        </li>
-        
-        
-        <li >
-            <a href='/posts/' >
-                
-                <span>Posts</span>
-            </a>
-        </li>
-        
-        
-        <li >
-            <a href='/data-analysis/' >
-                
-                <span>Data Analysis</span>
-            </a>
-        </li>
-        
-        
-        <li >
-            <a href='/gold-news-and-analysis/' >
-                
-                <span>Gold Price Check &amp; Analysis</span>
-            </a>
-        </li>
-        
-        
-        <li >
-            <a href='/atmospheric-environment/' >
-                
-                <span>Atmospheric Environment</span>
-            </a>
-        </li>
-        
-        <li class="menu-bottom-section">
-            <ol class="menu">
-
-                
-                    <li id="dark-mode-toggle">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-  <path stroke="none" d="M0 0h24v24H0z"/>
-  <circle cx="8" cy="12" r="2" />
-  <rect x="2" y="6" width="20" height="12" rx="6" />
-</svg>
-
-
-
-                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-  <path stroke="none" d="M0 0h24v24H0z"/>
-  <circle cx="16" cy="12" r="2" />
-  <rect x="2" y="6" width="20" height="12" rx="6" />
-</svg>
-
-
-
-                        <span>Dark Mode</span>
-                    </li>
-                
-            </ol>
-        </li>
-    </ol>
-</aside>
-
-    
-
-            <main class="main full-width">
-    <article class="main-article">
-    <header class="article-header">
-
-    <div class="article-details">
-    
-
-    <div class="article-title-wrapper">
-        <h2 class="article-title">
-            <a href="/data-analysis/python_data_analysis_07/">EDA(탐색적 데이터 분석) 정리 - 시각화부터 전처리까지</a>
-        </h2>
-    
-        
-    </div>
-
-    
-    
-    
-    
-    
-    
-    
-    <footer class="article-meta">
-        
-            <div class="inline-meta">
-                
-                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-  <path stroke="none" d="M0 0h24v24H0z"/>
-  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
-  <circle cx="18" cy="18" r="4" />
-  <path d="M15 3v4" />
-  <path d="M7 3v4" />
-  <path d="M3 11h16" />
-  <path d="M18 16.496v1.504l1 1" />
-</svg>
-                    <time class="article-time--published" datetime='2026-07-08T00:00:00Z'>2026년 7월 8일 수요일</time>
-                
-
-                
-            </div>
-        
-
-        
-
-        
-    </footer>
-    
-</div>
-
-</header>
-
-    
-
-    <section class="article-content">
-    
-    
-    <h1 id="eda탐색적-데이터-분석-정리">EDA(탐색적 데이터 분석) 정리
-</h1><p>이번 글에서는 <strong>EDA(Exploratory Data Analysis)</strong> 의 개념부터 특성 엔지니어링까지 실습 코드와 함께 정리하려고 합니다.</p>
-<hr>
-<h2 id="1-데이터-시각화">1. 데이터 시각화
-</h2><p><strong>EDA(Exploratory Data Analysis)</strong> 는 수학자 존 튜키가 제안한 개념으로, 데이터를 다양한 방법으로 확인하고 이해하는 과정입니다.</p>
-<p>시각화를 통해 자료를 직관적으로 바라볼 수 있으며, 여기서 얻은 지식은 이후 통계 분석이나 모델링에 활용됩니다.</p>
-<p><strong>데이터 시각화</strong>란 그래프, 차트, 맵과 같은 시각적 요소를 사용해 데이터를 나타내는 프로세스로, 수치 데이터만으로는 발견하지 못한 패턴이나 인사이트를 찾도록 도와줍니다.</p>
-<h3 id="주요-시각화-방법">주요 시각화 방법
-</h3><div class="table-wrapper"><table>
-  <thead>
-      <tr>
-          <th>방법</th>
-          <th>용도</th>
-          <th>장점</th>
-          <th>한계</th>
-      </tr>
-  </thead>
-  <tbody>
-      <tr>
-          <td>히스토그램</td>
-          <td>단일 수치형 변수의 분포</td>
-          <td>계급별 자료 수를 쉽게 파악</td>
-          <td>원래 값 상실 가능, 연속 데이터 전용</td>
-      </tr>
-      <tr>
-          <td>박스 플롯</td>
-          <td>이상치 식별, 분산 파악</td>
-          <td>분포 요약, 그룹 비교, 이상치 강조</td>
-          <td>세부 분포를 보여주지 못함</td>
-      </tr>
-      <tr>
-          <td>산점도</td>
-          <td>두 변수 간 관계/추세</td>
-          <td>생성·해석 쉬움, 패턴·추세·이상치 표현</td>
-          <td>범주형 데이터엔 부적합, 포인트 많으면 해석 어려움</td>
-      </tr>
-      <tr>
-          <td>막대 차트</td>
-          <td>범주형 변수의 빈도/비율</td>
-          <td>이산 카테고리 비교에 효과적</td>
-          <td>연속 데이터엔 부적합, 카테고리 많으면 혼잡</td>
-      </tr>
-      <tr>
-          <td>히트맵</td>
-          <td>변수 간 상관관계</td>
-          <td>대규모 데이터에서 패턴·군집 파악 용이</td>
-          <td>색상 척도에 따라 해석이 왜곡될 수 있음</td>
-      </tr>
-  </tbody>
-</table></div>
-<p>박스 플롯의 주요 지표:</p>
-<ul>
-<li><strong>Q1(제1사분위수)</strong>: 데이터의 25% 지점</li>
-<li><strong>중앙값</strong>: 데이터 세트를 절반으로 나누는 값</li>
-<li><strong>Q3(제3사분위수)</strong>: 데이터의 75% 지점</li>
-<li><strong>최댓값(휘스커 상한, 이상치 판단 경계)</strong>: Q3 + 1.5 × IQR — 이 값보다 큰 데이터는 이상치로 표시됨</li>
-<li><strong>최솟값(휘스커 하한, 이상치 판단 경계)</strong>: Q1 − 1.5 × IQR — 이 값보다 작은 데이터는 이상치로 표시됨</li>
-</ul>
-<hr>
-<h2 id="2-matplotlib">2. Matplotlib
-</h2><p>파이썬에서 가장 널리 사용되는 데이터 시각화 라이브러리입니다.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> matplotlib.pyplot <span style="color:#66d9ef">as</span> plt
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># 점 (1,3), (2,7), (3,9), (4,12) 그리기</span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># &#39;ro&#39;는 빨간색(&#39;red&#39;) 원형 마커(&#39;o&#39;)를 의미함</span>
-</span></span><span style="display:flex;"><span>plt<span style="color:#f92672">.</span>plot([<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">4</span>], [<span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">7</span>, <span style="color:#ae81ff">9</span>, <span style="color:#ae81ff">12</span>], <span style="color:#e6db74">&#39;ro&#39;</span>)
-</span></span><span style="display:flex;"><span>plt<span style="color:#f92672">.</span>axis([<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">5</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">15</span>])
-</span></span><span style="display:flex;"><span>plt<span style="color:#f92672">.</span>show()
-</span></span></code></pre></div><p>여러 그래프를 한 번에 나타낼 수도 있습니다.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> numpy <span style="color:#66d9ef">as</span> np
-</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> matplotlib.pyplot <span style="color:#66d9ef">as</span> plt
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>time <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>arange(<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">10</span>, <span style="color:#ae81ff">0.5</span>)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>plt<span style="color:#f92672">.</span>plot(time, time, <span style="color:#e6db74">&#39;ro&#39;</span>, time, time<span style="color:#f92672">**</span><span style="color:#ae81ff">2</span>, <span style="color:#e6db74">&#39;b--&#39;</span>, time, time<span style="color:#f92672">**</span><span style="color:#ae81ff">3</span>, <span style="color:#e6db74">&#39;gs&#39;</span>)
-</span></span><span style="display:flex;"><span>plt<span style="color:#f92672">.</span>show()
-</span></span></code></pre></div><ul>
-<li>한계 : Matplotlib은 Seaborn, Plotly 같은 최신 라이브러리에 비해 그래프가 덜 세련되어 보일 수 있습니다.</li>
-</ul>
-<hr>
-<h2 id="3-seaborn">3. Seaborn
-</h2><p>Seaborn은 Matplotlib을 기반으로 하며, 더 세련되고 통계적인 시각화를 간단한 코드로 만들 수 있습니다.</p>
-<h3 id="seaborn의-기능과-장점">Seaborn의 기능과 장점
-</h3><ul>
-<li><strong>Matplotlib 기반</strong>: 복잡한 시각화를 더 쉽게 생성</li>
-<li><strong>세련된 시각화</strong>: 미적으로 다듬어진 다양한 테마 포함</li>
-<li><strong>복잡한 코드의 단순화</strong>: 짧은 구문으로 복잡한 플롯 구현</li>
-<li><strong>Pandas와의 통합</strong>: DataFrame을 직접 다루고 시각화하기 쉬움</li>
-<li><strong>고급 통계 플롯</strong>: 통계 관계를 보여주는 다양한 고급 플롯 함수 포함</li>
-</ul>
-<h3 id="예시-1-박스-플롯-flights-데이터셋">예시 1: 박스 플롯 (Flights 데이터셋)
-</h3><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> pandas <span style="color:#66d9ef">as</span> pd
-</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> matplotlib.pyplot <span style="color:#66d9ef">as</span> plt
-</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> seaborn <span style="color:#66d9ef">as</span> sns
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># seaborn에서 자체 제공하는 flights 데이터셋 로드</span>
-</span></span><span style="display:flex;"><span>flights <span style="color:#f92672">=</span> sns<span style="color:#f92672">.</span>load_dataset(<span style="color:#e6db74">&#39;flights&#39;</span>)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>plt<span style="color:#f92672">.</span>figure(figsize<span style="color:#f92672">=</span>(<span style="color:#ae81ff">6</span>, <span style="color:#ae81ff">6</span>))
-</span></span><span style="display:flex;"><span>sns<span style="color:#f92672">.</span>boxplot(data<span style="color:#f92672">=</span>flights, x<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;year&#39;</span>, y<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;passengers&#39;</span>)
-</span></span><span style="display:flex;"><span>plt<span style="color:#f92672">.</span>show()
-</span></span></code></pre></div><h3 id="예시-2-산점도-tips-데이터셋">예시 2: 산점도 (Tips 데이터셋)
-</h3><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> seaborn <span style="color:#66d9ef">as</span> sns
-</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> matplotlib.pyplot <span style="color:#66d9ef">as</span> plt
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># 레스토랑 손님의 팁 데이터셋</span>
-</span></span><span style="display:flex;"><span>tips <span style="color:#f92672">=</span> sns<span style="color:#f92672">.</span>load_dataset(<span style="color:#e6db74">&#34;tips&#34;</span>)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>plt<span style="color:#f92672">.</span>figure(figsize<span style="color:#f92672">=</span>(<span style="color:#ae81ff">5</span>, <span style="color:#ae81ff">5</span>))
-</span></span><span style="display:flex;"><span>sns<span style="color:#f92672">.</span>scatterplot(data<span style="color:#f92672">=</span>tips, x<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;total_bill&#34;</span>, y<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;tip&#34;</span>, hue<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;time&#34;</span>)
-</span></span><span style="display:flex;"><span>plt<span style="color:#f92672">.</span>show()
-</span></span></code></pre></div><hr>
-<h2 id="4-데이터-비교">4. 데이터 비교
-</h2><p><strong>데이터 비교</strong>란 두 개 이상의 데이터 집합을 분석·평가하여 유사성, 차이, 추세, 관계 등을 파악하는 과정입니다.</p>
-<ul>
-<li><strong>질적 비교</strong>: 범주형 데이터의 차이와 유사성을 분석</li>
-<li><strong>양적 비교</strong>: 수치 데이터의 상관관계 또는 패턴을 분석</li>
-</ul>
-<h3 id="예시-연도별월별-승객-수-비교-색상-강조">예시: 연도별/월별 승객 수 비교 (색상 강조)
-</h3><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> matplotlib.pyplot <span style="color:#66d9ef">as</span> plt
-</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> seaborn <span style="color:#66d9ef">as</span> sns
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>flights <span style="color:#f92672">=</span> sns<span style="color:#f92672">.</span>load_dataset(<span style="color:#e6db74">&#39;flights&#39;</span>)
-</span></span><span style="display:flex;"><span>sns<span style="color:#f92672">.</span>set(font_scale<span style="color:#f92672">=</span><span style="color:#ae81ff">1.5</span>)
-</span></span><span style="display:flex;"><span>plt<span style="color:#f92672">.</span>figure(figsize<span style="color:#f92672">=</span>(<span style="color:#ae81ff">10</span>, <span style="color:#ae81ff">10</span>))
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># 특정 연도(1955, 1958)만 강조하여 비교</span>
-</span></span><span style="display:flex;"><span>flights_years <span style="color:#f92672">=</span> sorted(list(set(flights[<span style="color:#e6db74">&#39;year&#39;</span>])))
-</span></span><span style="display:flex;"><span>color <span style="color:#f92672">=</span> [<span style="color:#e6db74">&#39;lightgrey&#39;</span> <span style="color:#66d9ef">if</span> x <span style="color:#f92672">not</span> <span style="color:#f92672">in</span> [<span style="color:#ae81ff">1955</span>, <span style="color:#ae81ff">1958</span>] <span style="color:#66d9ef">else</span> <span style="color:#e6db74">&#34;#4472C4&#34;</span> <span style="color:#66d9ef">for</span> x <span style="color:#f92672">in</span> flights_years]
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>sns<span style="color:#f92672">.</span>barplot(data<span style="color:#f92672">=</span>flights, x<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;year&#34;</span>, y<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;passengers&#34;</span>, palette<span style="color:#f92672">=</span>color, errorbar<span style="color:#f92672">=</span><span style="color:#66d9ef">None</span>)
-</span></span><span style="display:flex;"><span>plt<span style="color:#f92672">.</span>show()
-</span></span></code></pre></div><h3 id="예시-연도별-승객-수-변화-라인-비교">예시: 연도별 승객 수 변화 라인 비교
-</h3><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> matplotlib.pyplot <span style="color:#66d9ef">as</span> plt
-</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> seaborn <span style="color:#66d9ef">as</span> sns
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>flights <span style="color:#f92672">=</span> sns<span style="color:#f92672">.</span>load_dataset(<span style="color:#e6db74">&#39;flights&#39;</span>)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># 연도마다 월별 승객 수 변화 시각화</span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> year <span style="color:#f92672">in</span> flights[<span style="color:#e6db74">&#39;year&#39;</span>]<span style="color:#f92672">.</span>unique():
-</span></span><span style="display:flex;"><span>    flights_for_year <span style="color:#f92672">=</span> flights[flights[<span style="color:#e6db74">&#39;year&#39;</span>] <span style="color:#f92672">==</span> year]
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># 1955년과 1958년만 파란색으로 강조</span>
-</span></span><span style="display:flex;"><span>    line_color <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;#4472C4&#39;</span> <span style="color:#66d9ef">if</span> year <span style="color:#f92672">in</span> [<span style="color:#ae81ff">1955</span>, <span style="color:#ae81ff">1958</span>] <span style="color:#66d9ef">else</span> <span style="color:#e6db74">&#39;#EFF3F9&#39;</span>
-</span></span><span style="display:flex;"><span>    plt<span style="color:#f92672">.</span>plot(flights_for_year[<span style="color:#e6db74">&#39;month&#39;</span>], flights_for_year[<span style="color:#e6db74">&#39;passengers&#39;</span>], color<span style="color:#f92672">=</span>line_color)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>plt<span style="color:#f92672">.</span>show()
-</span></span></code></pre></div><hr>
-<h2 id="5-상관관계-분석">5. 상관관계 분석
-</h2><p><strong>상관관계 분석</strong>은 두 양적 변수 간 선형 관계의 강도와 방향을 평가하는 것을 의미합니다.</p>
-<h3 id="공분산covariance">공분산(Covariance)
-</h3><p>두 변수의 공동 변동성을 설명하는 척도로, 두 변수가 함께 증가/감소하면 양수, 반대로 움직이면 음수가 됩니다.</p>
-<p>$$Cov(X, Y) = \frac{\sum_{i=1}^{n}(X_i - \bar{X})(Y_i - \bar{Y})}{n}$$</p>
-
-    <blockquote>
-        <p><code>numpy.cov()</code>는 기본적으로 <strong>표본공분산</strong>(n이 아닌 n−1로 나눈 값)을 반환합니다. 아래 예제 결과(114.7)도 n−1 기준입니다.</p>
-
-    </blockquote>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> pandas <span style="color:#66d9ef">as</span> pd
-</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> numpy <span style="color:#66d9ef">as</span> np
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>df <span style="color:#f92672">=</span> pd<span style="color:#f92672">.</span>DataFrame({<span style="color:#e6db74">&#39;키&#39;</span>: [<span style="color:#ae81ff">158</span>, <span style="color:#ae81ff">163</span>, <span style="color:#ae81ff">170</span>, <span style="color:#ae81ff">183</span>, <span style="color:#ae81ff">180</span>], <span style="color:#e6db74">&#39;몸무게&#39;</span>: [<span style="color:#ae81ff">49</span>, <span style="color:#ae81ff">52</span>, <span style="color:#ae81ff">60</span>, <span style="color:#ae81ff">80</span>, <span style="color:#ae81ff">83</span>]})
-</span></span><span style="display:flex;"><span>print(np<span style="color:#f92672">.</span>cov(df[<span style="color:#e6db74">&#39;키&#39;</span>], df[<span style="color:#e6db74">&#39;몸무게&#39;</span>]))
-</span></span></code></pre></div><ul>
-<li>공분산의 한계 : 단위에 따라 값이 크게 달라집니다. 예를 들어 키를 cm에서 m로 바꾸면 공분산 값 자체가 크게 변해, 변수 간 관계 강도를 직관적으로 비교하기 어렵습니다.</li>
-</ul>
-<h3 id="상관계수correlation-coefficient">상관계수(Correlation Coefficient)
-</h3><p>단위에 영향받지 않도록 공분산을 표준편차로 나눈 값으로, <strong>-1 ~ 1</strong> 사이의 값을 가집니다.</p>
-<p>$$Corr(X, Y) = \frac{Cov(X, Y)}{\sqrt{\frac{\sum(X-\mu)^2}{N}} \cdot \sqrt{\frac{\sum(Y-\mu)^2}{N}}}$$</p>
-<ul>
-<li><strong>-1</strong>: 완전한 음의 상관관계</li>
-<li><strong>0</strong>: 독립(관계 없음)</li>
-<li><strong>1</strong>: 완전한 양의 상관관계</li>
-</ul>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> pandas <span style="color:#66d9ef">as</span> pd
-</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> numpy <span style="color:#66d9ef">as</span> np
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>df <span style="color:#f92672">=</span> pd<span style="color:#f92672">.</span>DataFrame({<span style="color:#e6db74">&#39;키&#39;</span>: [<span style="color:#ae81ff">158</span>, <span style="color:#ae81ff">163</span>, <span style="color:#ae81ff">170</span>, <span style="color:#ae81ff">183</span>, <span style="color:#ae81ff">180</span>], <span style="color:#e6db74">&#39;몸무게&#39;</span>: [<span style="color:#ae81ff">49</span>, <span style="color:#ae81ff">52</span>, <span style="color:#ae81ff">60</span>, <span style="color:#ae81ff">80</span>, <span style="color:#ae81ff">83</span>]})
-</span></span><span style="display:flex;"><span>print(np<span style="color:#f92672">.</span>corrcoef(df[<span style="color:#e6db74">&#39;키&#39;</span>], df[<span style="color:#e6db74">&#39;몸무게&#39;</span>])[<span style="color:#ae81ff">0</span>][<span style="color:#ae81ff">1</span>])
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># 단위를 cm -&gt; m로 바꿔도 상관계수는 동일하게 유지됨</span>
-</span></span></code></pre></div><hr>
-<h2 id="6-상관관계-시각화">6. 상관관계 시각화
-</h2><p>상관관계를 시각화하면 두 변수 사이 관계의 강도와 방향을 쉽게 식별할 수 있고, 필요한 특징(feature) 선택에도 도움이 됩니다.</p>
-<p>예시로 Scikit-learn의 <strong>당뇨병(diabetes) 데이터셋</strong>을 사용합니다.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> sklearn <span style="color:#f92672">import</span> datasets
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>data <span style="color:#f92672">=</span> datasets<span style="color:#f92672">.</span>load_diabetes()
-</span></span><span style="display:flex;"><span>print(data<span style="color:#f92672">.</span>keys())
-</span></span><span style="display:flex;"><span>print(data[<span style="color:#e6db74">&#39;feature_names&#39;</span>])
-</span></span></code></pre></div><h3 id="산점도로-두-변수-관계-보기">산점도로 두 변수 관계 보기
-</h3><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> matplotlib.pyplot <span style="color:#66d9ef">as</span> plt
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>plt<span style="color:#f92672">.</span>scatter(data[<span style="color:#e6db74">&#39;data&#39;</span>][:, <span style="color:#ae81ff">2</span>], data[<span style="color:#e6db74">&#39;target&#39;</span>], alpha<span style="color:#f92672">=</span><span style="color:#ae81ff">0.5</span>)  <span style="color:#75715e"># BMI vs target</span>
-</span></span><span style="display:flex;"><span>plt<span style="color:#f92672">.</span>title(<span style="color:#e6db74">&#34;Scatter plot&#34;</span>)
-</span></span><span style="display:flex;"><span>plt<span style="color:#f92672">.</span>xlabel(<span style="color:#e6db74">&#39;BMI&#39;</span>)
-</span></span><span style="display:flex;"><span>plt<span style="color:#f92672">.</span>ylabel(<span style="color:#e6db74">&#39;TARGET&#39;</span>)
-</span></span><span style="display:flex;"><span>plt<span style="color:#f92672">.</span>show()
-</span></span></code></pre></div><h3 id="여러-변수-간-산점도-pairplot">여러 변수 간 산점도 (pairplot)
-</h3><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> pandas <span style="color:#66d9ef">as</span> pd
-</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> seaborn <span style="color:#66d9ef">as</span> sns
-</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> matplotlib.pyplot <span style="color:#66d9ef">as</span> plt
-</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> sklearn <span style="color:#f92672">import</span> datasets
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>data <span style="color:#f92672">=</span> datasets<span style="color:#f92672">.</span>load_diabetes()
-</span></span><span style="display:flex;"><span>df <span style="color:#f92672">=</span> pd<span style="color:#f92672">.</span>DataFrame(data[<span style="color:#e6db74">&#39;data&#39;</span>], index<span style="color:#f92672">=</span>data[<span style="color:#e6db74">&#39;target&#39;</span>], columns<span style="color:#f92672">=</span>data[<span style="color:#e6db74">&#39;feature_names&#39;</span>])
-</span></span><span style="display:flex;"><span>df <span style="color:#f92672">=</span> df<span style="color:#f92672">.</span>reset_index(drop<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>plt<span style="color:#f92672">.</span>figure(figsize<span style="color:#f92672">=</span>(<span style="color:#ae81ff">14</span>, <span style="color:#ae81ff">8</span>))
-</span></span><span style="display:flex;"><span>sns<span style="color:#f92672">.</span>pairplot(df[[<span style="color:#e6db74">&#39;age&#39;</span>, <span style="color:#e6db74">&#39;bmi&#39;</span>, <span style="color:#e6db74">&#39;bp&#39;</span>]])
-</span></span><span style="display:flex;"><span>plt<span style="color:#f92672">.</span>show()
-</span></span></code></pre></div><h3 id="히트맵으로-전체-변수-상관관계-확인">히트맵으로 전체 변수 상관관계 확인
-</h3><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> seaborn <span style="color:#66d9ef">as</span> sns
-</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> matplotlib.pyplot <span style="color:#66d9ef">as</span> plt
-</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> sklearn <span style="color:#f92672">import</span> datasets
-</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> pandas <span style="color:#66d9ef">as</span> pd
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>data <span style="color:#f92672">=</span> datasets<span style="color:#f92672">.</span>load_diabetes()
-</span></span><span style="display:flex;"><span>df <span style="color:#f92672">=</span> pd<span style="color:#f92672">.</span>DataFrame(data[<span style="color:#e6db74">&#39;data&#39;</span>], index<span style="color:#f92672">=</span>data[<span style="color:#e6db74">&#39;target&#39;</span>], columns<span style="color:#f92672">=</span>data[<span style="color:#e6db74">&#39;feature_names&#39;</span>])
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>sns<span style="color:#f92672">.</span>heatmap(df<span style="color:#f92672">.</span>corr())
-</span></span><span style="display:flex;"><span>plt<span style="color:#f92672">.</span>title(<span style="color:#e6db74">&#39;Heatmap by sns.heatmap()&#39;</span>, fontsize<span style="color:#f92672">=</span><span style="color:#ae81ff">20</span>)
-</span></span><span style="display:flex;"><span>plt<span style="color:#f92672">.</span>show()
-</span></span></code></pre></div><p>Matplotlib만으로도 유사하게 그릴 수 있습니다.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> numpy <span style="color:#66d9ef">as</span> np
-</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> matplotlib.pyplot <span style="color:#66d9ef">as</span> plt
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>plt<span style="color:#f92672">.</span>pcolor(df<span style="color:#f92672">.</span>corr())
-</span></span><span style="display:flex;"><span>plt<span style="color:#f92672">.</span>xticks(np<span style="color:#f92672">.</span>arange(<span style="color:#ae81ff">0.5</span>, len(df<span style="color:#f92672">.</span>columns), <span style="color:#ae81ff">1</span>), df<span style="color:#f92672">.</span>columns)
-</span></span><span style="display:flex;"><span>plt<span style="color:#f92672">.</span>yticks(np<span style="color:#f92672">.</span>arange(<span style="color:#ae81ff">0.5</span>, len(df<span style="color:#f92672">.</span>columns), <span style="color:#ae81ff">1</span>), df<span style="color:#f92672">.</span>columns)
-</span></span><span style="display:flex;"><span>plt<span style="color:#f92672">.</span>title(<span style="color:#e6db74">&#39;Heatmap by plt.pcolor()&#39;</span>, fontsize<span style="color:#f92672">=</span><span style="color:#ae81ff">20</span>)
-</span></span><span style="display:flex;"><span>plt<span style="color:#f92672">.</span>colorbar()
-</span></span><span style="display:flex;"><span>plt<span style="color:#f92672">.</span>show()
-</span></span></code></pre></div><hr>
-<h2 id="7-데이터-스케일링">7. 데이터 스케일링
-</h2><p><strong>데이터 스케일링</strong>은 서로 다른 변수의 값 범위를 일치시키는 작업입니다.</p>
-<h3 id="필요성">필요성
-</h3><ul>
-<li>모든 변수가 동일한 범위가 되어 쉽게 비교 가능</li>
-<li>규모가 큰 변수의 영향이 과도하게 커지는 것을 방지</li>
-<li>이상치 처리에 효과적</li>
-</ul>
-<h3 id="스케일링-종류">스케일링 종류
-</h3><div class="table-wrapper"><table>
-  <thead>
-      <tr>
-          <th>종류</th>
-          <th>설명</th>
-      </tr>
-  </thead>
-  <tbody>
-      <tr>
-          <td>Min-Max 스케일링</td>
-          <td>최솟값·최댓값을 이용해 0~1 사이 값으로 변환</td>
-      </tr>
-      <tr>
-          <td>표준화 (Standardization)</td>
-          <td>평균 0, 표준편차 1이 되도록 변환</td>
-      </tr>
-      <tr>
-          <td>로버스트 스케일링</td>
-          <td>중앙값 0, 사분위범위(IQR) 1이 되도록 변환 (이상치에 강함)</td>
-      </tr>
-  </tbody>
-</table></div>
-<p>예시 데이터로 Scikit-learn의 <strong>유방암(breast cancer) 데이터셋</strong>을 사용합니다.</p>
-<h3 id="표준화-standardscaler">표준화 (StandardScaler)
-</h3><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> sklearn.datasets <span style="color:#f92672">import</span> load_breast_cancer
-</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> sklearn.preprocessing <span style="color:#f92672">import</span> StandardScaler
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>cancer <span style="color:#f92672">=</span> load_breast_cancer()
-</span></span><span style="display:flex;"><span>X <span style="color:#f92672">=</span> cancer<span style="color:#f92672">.</span>data
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>std <span style="color:#f92672">=</span> StandardScaler()
-</span></span><span style="display:flex;"><span>std<span style="color:#f92672">.</span>fit(X)
-</span></span><span style="display:flex;"><span>X_scaled <span style="color:#f92672">=</span> std<span style="color:#f92672">.</span>transform(X)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">&#39;Data before scaling&#39;</span>)
-</span></span><span style="display:flex;"><span>print(X)
-</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">&#39;Data after scaling&#39;</span>)
-</span></span><span style="display:flex;"><span>print(X_scaled)
-</span></span></code></pre></div><h3 id="min-max-스케일링">Min-Max 스케일링
-</h3><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> sklearn.preprocessing <span style="color:#f92672">import</span> MinMaxScaler
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>mms <span style="color:#f92672">=</span> MinMaxScaler()
-</span></span><span style="display:flex;"><span>mms<span style="color:#f92672">.</span>fit(X)
-</span></span><span style="display:flex;"><span>X_scaled <span style="color:#f92672">=</span> mms<span style="color:#f92672">.</span>transform(X)
-</span></span></code></pre></div><h3 id="로버스트-스케일링">로버스트 스케일링
-</h3><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> sklearn.preprocessing <span style="color:#f92672">import</span> RobustScaler
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>rbs <span style="color:#f92672">=</span> RobustScaler()
-</span></span><span style="display:flex;"><span>rbs<span style="color:#f92672">.</span>fit(X)
-</span></span><span style="display:flex;"><span>X_scaled <span style="color:#f92672">=</span> rbs<span style="color:#f92672">.</span>transform(X)
-</span></span></code></pre></div><hr>
-<h2 id="8-데이터-전처리">8. 데이터 전처리
-</h2><p><strong>데이터 전처리</strong>란 데이터를 분석하기에 효과적인 형식으로 정리·변환·구성하는 작업입니다.</p>
-<ul>
-<li><strong>데이터 정제</strong>: 누락된 값, 잡음, 일관성 없는 데이터 처리</li>
-<li><strong>특징 엔지니어링</strong>: 기존 특징에서 새로운 특징을 생성·변환</li>
-<li><strong>불균형 데이터 처리</strong>: 클래스 불균형이 심하면 모델에 편향이 생기므로 오버샘플링·언더샘플링 등으로 균형을 맞춤</li>
-</ul>
-<p>예시로 Seaborn의 <strong>titanic 데이터셋</strong>을 사용합니다.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> seaborn <span style="color:#66d9ef">as</span> sns
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>titanic <span style="color:#f92672">=</span> sns<span style="color:#f92672">.</span>load_dataset(<span style="color:#e6db74">&#39;titanic&#39;</span>)
-</span></span><span style="display:flex;"><span>print(titanic<span style="color:#f92672">.</span>info())
-</span></span></code></pre></div><h3 id="불필요한-열-제외">불필요한 열 제외
-</h3><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># 누락된 데이터가 많은 열 제거 (예: deck)</span>
-</span></span><span style="display:flex;"><span>cols <span style="color:#f92672">=</span> [<span style="color:#e6db74">&#39;deck&#39;</span>]
-</span></span><span style="display:flex;"><span>titanic <span style="color:#f92672">=</span> titanic<span style="color:#f92672">.</span>drop(cols, axis<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>)
-</span></span><span style="display:flex;"><span>print(titanic<span style="color:#f92672">.</span>info())
-</span></span></code></pre></div><h3 id="선형보간으로-결측치-채우기">선형보간으로 결측치 채우기
-</h3><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># 누락된 데이터를 선형보간을 이용해 메꿈</span>
-</span></span><span style="display:flex;"><span>titanic[<span style="color:#e6db74">&#39;age&#39;</span>] <span style="color:#f92672">=</span> titanic[<span style="color:#e6db74">&#39;age&#39;</span>]<span style="color:#f92672">.</span>interpolate()
-</span></span><span style="display:flex;"><span>print(titanic<span style="color:#f92672">.</span>info())
-</span></span></code></pre></div><hr>
-<h2 id="9-특성-엔지니어링">9. 특성 엔지니어링
-</h2><p><strong>특성 엔지니어링(Feature Engineering)</strong> 은 기존 특성에서 새로운 특성을 선택·변환·생성하여 모델의 성능을 향상시키는 과정입니다.</p>
-<h3 id="주요-방법">주요 방법
-</h3><div class="table-wrapper"><table>
-  <thead>
-      <tr>
-          <th>방법</th>
-          <th>설명</th>
-      </tr>
-  </thead>
-  <tbody>
-      <tr>
-          <td>특성 결합</td>
-          <td>두 개 이상의 기존 특성을 결합해 새로운 특성 생성</td>
-      </tr>
-      <tr>
-          <td>범주형 변수 인코딩</td>
-          <td>문자열 등의 범주형 특성을 수치형 특성으로 변환</td>
-      </tr>
-      <tr>
-          <td>일변량 비선형 변환</td>
-          <td>제곱항, 세제곱항 등을 추가</td>
-      </tr>
-      <tr>
-          <td>새로운 특성 생성</td>
-          <td>도메인 지식을 바탕으로 새로운 유용한 특성을 만듦</td>
-      </tr>
-  </tbody>
-</table></div>
-<h3 id="예시-범주형-변수-인코딩-및-특성-결합-상관관계-계산">예시: 범주형 변수 인코딩 및 특성 결합 (상관관계 계산)
-</h3><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> numpy <span style="color:#66d9ef">as</span> np
-</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> pandas <span style="color:#66d9ef">as</span> pd
-</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> seaborn <span style="color:#66d9ef">as</span> sns
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>titanic <span style="color:#f92672">=</span> sns<span style="color:#f92672">.</span>load_dataset(<span style="color:#e6db74">&#39;titanic&#39;</span>)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># 생존 특성을 0과 1로 인코딩하여 상관관계 확인</span>
-</span></span><span style="display:flex;"><span>titanic[<span style="color:#e6db74">&#39;alive_1&#39;</span>] <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>where(titanic[<span style="color:#e6db74">&#39;alive&#39;</span>] <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;yes&#39;</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>)
-</span></span><span style="display:flex;"><span>titanic_sub <span style="color:#f92672">=</span> titanic[[<span style="color:#e6db74">&#39;fare&#39;</span>, <span style="color:#e6db74">&#39;alive_1&#39;</span>]]
-</span></span><span style="display:flex;"><span>print(titanic_sub<span style="color:#f92672">.</span>corr())
-</span></span></code></pre></div><h3 id="예시-새로운-특징-생성">예시: 새로운 특징 생성
-</h3><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> numpy <span style="color:#66d9ef">as</span> np
-</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> seaborn <span style="color:#66d9ef">as</span> sns
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>titanic <span style="color:#f92672">=</span> sns<span style="color:#f92672">.</span>load_dataset(<span style="color:#e6db74">&#39;titanic&#39;</span>)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># 요금이 50을 넘으면 비싼 표(1), 아니면 0으로 새로운 칼럼 생성</span>
-</span></span><span style="display:flex;"><span>titanic[<span style="color:#e6db74">&#39;expensive&#39;</span>] <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>where(titanic[<span style="color:#e6db74">&#39;fare&#39;</span>] <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">50</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># 퀸즈타운 승선이면 &#39;Oceania&#39;, 아니면 &#39;Europe&#39;으로 대륙 특성 생성</span>
-</span></span><span style="display:flex;"><span>titanic[<span style="color:#e6db74">&#39;continent&#39;</span>] <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>where(titanic[<span style="color:#e6db74">&#39;embark_town&#39;</span>] <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;Queenstown&#39;</span>, <span style="color:#e6db74">&#39;Oceania&#39;</span>, <span style="color:#e6db74">&#39;Europe&#39;</span>)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>print(titanic[[<span style="color:#e6db74">&#39;expensive&#39;</span>, <span style="color:#e6db74">&#39;continent&#39;</span>]])
-</span></span></code></pre></div><hr>
-<h2 id="마무리">마무리
-</h2><p>EDA는 모델링 이전에 데이터의 특성과 패턴, 이상치, 변수 간 관계를 파악하는 필수적인 과정입니다.</p>
-<ul>
-<li>데이터 로드 → 시각화(분포/이상치/관계 파악) → 데이터 비교 → 상관관계 분석 → 스케일링 → 전처리(결측치 등) → 특성 엔지니어링</li>
-</ul>
-<p>다양한 그래프 상황도 같이 넣고 싶었지만 아직 숙련도 이슈를 그래프는 넣지 못했습니다.</p>
-<p>이후 순서대로 글을 작성하고 싶은데 공부를 하다 보니 다뤄보고 싶은 주제가 계속 생기고 있어서 순서는 조금 달라질 수도 있지만, 하나씩 꾸준히 기록해보겠습니다.</p>
-<p>감사합니다.</p>
-
-</section>
-
-
-    <footer class="article-meta article-footer">
-    
-
-    </footer>
-
-
-    
-        <link 
-                rel="stylesheet" 
-                href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI&#43;WdtXRGWt2kTvGFasHpSy3SV"crossorigin="anonymous"
-            ><script 
-                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG&#43;vnGctmUb0ZY0l8"crossorigin="anonymous"
-                defer
-                >
-            </script><script 
-                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"integrity="sha384-&#43;VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4&#43;/RRE05"crossorigin="anonymous"
-                defer
-                >
-            </script><script>
-    window.addEventListener("DOMContentLoaded", () => {
-        const elementsToRender = [".main-article", ".widget--toc"];
-
-        elementsToRender.forEach(selector => {
-            const element = document.querySelector(selector);
-            if (element) {
-                renderMathInElement(element, {
-                    delimiters: [
-                        { left: "$$", right: "$$", display: true },
-                        { left: "$", right: "$", display: false },
-                        { left: "\\(", right: "\\)", display: false },
-                        { left: "\\[", right: "\\]", display: true }
-                    ],
-                    ignoredClasses: ["gist"]
-                });
-            }
-        });
-    });
-</script>
-    
-</article>
-
-    
-
-    
-
-     
-    
-        
-
-        <div class="disqus-container">
-    
-</div>
-
-<style>
-    .disqus-container {
-        background-color: var(--card-background);
-        border-radius: var(--card-border-radius);
-        box-shadow: var(--shadow-l1);
-        padding: var(--card-padding);
-    }
-</style>
-
-<script>
-    window.addEventListener('onColorSchemeChange', (e) => {
-        if (typeof DISQUS == 'object') {
-            DISQUS.reset({
-                reload: true
-            });
-        }
-    })
-</script>
-
-    
-
-    <footer class="site-footer">
-    <section class="copyright">
-        &copy; 
-        
-        2026 LucasPark Blog
-    </section>
-    
-    <section class="powerby">
-        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
-        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="4.0.3">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
-    </section>
-</footer>
-
-
-    
-
-
-
-<script type="module">
+<!doctype html><html lang=ko-kr dir=ltr><head><meta charset=utf-8><meta name=viewport content='width=device-width,initial-scale=1'><meta name=description content="EDA(탐색적 데이터 분석) 정리 이번 글에서는 EDA(Exploratory Data Analysis) 의 개념부터 특성 엔지니어링까지 실습 코드와 함께 정리하려고 합니다.\n1. 데이터 시각화 EDA(Exploratory Data Analysis) 는 수학자 존 튜키가 제안한 개념으로, 데이터를 다양한 방법으로 확인하고 이해하는 과정입니다.\n시각화를 통해 자료를 직관적으로 바라볼 수 있으며, 여기서 얻은 지식은 이후 통계 분석이나 모델링에 활용됩니다.\n데이터 시각화란 그래프, 차트, 맵과 같은 시각적 요소를 사용해 데이터를 나타내는 프로세스로, 수치 데이터만으로는 발견하지 못한 패턴이나 인사이트를 찾도록 도와줍니다.\n"><title>EDA(탐색적 데이터 분석) 정리 - 시각화부터 전처리까지</title><link rel=canonical href=https://lucaspark-10.github.io/data-analysis/python_data_analysis_07/><link rel=preconnect href=https://fonts.googleapis.com><link rel=preconnect href=https://fonts.gstatic.com crossorigin><link rel=preload as=style href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap"><link rel=stylesheet href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap"><link rel=stylesheet href=/scss/style.min.e62e09c60ba428a627e03568fa3df938f6a8224f815b5846f00816c17d4a0be4.css><meta property='og:title' content="EDA(탐색적 데이터 분석) 정리 - 시각화부터 전처리까지"><meta property='og:description' content="EDA(탐색적 데이터 분석) 정리 이번 글에서는 EDA(Exploratory Data Analysis) 의 개념부터 특성 엔지니어링까지 실습 코드와 함께 정리하려고 합니다.\n1. 데이터 시각화 EDA(Exploratory Data Analysis) 는 수학자 존 튜키가 제안한 개념으로, 데이터를 다양한 방법으로 확인하고 이해하는 과정입니다.\n시각화를 통해 자료를 직관적으로 바라볼 수 있으며, 여기서 얻은 지식은 이후 통계 분석이나 모델링에 활용됩니다.\n데이터 시각화란 그래프, 차트, 맵과 같은 시각적 요소를 사용해 데이터를 나타내는 프로세스로, 수치 데이터만으로는 발견하지 못한 패턴이나 인사이트를 찾도록 도와줍니다.\n"><meta property='og:url' content='https://lucaspark-10.github.io/data-analysis/python_data_analysis_07/'><meta property='og:site_name' content='LucasPark Blog'><meta property='og:type' content='article'><meta property='article:section' content='Data-Analysis'><meta property='article:published_time' content='2026-07-08T00:00:00+00:00'><meta property='article:modified_time' content='2026-07-08T00:00:00+00:00'><meta name=twitter:title content="EDA(탐색적 데이터 분석) 정리 - 시각화부터 전처리까지"><meta name=twitter:description content="EDA(탐색적 데이터 분석) 정리 이번 글에서는 EDA(Exploratory Data Analysis) 의 개념부터 특성 엔지니어링까지 실습 코드와 함께 정리하려고 합니다.\n1. 데이터 시각화 EDA(Exploratory Data Analysis) 는 수학자 존 튜키가 제안한 개념으로, 데이터를 다양한 방법으로 확인하고 이해하는 과정입니다.\n시각화를 통해 자료를 직관적으로 바라볼 수 있으며, 여기서 얻은 지식은 이후 통계 분석이나 모델링에 활용됩니다.\n데이터 시각화란 그래프, 차트, 맵과 같은 시각적 요소를 사용해 데이터를 나타내는 프로세스로, 수치 데이터만으로는 발견하지 못한 패턴이나 인사이트를 찾도록 도와줍니다.\n"><script async src="https://www.googletagmanager.com/gtag/js?id=G-EVK5B22CB3"></script><script>var doNotTrack=!1,dnt=navigator.doNotTrack||window.doNotTrack||navigator.msDoNotTrack,doNotTrack=dnt=="1"||dnt=="yes";if(!doNotTrack){window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag("js",new Date),gtag("config","G-EVK5B22CB3")}</script></head><body class=article-page><script>(function(){const e="StackColorScheme";localStorage.getItem(e)||localStorage.setItem(e,"auto")})()</script><script>(function(){const t="StackColorScheme",e=localStorage.getItem(t),n=window.matchMedia("(prefers-color-scheme: dark)").matches===!0;e=="dark"||e==="auto"&&n?document.documentElement.dataset.scheme="dark":document.documentElement.dataset.scheme="light"})()</script><div class="container main-container flex on-phone--column compact"><aside class="sidebar left-sidebar sticky"><button class="hamburger hamburger--spin" type=button id=toggle-menu aria-label="Toggle Menu">
+<span class=hamburger-box><span class=hamburger-inner></span></span></button><header><div class=site-meta><h1 class=site-name><a href=/>LucasPark Blog</a></h1><h2 class=site-description>Lucas Park의 개인 블로그</h2></div></header><ol class=menu id=main-menu><li><a href=/><span>Home</span></a></li><li><a href=/posts/><span>Posts</span></a></li><li><a href=/data-analysis/><span>Data Analysis</span></a></li><li><a href=/gold-news-and-analysis/><span>Gold Price Check & Analysis</span></a></li><li><a href=/atmospheric-environment/><span>Atmospheric Environment</span></a></li><li class=menu-bottom-section><ol class=menu><li id=dark-mode-toggle><svg class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="8" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<svg class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="16" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<span>Dark Mode</span></li></ol></li></ol></aside><main class="main full-width"><article class=main-article><header class=article-header><div class=article-details><div class=article-title-wrapper><h2 class=article-title><a href=/data-analysis/python_data_analysis_07/>EDA(탐색적 데이터 분석) 정리 - 시각화부터 전처리까지</a></h2></div><footer class=article-meta><div class=inline-meta><svg class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M11.795 21H5a2 2 0 01-2-2V7a2 2 0 012-2h12a2 2 0 012 2v4"/><circle cx="18" cy="18" r="4"/><path d="M15 3v4"/><path d="M7 3v4"/><path d="M3 11h16"/><path d="M18 16.496V18l1 1"/></svg>
+<time class=article-time--published datetime=2026-07-08T00:00:00Z>2026년 7월 8일 수요일</time></div></footer></div></header><section class=article-content><h1 id=eda탐색적-데이터-분석-정리>EDA(탐색적 데이터 분석) 정리</h1><p>이번 글에서는 <strong>EDA(Exploratory Data Analysis)</strong> 의 개념부터 특성 엔지니어링까지 실습 코드와 함께 정리하려고 합니다.</p><hr><h2 id=1-데이터-시각화>1. 데이터 시각화</h2><p><strong>EDA(Exploratory Data Analysis)</strong> 는 수학자 존 튜키가 제안한 개념으로, 데이터를 다양한 방법으로 확인하고 이해하는 과정입니다.</p><p>시각화를 통해 자료를 직관적으로 바라볼 수 있으며, 여기서 얻은 지식은 이후 통계 분석이나 모델링에 활용됩니다.</p><p><strong>데이터 시각화</strong>란 그래프, 차트, 맵과 같은 시각적 요소를 사용해 데이터를 나타내는 프로세스로, 수치 데이터만으로는 발견하지 못한 패턴이나 인사이트를 찾도록 도와줍니다.</p><h3 id=주요-시각화-방법>주요 시각화 방법</h3><div class=table-wrapper><table><thead><tr><th>방법</th><th>용도</th><th>장점</th><th>한계</th></tr></thead><tbody><tr><td>히스토그램</td><td>단일 수치형 변수의 분포</td><td>계급별 자료 수를 쉽게 파악</td><td>원래 값 상실 가능, 연속 데이터 전용</td></tr><tr><td>박스 플롯</td><td>이상치 식별, 분산 파악</td><td>분포 요약, 그룹 비교, 이상치 강조</td><td>세부 분포를 보여주지 못함</td></tr><tr><td>산점도</td><td>두 변수 간 관계/추세</td><td>생성·해석 쉬움, 패턴·추세·이상치 표현</td><td>범주형 데이터엔 부적합, 포인트 많으면 해석 어려움</td></tr><tr><td>막대 차트</td><td>범주형 변수의 빈도/비율</td><td>이산 카테고리 비교에 효과적</td><td>연속 데이터엔 부적합, 카테고리 많으면 혼잡</td></tr><tr><td>히트맵</td><td>변수 간 상관관계</td><td>대규모 데이터에서 패턴·군집 파악 용이</td><td>색상 척도에 따라 해석이 왜곡될 수 있음</td></tr></tbody></table></div><p>박스 플롯의 주요 지표:</p><ul><li><strong>Q1(제1사분위수)</strong>: 데이터의 25% 지점</li><li><strong>중앙값</strong>: 데이터 세트를 절반으로 나누는 값</li><li><strong>Q3(제3사분위수)</strong>: 데이터의 75% 지점</li><li><strong>최댓값(휘스커 상한, 이상치 판단 경계)</strong>: Q3 + 1.5 × IQR — 이 값보다 큰 데이터는 이상치로 표시됨</li><li><strong>최솟값(휘스커 하한, 이상치 판단 경계)</strong>: Q1 − 1.5 × IQR — 이 값보다 작은 데이터는 이상치로 표시됨</li></ul><hr><h2 id=2-matplotlib>2. Matplotlib</h2><p>파이썬에서 가장 널리 사용되는 데이터 시각화 라이브러리입니다.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#f92672>import</span> matplotlib.pyplot <span style=color:#66d9ef>as</span> plt
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 점 (1,3), (2,7), (3,9), (4,12) 그리기</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># &#39;ro&#39;는 빨간색(&#39;red&#39;) 원형 마커(&#39;o&#39;)를 의미함</span>
+</span></span><span style=display:flex><span>plt<span style=color:#f92672>.</span>plot([<span style=color:#ae81ff>1</span>, <span style=color:#ae81ff>2</span>, <span style=color:#ae81ff>3</span>, <span style=color:#ae81ff>4</span>], [<span style=color:#ae81ff>3</span>, <span style=color:#ae81ff>7</span>, <span style=color:#ae81ff>9</span>, <span style=color:#ae81ff>12</span>], <span style=color:#e6db74>&#39;ro&#39;</span>)
+</span></span><span style=display:flex><span>plt<span style=color:#f92672>.</span>axis([<span style=color:#ae81ff>0</span>, <span style=color:#ae81ff>5</span>, <span style=color:#ae81ff>0</span>, <span style=color:#ae81ff>15</span>])
+</span></span><span style=display:flex><span>plt<span style=color:#f92672>.</span>show()
+</span></span></code></pre></div><p>여러 그래프를 한 번에 나타낼 수도 있습니다.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#f92672>import</span> numpy <span style=color:#66d9ef>as</span> np
+</span></span><span style=display:flex><span><span style=color:#f92672>import</span> matplotlib.pyplot <span style=color:#66d9ef>as</span> plt
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>time <span style=color:#f92672>=</span> np<span style=color:#f92672>.</span>arange(<span style=color:#ae81ff>0</span>, <span style=color:#ae81ff>10</span>, <span style=color:#ae81ff>0.5</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>plt<span style=color:#f92672>.</span>plot(time, time, <span style=color:#e6db74>&#39;ro&#39;</span>, time, time<span style=color:#f92672>**</span><span style=color:#ae81ff>2</span>, <span style=color:#e6db74>&#39;b--&#39;</span>, time, time<span style=color:#f92672>**</span><span style=color:#ae81ff>3</span>, <span style=color:#e6db74>&#39;gs&#39;</span>)
+</span></span><span style=display:flex><span>plt<span style=color:#f92672>.</span>show()
+</span></span></code></pre></div><ul><li>한계 : Matplotlib은 Seaborn, Plotly 같은 최신 라이브러리에 비해 그래프가 덜 세련되어 보일 수 있습니다.</li></ul><hr><h2 id=3-seaborn>3. Seaborn</h2><p>Seaborn은 Matplotlib을 기반으로 하며, 더 세련되고 통계적인 시각화를 간단한 코드로 만들 수 있습니다.</p><h3 id=seaborn의-기능과-장점>Seaborn의 기능과 장점</h3><ul><li><strong>Matplotlib 기반</strong>: 복잡한 시각화를 더 쉽게 생성</li><li><strong>세련된 시각화</strong>: 미적으로 다듬어진 다양한 테마 포함</li><li><strong>복잡한 코드의 단순화</strong>: 짧은 구문으로 복잡한 플롯 구현</li><li><strong>Pandas와의 통합</strong>: DataFrame을 직접 다루고 시각화하기 쉬움</li><li><strong>고급 통계 플롯</strong>: 통계 관계를 보여주는 다양한 고급 플롯 함수 포함</li></ul><h3 id=예시-1-박스-플롯-flights-데이터셋>예시 1: 박스 플롯 (Flights 데이터셋)</h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#f92672>import</span> pandas <span style=color:#66d9ef>as</span> pd
+</span></span><span style=display:flex><span><span style=color:#f92672>import</span> matplotlib.pyplot <span style=color:#66d9ef>as</span> plt
+</span></span><span style=display:flex><span><span style=color:#f92672>import</span> seaborn <span style=color:#66d9ef>as</span> sns
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># seaborn에서 자체 제공하는 flights 데이터셋 로드</span>
+</span></span><span style=display:flex><span>flights <span style=color:#f92672>=</span> sns<span style=color:#f92672>.</span>load_dataset(<span style=color:#e6db74>&#39;flights&#39;</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>plt<span style=color:#f92672>.</span>figure(figsize<span style=color:#f92672>=</span>(<span style=color:#ae81ff>6</span>, <span style=color:#ae81ff>6</span>))
+</span></span><span style=display:flex><span>sns<span style=color:#f92672>.</span>boxplot(data<span style=color:#f92672>=</span>flights, x<span style=color:#f92672>=</span><span style=color:#e6db74>&#39;year&#39;</span>, y<span style=color:#f92672>=</span><span style=color:#e6db74>&#39;passengers&#39;</span>)
+</span></span><span style=display:flex><span>plt<span style=color:#f92672>.</span>show()
+</span></span></code></pre></div><h3 id=예시-2-산점도-tips-데이터셋>예시 2: 산점도 (Tips 데이터셋)</h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#f92672>import</span> seaborn <span style=color:#66d9ef>as</span> sns
+</span></span><span style=display:flex><span><span style=color:#f92672>import</span> matplotlib.pyplot <span style=color:#66d9ef>as</span> plt
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 레스토랑 손님의 팁 데이터셋</span>
+</span></span><span style=display:flex><span>tips <span style=color:#f92672>=</span> sns<span style=color:#f92672>.</span>load_dataset(<span style=color:#e6db74>&#34;tips&#34;</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>plt<span style=color:#f92672>.</span>figure(figsize<span style=color:#f92672>=</span>(<span style=color:#ae81ff>5</span>, <span style=color:#ae81ff>5</span>))
+</span></span><span style=display:flex><span>sns<span style=color:#f92672>.</span>scatterplot(data<span style=color:#f92672>=</span>tips, x<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;total_bill&#34;</span>, y<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;tip&#34;</span>, hue<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;time&#34;</span>)
+</span></span><span style=display:flex><span>plt<span style=color:#f92672>.</span>show()
+</span></span></code></pre></div><hr><h2 id=4-데이터-비교>4. 데이터 비교</h2><p><strong>데이터 비교</strong>란 두 개 이상의 데이터 집합을 분석·평가하여 유사성, 차이, 추세, 관계 등을 파악하는 과정입니다.</p><ul><li><strong>질적 비교</strong>: 범주형 데이터의 차이와 유사성을 분석</li><li><strong>양적 비교</strong>: 수치 데이터의 상관관계 또는 패턴을 분석</li></ul><h3 id=예시-연도별월별-승객-수-비교-색상-강조>예시: 연도별/월별 승객 수 비교 (색상 강조)</h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#f92672>import</span> matplotlib.pyplot <span style=color:#66d9ef>as</span> plt
+</span></span><span style=display:flex><span><span style=color:#f92672>import</span> seaborn <span style=color:#66d9ef>as</span> sns
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>flights <span style=color:#f92672>=</span> sns<span style=color:#f92672>.</span>load_dataset(<span style=color:#e6db74>&#39;flights&#39;</span>)
+</span></span><span style=display:flex><span>sns<span style=color:#f92672>.</span>set(font_scale<span style=color:#f92672>=</span><span style=color:#ae81ff>1.5</span>)
+</span></span><span style=display:flex><span>plt<span style=color:#f92672>.</span>figure(figsize<span style=color:#f92672>=</span>(<span style=color:#ae81ff>10</span>, <span style=color:#ae81ff>10</span>))
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 특정 연도(1955, 1958)만 강조하여 비교</span>
+</span></span><span style=display:flex><span>flights_years <span style=color:#f92672>=</span> sorted(list(set(flights[<span style=color:#e6db74>&#39;year&#39;</span>])))
+</span></span><span style=display:flex><span>color <span style=color:#f92672>=</span> [<span style=color:#e6db74>&#39;lightgrey&#39;</span> <span style=color:#66d9ef>if</span> x <span style=color:#f92672>not</span> <span style=color:#f92672>in</span> [<span style=color:#ae81ff>1955</span>, <span style=color:#ae81ff>1958</span>] <span style=color:#66d9ef>else</span> <span style=color:#e6db74>&#34;#4472C4&#34;</span> <span style=color:#66d9ef>for</span> x <span style=color:#f92672>in</span> flights_years]
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>sns<span style=color:#f92672>.</span>barplot(data<span style=color:#f92672>=</span>flights, x<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;year&#34;</span>, y<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;passengers&#34;</span>, palette<span style=color:#f92672>=</span>color, errorbar<span style=color:#f92672>=</span><span style=color:#66d9ef>None</span>)
+</span></span><span style=display:flex><span>plt<span style=color:#f92672>.</span>show()
+</span></span></code></pre></div><h3 id=예시-연도별-승객-수-변화-라인-비교>예시: 연도별 승객 수 변화 라인 비교</h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#f92672>import</span> matplotlib.pyplot <span style=color:#66d9ef>as</span> plt
+</span></span><span style=display:flex><span><span style=color:#f92672>import</span> seaborn <span style=color:#66d9ef>as</span> sns
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>flights <span style=color:#f92672>=</span> sns<span style=color:#f92672>.</span>load_dataset(<span style=color:#e6db74>&#39;flights&#39;</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 연도마다 월별 승객 수 변화 시각화</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>for</span> year <span style=color:#f92672>in</span> flights[<span style=color:#e6db74>&#39;year&#39;</span>]<span style=color:#f92672>.</span>unique():
+</span></span><span style=display:flex><span>    flights_for_year <span style=color:#f92672>=</span> flights[flights[<span style=color:#e6db74>&#39;year&#39;</span>] <span style=color:#f92672>==</span> year]
+</span></span><span style=display:flex><span>    <span style=color:#75715e># 1955년과 1958년만 파란색으로 강조</span>
+</span></span><span style=display:flex><span>    line_color <span style=color:#f92672>=</span> <span style=color:#e6db74>&#39;#4472C4&#39;</span> <span style=color:#66d9ef>if</span> year <span style=color:#f92672>in</span> [<span style=color:#ae81ff>1955</span>, <span style=color:#ae81ff>1958</span>] <span style=color:#66d9ef>else</span> <span style=color:#e6db74>&#39;#EFF3F9&#39;</span>
+</span></span><span style=display:flex><span>    plt<span style=color:#f92672>.</span>plot(flights_for_year[<span style=color:#e6db74>&#39;month&#39;</span>], flights_for_year[<span style=color:#e6db74>&#39;passengers&#39;</span>], color<span style=color:#f92672>=</span>line_color)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>plt<span style=color:#f92672>.</span>show()
+</span></span></code></pre></div><hr><h2 id=5-상관관계-분석>5. 상관관계 분석</h2><p><strong>상관관계 분석</strong>은 두 양적 변수 간 선형 관계의 강도와 방향을 평가하는 것을 의미합니다.</p><h3 id=공분산covariance>공분산(Covariance)</h3><p>두 변수의 공동 변동성을 설명하는 척도로, 두 변수가 함께 증가/감소하면 양수, 반대로 움직이면 음수가 됩니다.</p><p>$$Cov(X, Y) = \frac{\sum_{i=1}^{n}(X_i - \bar{X})(Y_i - \bar{Y})}{n}$$</p><blockquote><p><code>numpy.cov()</code>는 기본적으로 <strong>표본공분산</strong>(n이 아닌 n−1로 나눈 값)을 반환합니다. 아래 예제 결과(114.7)도 n−1 기준입니다.</p></blockquote><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#f92672>import</span> pandas <span style=color:#66d9ef>as</span> pd
+</span></span><span style=display:flex><span><span style=color:#f92672>import</span> numpy <span style=color:#66d9ef>as</span> np
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>df <span style=color:#f92672>=</span> pd<span style=color:#f92672>.</span>DataFrame({<span style=color:#e6db74>&#39;키&#39;</span>: [<span style=color:#ae81ff>158</span>, <span style=color:#ae81ff>163</span>, <span style=color:#ae81ff>170</span>, <span style=color:#ae81ff>183</span>, <span style=color:#ae81ff>180</span>], <span style=color:#e6db74>&#39;몸무게&#39;</span>: [<span style=color:#ae81ff>49</span>, <span style=color:#ae81ff>52</span>, <span style=color:#ae81ff>60</span>, <span style=color:#ae81ff>80</span>, <span style=color:#ae81ff>83</span>]})
+</span></span><span style=display:flex><span>print(np<span style=color:#f92672>.</span>cov(df[<span style=color:#e6db74>&#39;키&#39;</span>], df[<span style=color:#e6db74>&#39;몸무게&#39;</span>]))
+</span></span></code></pre></div><ul><li>공분산의 한계 : 단위에 따라 값이 크게 달라집니다. 예를 들어 키를 cm에서 m로 바꾸면 공분산 값 자체가 크게 변해, 변수 간 관계 강도를 직관적으로 비교하기 어렵습니다.</li></ul><h3 id=상관계수correlation-coefficient>상관계수(Correlation Coefficient)</h3><p>단위에 영향받지 않도록 공분산을 표준편차로 나눈 값으로, <strong>-1 ~ 1</strong> 사이의 값을 가집니다.</p><p>$$Corr(X, Y) = \frac{Cov(X, Y)}{\sqrt{\frac{\sum(X-\mu)^2}{N}} \cdot \sqrt{\frac{\sum(Y-\mu)^2}{N}}}$$</p><ul><li><strong>-1</strong>: 완전한 음의 상관관계</li><li><strong>0</strong>: 독립(관계 없음)</li><li><strong>1</strong>: 완전한 양의 상관관계</li></ul><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#f92672>import</span> pandas <span style=color:#66d9ef>as</span> pd
+</span></span><span style=display:flex><span><span style=color:#f92672>import</span> numpy <span style=color:#66d9ef>as</span> np
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>df <span style=color:#f92672>=</span> pd<span style=color:#f92672>.</span>DataFrame({<span style=color:#e6db74>&#39;키&#39;</span>: [<span style=color:#ae81ff>158</span>, <span style=color:#ae81ff>163</span>, <span style=color:#ae81ff>170</span>, <span style=color:#ae81ff>183</span>, <span style=color:#ae81ff>180</span>], <span style=color:#e6db74>&#39;몸무게&#39;</span>: [<span style=color:#ae81ff>49</span>, <span style=color:#ae81ff>52</span>, <span style=color:#ae81ff>60</span>, <span style=color:#ae81ff>80</span>, <span style=color:#ae81ff>83</span>]})
+</span></span><span style=display:flex><span>print(np<span style=color:#f92672>.</span>corrcoef(df[<span style=color:#e6db74>&#39;키&#39;</span>], df[<span style=color:#e6db74>&#39;몸무게&#39;</span>])[<span style=color:#ae81ff>0</span>][<span style=color:#ae81ff>1</span>])
+</span></span><span style=display:flex><span><span style=color:#75715e># 단위를 cm -&gt; m로 바꿔도 상관계수는 동일하게 유지됨</span>
+</span></span></code></pre></div><hr><h2 id=6-상관관계-시각화>6. 상관관계 시각화</h2><p>상관관계를 시각화하면 두 변수 사이 관계의 강도와 방향을 쉽게 식별할 수 있고, 필요한 특징(feature) 선택에도 도움이 됩니다.</p><p>예시로 Scikit-learn의 <strong>당뇨병(diabetes) 데이터셋</strong>을 사용합니다.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#f92672>from</span> sklearn <span style=color:#f92672>import</span> datasets
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>data <span style=color:#f92672>=</span> datasets<span style=color:#f92672>.</span>load_diabetes()
+</span></span><span style=display:flex><span>print(data<span style=color:#f92672>.</span>keys())
+</span></span><span style=display:flex><span>print(data[<span style=color:#e6db74>&#39;feature_names&#39;</span>])
+</span></span></code></pre></div><h3 id=산점도로-두-변수-관계-보기>산점도로 두 변수 관계 보기</h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#f92672>import</span> matplotlib.pyplot <span style=color:#66d9ef>as</span> plt
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>plt<span style=color:#f92672>.</span>scatter(data[<span style=color:#e6db74>&#39;data&#39;</span>][:, <span style=color:#ae81ff>2</span>], data[<span style=color:#e6db74>&#39;target&#39;</span>], alpha<span style=color:#f92672>=</span><span style=color:#ae81ff>0.5</span>)  <span style=color:#75715e># BMI vs target</span>
+</span></span><span style=display:flex><span>plt<span style=color:#f92672>.</span>title(<span style=color:#e6db74>&#34;Scatter plot&#34;</span>)
+</span></span><span style=display:flex><span>plt<span style=color:#f92672>.</span>xlabel(<span style=color:#e6db74>&#39;BMI&#39;</span>)
+</span></span><span style=display:flex><span>plt<span style=color:#f92672>.</span>ylabel(<span style=color:#e6db74>&#39;TARGET&#39;</span>)
+</span></span><span style=display:flex><span>plt<span style=color:#f92672>.</span>show()
+</span></span></code></pre></div><h3 id=여러-변수-간-산점도-pairplot>여러 변수 간 산점도 (pairplot)</h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#f92672>import</span> pandas <span style=color:#66d9ef>as</span> pd
+</span></span><span style=display:flex><span><span style=color:#f92672>import</span> seaborn <span style=color:#66d9ef>as</span> sns
+</span></span><span style=display:flex><span><span style=color:#f92672>import</span> matplotlib.pyplot <span style=color:#66d9ef>as</span> plt
+</span></span><span style=display:flex><span><span style=color:#f92672>from</span> sklearn <span style=color:#f92672>import</span> datasets
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>data <span style=color:#f92672>=</span> datasets<span style=color:#f92672>.</span>load_diabetes()
+</span></span><span style=display:flex><span>df <span style=color:#f92672>=</span> pd<span style=color:#f92672>.</span>DataFrame(data[<span style=color:#e6db74>&#39;data&#39;</span>], index<span style=color:#f92672>=</span>data[<span style=color:#e6db74>&#39;target&#39;</span>], columns<span style=color:#f92672>=</span>data[<span style=color:#e6db74>&#39;feature_names&#39;</span>])
+</span></span><span style=display:flex><span>df <span style=color:#f92672>=</span> df<span style=color:#f92672>.</span>reset_index(drop<span style=color:#f92672>=</span><span style=color:#66d9ef>True</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>plt<span style=color:#f92672>.</span>figure(figsize<span style=color:#f92672>=</span>(<span style=color:#ae81ff>14</span>, <span style=color:#ae81ff>8</span>))
+</span></span><span style=display:flex><span>sns<span style=color:#f92672>.</span>pairplot(df[[<span style=color:#e6db74>&#39;age&#39;</span>, <span style=color:#e6db74>&#39;bmi&#39;</span>, <span style=color:#e6db74>&#39;bp&#39;</span>]])
+</span></span><span style=display:flex><span>plt<span style=color:#f92672>.</span>show()
+</span></span></code></pre></div><h3 id=히트맵으로-전체-변수-상관관계-확인>히트맵으로 전체 변수 상관관계 확인</h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#f92672>import</span> seaborn <span style=color:#66d9ef>as</span> sns
+</span></span><span style=display:flex><span><span style=color:#f92672>import</span> matplotlib.pyplot <span style=color:#66d9ef>as</span> plt
+</span></span><span style=display:flex><span><span style=color:#f92672>from</span> sklearn <span style=color:#f92672>import</span> datasets
+</span></span><span style=display:flex><span><span style=color:#f92672>import</span> pandas <span style=color:#66d9ef>as</span> pd
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>data <span style=color:#f92672>=</span> datasets<span style=color:#f92672>.</span>load_diabetes()
+</span></span><span style=display:flex><span>df <span style=color:#f92672>=</span> pd<span style=color:#f92672>.</span>DataFrame(data[<span style=color:#e6db74>&#39;data&#39;</span>], index<span style=color:#f92672>=</span>data[<span style=color:#e6db74>&#39;target&#39;</span>], columns<span style=color:#f92672>=</span>data[<span style=color:#e6db74>&#39;feature_names&#39;</span>])
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>sns<span style=color:#f92672>.</span>heatmap(df<span style=color:#f92672>.</span>corr())
+</span></span><span style=display:flex><span>plt<span style=color:#f92672>.</span>title(<span style=color:#e6db74>&#39;Heatmap by sns.heatmap()&#39;</span>, fontsize<span style=color:#f92672>=</span><span style=color:#ae81ff>20</span>)
+</span></span><span style=display:flex><span>plt<span style=color:#f92672>.</span>show()
+</span></span></code></pre></div><p>Matplotlib만으로도 유사하게 그릴 수 있습니다.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#f92672>import</span> numpy <span style=color:#66d9ef>as</span> np
+</span></span><span style=display:flex><span><span style=color:#f92672>import</span> matplotlib.pyplot <span style=color:#66d9ef>as</span> plt
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>plt<span style=color:#f92672>.</span>pcolor(df<span style=color:#f92672>.</span>corr())
+</span></span><span style=display:flex><span>plt<span style=color:#f92672>.</span>xticks(np<span style=color:#f92672>.</span>arange(<span style=color:#ae81ff>0.5</span>, len(df<span style=color:#f92672>.</span>columns), <span style=color:#ae81ff>1</span>), df<span style=color:#f92672>.</span>columns)
+</span></span><span style=display:flex><span>plt<span style=color:#f92672>.</span>yticks(np<span style=color:#f92672>.</span>arange(<span style=color:#ae81ff>0.5</span>, len(df<span style=color:#f92672>.</span>columns), <span style=color:#ae81ff>1</span>), df<span style=color:#f92672>.</span>columns)
+</span></span><span style=display:flex><span>plt<span style=color:#f92672>.</span>title(<span style=color:#e6db74>&#39;Heatmap by plt.pcolor()&#39;</span>, fontsize<span style=color:#f92672>=</span><span style=color:#ae81ff>20</span>)
+</span></span><span style=display:flex><span>plt<span style=color:#f92672>.</span>colorbar()
+</span></span><span style=display:flex><span>plt<span style=color:#f92672>.</span>show()
+</span></span></code></pre></div><hr><h2 id=7-데이터-스케일링>7. 데이터 스케일링</h2><p><strong>데이터 스케일링</strong>은 서로 다른 변수의 값 범위를 일치시키는 작업입니다.</p><h3 id=필요성>필요성</h3><ul><li>모든 변수가 동일한 범위가 되어 쉽게 비교 가능</li><li>규모가 큰 변수의 영향이 과도하게 커지는 것을 방지</li><li>이상치 처리에 효과적</li></ul><h3 id=스케일링-종류>스케일링 종류</h3><div class=table-wrapper><table><thead><tr><th>종류</th><th>설명</th></tr></thead><tbody><tr><td>Min-Max 스케일링</td><td>최솟값·최댓값을 이용해 0~1 사이 값으로 변환</td></tr><tr><td>표준화 (Standardization)</td><td>평균 0, 표준편차 1이 되도록 변환</td></tr><tr><td>로버스트 스케일링</td><td>중앙값 0, 사분위범위(IQR) 1이 되도록 변환 (이상치에 강함)</td></tr></tbody></table></div><p>예시 데이터로 Scikit-learn의 <strong>유방암(breast cancer) 데이터셋</strong>을 사용합니다.</p><h3 id=표준화-standardscaler>표준화 (StandardScaler)</h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#f92672>from</span> sklearn.datasets <span style=color:#f92672>import</span> load_breast_cancer
+</span></span><span style=display:flex><span><span style=color:#f92672>from</span> sklearn.preprocessing <span style=color:#f92672>import</span> StandardScaler
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>cancer <span style=color:#f92672>=</span> load_breast_cancer()
+</span></span><span style=display:flex><span>X <span style=color:#f92672>=</span> cancer<span style=color:#f92672>.</span>data
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>std <span style=color:#f92672>=</span> StandardScaler()
+</span></span><span style=display:flex><span>std<span style=color:#f92672>.</span>fit(X)
+</span></span><span style=display:flex><span>X_scaled <span style=color:#f92672>=</span> std<span style=color:#f92672>.</span>transform(X)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>print(<span style=color:#e6db74>&#39;Data before scaling&#39;</span>)
+</span></span><span style=display:flex><span>print(X)
+</span></span><span style=display:flex><span>print(<span style=color:#e6db74>&#39;Data after scaling&#39;</span>)
+</span></span><span style=display:flex><span>print(X_scaled)
+</span></span></code></pre></div><h3 id=min-max-스케일링>Min-Max 스케일링</h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#f92672>from</span> sklearn.preprocessing <span style=color:#f92672>import</span> MinMaxScaler
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>mms <span style=color:#f92672>=</span> MinMaxScaler()
+</span></span><span style=display:flex><span>mms<span style=color:#f92672>.</span>fit(X)
+</span></span><span style=display:flex><span>X_scaled <span style=color:#f92672>=</span> mms<span style=color:#f92672>.</span>transform(X)
+</span></span></code></pre></div><h3 id=로버스트-스케일링>로버스트 스케일링</h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#f92672>from</span> sklearn.preprocessing <span style=color:#f92672>import</span> RobustScaler
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>rbs <span style=color:#f92672>=</span> RobustScaler()
+</span></span><span style=display:flex><span>rbs<span style=color:#f92672>.</span>fit(X)
+</span></span><span style=display:flex><span>X_scaled <span style=color:#f92672>=</span> rbs<span style=color:#f92672>.</span>transform(X)
+</span></span></code></pre></div><hr><h2 id=8-데이터-전처리>8. 데이터 전처리</h2><p><strong>데이터 전처리</strong>란 데이터를 분석하기에 효과적인 형식으로 정리·변환·구성하는 작업입니다.</p><ul><li><strong>데이터 정제</strong>: 누락된 값, 잡음, 일관성 없는 데이터 처리</li><li><strong>특징 엔지니어링</strong>: 기존 특징에서 새로운 특징을 생성·변환</li><li><strong>불균형 데이터 처리</strong>: 클래스 불균형이 심하면 모델에 편향이 생기므로 오버샘플링·언더샘플링 등으로 균형을 맞춤</li></ul><p>예시로 Seaborn의 <strong>titanic 데이터셋</strong>을 사용합니다.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#f92672>import</span> seaborn <span style=color:#66d9ef>as</span> sns
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>titanic <span style=color:#f92672>=</span> sns<span style=color:#f92672>.</span>load_dataset(<span style=color:#e6db74>&#39;titanic&#39;</span>)
+</span></span><span style=display:flex><span>print(titanic<span style=color:#f92672>.</span>info())
+</span></span></code></pre></div><h3 id=불필요한-열-제외>불필요한 열 제외</h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#75715e># 누락된 데이터가 많은 열 제거 (예: deck)</span>
+</span></span><span style=display:flex><span>cols <span style=color:#f92672>=</span> [<span style=color:#e6db74>&#39;deck&#39;</span>]
+</span></span><span style=display:flex><span>titanic <span style=color:#f92672>=</span> titanic<span style=color:#f92672>.</span>drop(cols, axis<span style=color:#f92672>=</span><span style=color:#ae81ff>1</span>)
+</span></span><span style=display:flex><span>print(titanic<span style=color:#f92672>.</span>info())
+</span></span></code></pre></div><h3 id=선형보간으로-결측치-채우기>선형보간으로 결측치 채우기</h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#75715e># 누락된 데이터를 선형보간을 이용해 메꿈</span>
+</span></span><span style=display:flex><span>titanic[<span style=color:#e6db74>&#39;age&#39;</span>] <span style=color:#f92672>=</span> titanic[<span style=color:#e6db74>&#39;age&#39;</span>]<span style=color:#f92672>.</span>interpolate()
+</span></span><span style=display:flex><span>print(titanic<span style=color:#f92672>.</span>info())
+</span></span></code></pre></div><hr><h2 id=9-특성-엔지니어링>9. 특성 엔지니어링</h2><p><strong>특성 엔지니어링(Feature Engineering)</strong> 은 기존 특성에서 새로운 특성을 선택·변환·생성하여 모델의 성능을 향상시키는 과정입니다.</p><h3 id=주요-방법>주요 방법</h3><div class=table-wrapper><table><thead><tr><th>방법</th><th>설명</th></tr></thead><tbody><tr><td>특성 결합</td><td>두 개 이상의 기존 특성을 결합해 새로운 특성 생성</td></tr><tr><td>범주형 변수 인코딩</td><td>문자열 등의 범주형 특성을 수치형 특성으로 변환</td></tr><tr><td>일변량 비선형 변환</td><td>제곱항, 세제곱항 등을 추가</td></tr><tr><td>새로운 특성 생성</td><td>도메인 지식을 바탕으로 새로운 유용한 특성을 만듦</td></tr></tbody></table></div><h3 id=예시-범주형-변수-인코딩-및-특성-결합-상관관계-계산>예시: 범주형 변수 인코딩 및 특성 결합 (상관관계 계산)</h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#f92672>import</span> numpy <span style=color:#66d9ef>as</span> np
+</span></span><span style=display:flex><span><span style=color:#f92672>import</span> pandas <span style=color:#66d9ef>as</span> pd
+</span></span><span style=display:flex><span><span style=color:#f92672>import</span> seaborn <span style=color:#66d9ef>as</span> sns
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>titanic <span style=color:#f92672>=</span> sns<span style=color:#f92672>.</span>load_dataset(<span style=color:#e6db74>&#39;titanic&#39;</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 생존 특성을 0과 1로 인코딩하여 상관관계 확인</span>
+</span></span><span style=display:flex><span>titanic[<span style=color:#e6db74>&#39;alive_1&#39;</span>] <span style=color:#f92672>=</span> np<span style=color:#f92672>.</span>where(titanic[<span style=color:#e6db74>&#39;alive&#39;</span>] <span style=color:#f92672>==</span> <span style=color:#e6db74>&#39;yes&#39;</span>, <span style=color:#ae81ff>1</span>, <span style=color:#ae81ff>0</span>)
+</span></span><span style=display:flex><span>titanic_sub <span style=color:#f92672>=</span> titanic[[<span style=color:#e6db74>&#39;fare&#39;</span>, <span style=color:#e6db74>&#39;alive_1&#39;</span>]]
+</span></span><span style=display:flex><span>print(titanic_sub<span style=color:#f92672>.</span>corr())
+</span></span></code></pre></div><h3 id=예시-새로운-특징-생성>예시: 새로운 특징 생성</h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#f92672>import</span> numpy <span style=color:#66d9ef>as</span> np
+</span></span><span style=display:flex><span><span style=color:#f92672>import</span> seaborn <span style=color:#66d9ef>as</span> sns
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>titanic <span style=color:#f92672>=</span> sns<span style=color:#f92672>.</span>load_dataset(<span style=color:#e6db74>&#39;titanic&#39;</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 요금이 50을 넘으면 비싼 표(1), 아니면 0으로 새로운 칼럼 생성</span>
+</span></span><span style=display:flex><span>titanic[<span style=color:#e6db74>&#39;expensive&#39;</span>] <span style=color:#f92672>=</span> np<span style=color:#f92672>.</span>where(titanic[<span style=color:#e6db74>&#39;fare&#39;</span>] <span style=color:#f92672>&gt;</span> <span style=color:#ae81ff>50</span>, <span style=color:#ae81ff>1</span>, <span style=color:#ae81ff>0</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 퀸즈타운 승선이면 &#39;Oceania&#39;, 아니면 &#39;Europe&#39;으로 대륙 특성 생성</span>
+</span></span><span style=display:flex><span>titanic[<span style=color:#e6db74>&#39;continent&#39;</span>] <span style=color:#f92672>=</span> np<span style=color:#f92672>.</span>where(titanic[<span style=color:#e6db74>&#39;embark_town&#39;</span>] <span style=color:#f92672>==</span> <span style=color:#e6db74>&#39;Queenstown&#39;</span>, <span style=color:#e6db74>&#39;Oceania&#39;</span>, <span style=color:#e6db74>&#39;Europe&#39;</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>print(titanic[[<span style=color:#e6db74>&#39;expensive&#39;</span>, <span style=color:#e6db74>&#39;continent&#39;</span>]])
+</span></span></code></pre></div><hr><h2 id=마무리>마무리</h2><p>EDA는 모델링 이전에 데이터의 특성과 패턴, 이상치, 변수 간 관계를 파악하는 필수적인 과정입니다.</p><ul><li>데이터 로드 → 시각화(분포/이상치/관계 파악) → 데이터 비교 → 상관관계 분석 → 스케일링 → 전처리(결측치 등) → 특성 엔지니어링</li></ul><p>다양한 그래프 상황도 같이 넣고 싶었지만 아직 숙련도 이슈를 그래프는 넣지 못했습니다.</p><p>이후 순서대로 글을 작성하고 싶은데 공부를 하다 보니 다뤄보고 싶은 주제가 계속 생기고 있어서 순서는 조금 달라질 수도 있지만, 하나씩 꾸준히 기록해보겠습니다.</p><p>감사합니다.</p></section><footer class="article-meta article-footer"></footer><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css integrity=sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV crossorigin=anonymous><script src=https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js integrity=sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG+vnGctmUb0ZY0l8 crossorigin=anonymous defer></script><script src=https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js integrity=sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05 crossorigin=anonymous defer></script><script>window.addEventListener("DOMContentLoaded",()=>{const e=[".main-article",".widget--toc"];e.forEach(e=>{const t=document.querySelector(e);t&&renderMathInElement(t,{delimiters:[{left:"$$",right:"$$",display:!0},{left:"$",right:"$",display:!1},{left:"\\(",right:"\\)",display:!1},{left:"\\[",right:"\\]",display:!0}],ignoredClasses:["gist"]})})})</script></article><div class=disqus-container></div><style>.disqus-container{background-color:var(--card-background);border-radius:var(--card-border-radius);box-shadow:var(--shadow-l1);padding:var(--card-padding)}</style><script>window.addEventListener("onColorSchemeChange",e=>{typeof DISQUS=="object"&&DISQUS.reset({reload:!0})})</script><footer class=site-footer><section class=copyright>&copy;
+2026 LucasPark Blog</section><section class=powerby>Built with <a href=https://gohugo.io/ target=_blank rel=noopener>Hugo</a><br>Theme <b><a href=https://github.com/CaiJimmy/hugo-theme-stack target=_blank rel=noopener data-version=4.0.3>Stack</a></b> designed by <a href=https://jimmycai.com target=_blank rel=noopener>Jimmy</a></section></footer><script type=module>
     import gallery from '\/ts\/gallery.js';
 
     const articleContent = document.querySelector('.article-content');
@@ -699,15 +198,4 @@
         });
         lightbox.init();
     }
-</script>
-
-    
-
-            </main>
-        </div>
-        
-<script type="text/javascript" src="/ts/main.1ff1e5fdc4e178ed422e50aa407526dc552f26342d729343fded19416194382c.js" defer></script>
-
-
-    </body>
-</html>
+</script></main></div><script type=text/javascript src=/ts/main.1ff1e5fdc4e178ed422e50aa407526dc552f26342d729343fded19416194382c.js defer></script></body></html>
