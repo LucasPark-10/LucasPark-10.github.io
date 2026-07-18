@@ -222,12 +222,12 @@
 </ol>
 <h3 id="선형-변환의-활용-신경망-연산">선형 변환의 활용 (신경망 연산)
 </h3><p>신경망에서 입력벡터 $x$, 가중치 행렬 $W$, 편향벡터 $b$가 주어졌을 때 출력벡터 $u$는 다음과 같은 선형변환으로 표현됩니다.</p>
-<p>$$\begin{pmatrix} u_1 \ u_2 \ \vdots \ u_k \end{pmatrix}
-= \begin{pmatrix} w_{11} &amp; w_{12} &amp; \cdots &amp; w_{1n} \ w_{21} &amp; w_{22} &amp; \cdots &amp; w_{2n} \ \vdots &amp; \vdots &amp; \ddots &amp; \vdots \ w_{k1} &amp; w_{k2} &amp; \cdots &amp; w_{kn} \end{pmatrix} \begin{pmatrix} x_1 \ x_2 \ \vdots \ x_n \end{pmatrix}</p>
-<ul>
-<li>\begin{pmatrix} b_1 \ b_2 \ \vdots \ b_k \end{pmatrix}
-;\Rightarrow; \begin{pmatrix} f(u_1) \ f(u_2) \ \vdots \ f(u_k) \end{pmatrix}$$</li>
-</ul>
+<p>$$
+u = W \cdot x + b
+$$</p>
+<p>$$
+\begin{pmatrix} u_1 \ u_2 \ \vdots \ u_k \end{pmatrix} = \begin{pmatrix} w_{11} &amp; w_{12} &amp; \cdots &amp; w_{1n} \ w_{21} &amp; w_{22} &amp; \cdots &amp; w_{2n} \ \vdots &amp; \vdots &amp; \ddots &amp; \vdots \ w_{k1} &amp; w_{k2} &amp; \cdots &amp; w_{kn} \end{pmatrix} \begin{pmatrix} x_1 \ x_2 \ \vdots \ x_n \end{pmatrix} + \begin{pmatrix} b_1 \ b_2 \ \vdots \ b_k \end{pmatrix} ;\Rightarrow; \begin{pmatrix} f(u_1) \ f(u_2) \ \vdots \ f(u_k) \end{pmatrix}
+$$</p>
 <hr>
 <h2 id="1-벡터공간의-확장으로의-행렬">1. 벡터공간의 확장으로의 행렬
 </h2><h3 id="1-1-행렬의-벡터공간-연산">1-1. 행렬의 벡터공간 연산
