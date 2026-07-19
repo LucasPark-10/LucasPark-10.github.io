@@ -266,7 +266,7 @@ V = (v_1\ v_2\ v_3) = \begin{pmatrix}
 0 &amp; 1 &amp; 0
 \end{pmatrix}
 $$</p>
-<p>$V$는 직교행렬이며 $A^\top A V = V,\mathrm{diag}(2,1,0)$.</p>
+<p>$V$는 직교행렬이며 $A^\top A V = V\,\mathrm{diag}(2,1,0)$.</p>
 <p><strong>$u_i$ 구하기</strong>: $u_i = \dfrac{1}{\sqrt{\lambda_i}} A v_i$</p>
 <ul>
 <li>$Av_1 = \sqrt2(1,0)^\top \Rightarrow u_1 = (1,0)^\top$</li>
@@ -274,7 +274,7 @@ $$</p>
 <li>$Av_3 = (0,0)^\top$ (특이값 0에 해당, $u_3$ 정의 불가)</li>
 </ul>
 <p>$$
-U = (u_1\ u_2) = \begin{pmatrix}1&amp;0\0&amp;1\end{pmatrix}
+U = (u_1\ u_2) = \begin{pmatrix}1&amp;0\\0&amp;1\end{pmatrix}
 $$</p>
 <p><strong>결론</strong></p>
 <p>$$
@@ -296,8 +296,8 @@ $$</p>
 <li>$\lambda=1$: $v_2 = \dfrac{1}{\sqrt2}(-1,1)^\top$</li>
 </ul>
 <p>$$
-V = \begin{pmatrix} \frac1{\sqrt2} &amp; -\frac1{\sqrt2} \ \frac1{\sqrt2} &amp; \frac1{\sqrt2} \end{pmatrix}, \qquad
-B^\top B V = \begin{pmatrix}3&amp;0\0&amp;1\end{pmatrix}V
+V = \begin{pmatrix} \frac1{\sqrt2} &amp; -\frac1{\sqrt2} \\ \frac1{\sqrt2} &amp; \frac1{\sqrt2} \end{pmatrix}, \qquad
+B^\top B V = \begin{pmatrix}3&amp;0\\0&amp;1\end{pmatrix}V
 $$</p>
 <p>$u_i = \dfrac{1}{\sqrt{\lambda_i}} B v_i$로 계산하면:</p>
 <p>$$
@@ -309,8 +309,8 @@ $$</p>
 u_3 = \left(\tfrac1{\sqrt3},\ -\tfrac1{\sqrt3},\ \tfrac1{\sqrt3}\right)^\top
 $$</p>
 <p>$$
-U = (u_1\ u_2\ u_3), \qquad B V = U\begin{pmatrix}\sqrt3 &amp; 0\0&amp;1\0&amp;0\end{pmatrix}
-\ \Rightarrow\ U^\top B V = \begin{pmatrix}\sqrt3&amp;0\0&amp;1\0&amp;0\end{pmatrix}
+U = (u_1\ u_2\ u_3), \qquad B V = U\begin{pmatrix}\sqrt3 &amp; 0\\0&amp;1\\0&amp;0\end{pmatrix}
+\ \Rightarrow\ U^\top B V = \begin{pmatrix}\sqrt3&amp;0\\0&amp;1\\0&amp;0\end{pmatrix}
 $$</p>
 <hr>
 <h3 id="예제-3">예제 3
@@ -331,7 +331,7 @@ u_1 = \left(\tfrac{4}{\sqrt{80}},\ \tfrac{8}{\sqrt{80}}\right)^\top,\qquad
 u_2 = \left(\tfrac{4}{\sqrt{20}},\ -\tfrac{2}{\sqrt{20}}\right)^\top
 $$</p>
 <p>$$
-A V = U\begin{pmatrix}\sqrt{40}&amp;0\0&amp;\sqrt{10}\end{pmatrix}
+A V = U\begin{pmatrix}\sqrt{40}&amp;0\\0&amp;\sqrt{10}\end{pmatrix}
 $$</p>
 <p>세 예제 모두 같은 절차를 따르게 됩니다:</p>
 <ol>
@@ -372,8 +372,8 @@ $$</p>
 <p>이를 <strong>특이값</strong>(singular value)이라 부룹니다.</p>
 <p>$\Lambda$의 모양은 $m,n$의 크기에 따라 다음과 같습니다.</p>
 <p>$$
-m=2,n=3:\ \Lambda=\begin{pmatrix}\sigma_1&amp;0&amp;0\0&amp;\sigma_2&amp;0\end{pmatrix}, \qquad
-m=3,n=2:\ \Lambda=\begin{pmatrix}\sigma_1&amp;0\0&amp;\sigma_2\0&amp;0\end{pmatrix}
+m=2,n=3:\ \Lambda=\begin{pmatrix}\sigma_1&amp;0&amp;0\\0&amp;\sigma_2&amp;0\end{pmatrix}, \qquad
+m=3,n=2:\ \Lambda=\begin{pmatrix}\sigma_1&amp;0\\0&amp;\sigma_2\\0&amp;0\end{pmatrix}
 $$</p>
 <p>핵심 관찰: $\Lambda^\top\Lambda = \mathrm{diag}(\sigma_1^2,\dots)$ ($n\times n$), $\Lambda\Lambda^\top = \mathrm{diag}(\sigma_1^2,\dots)$ ($m\times m$)</p>
 <p>$$
@@ -442,7 +442,7 @@ $$u_i^\top A v_j = (u_i^\top A v_j)^\top = v_j^\top A^\top u_i = 0$$</li>
 </ul>
 
     </blockquote>
-<h3 id="rank가-1인-행렬의-합으로의-근사화">rank가 1인 행렬의 합으로의 근사화
+<h3 id="rank가-1인-행렬의-합으로의-근사화">Rank가 1인 행렬의 합으로의 근사화
 </h3><p>모든 행렬을 정확히 Rank 1 행렬로 표현할 수는 없다 (행렬식이 0이 아닌 행렬은 full rank를 가지므로 차원 축소가 어려움). 하지만 SVD를 이용하면 모든 행렬을 Rank가 1인 행렬들의 합으로 근사화 할 수 있습니다.</p>
 
     <blockquote>
@@ -465,7 +465,7 @@ $$</p>
 <h3 id="수치-예제">수치 예제
 </h3><p>$4\times4$ 행렬</p>
 <p>$$
-\begin{pmatrix}3&amp;1&amp;4&amp;1\5&amp;9&amp;2&amp;6\5&amp;3&amp;5&amp;8\9&amp;9&amp;9&amp;3\end{pmatrix}
+\begin{pmatrix}3&amp;1&amp;4&amp;1\\5&amp;9&amp;2&amp;6\\5&amp;3&amp;5&amp;8\\9&amp;9&amp;9&amp;3\end{pmatrix}
 $$</p>
 <p>을 SVD하면 특이값이 $21.9785,\ 6.1108,\ 5.2536,\ 0.0510$으로 나오게 됩니다.</p>
 <p>$\sigma_1 u_1 v_1^\top$, $\sigma_1u_1v_1^\top+\sigma_2u_2v_2^\top$, $\sigma_1u_1v_1^\top+\sigma_2u_2v_2^\top+\sigma_3u_3v_3^\top$</p>
