@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="ko-kr" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="들어가며 고윳값, 고유벡터, 행렬의 대각화를 정리한 내용입니다.\n1. 고윳값, 고유벡터의 정의 1.1 동기: $A^{100}$을 어떻게 계산할까? $$ A = \\begin{pmatrix} 1 &amp; -8 \\ 1 &amp; -5 \\end{pmatrix} $$\n에 대해 $A^{100}$ 을 직접 계산하는 것은 매우 번거롭습니다.\n그런데 다음 두 벡터는 특별한 성질을 가집니다.\n$$ \\begin{pmatrix} 1 &amp; -8 \\ 1 &amp; -5 \\end{pmatrix}\\begin{pmatrix} 2\\1 \\end{pmatrix} = -3\\begin{pmatrix} 2\\1 \\end{pmatrix}, \\qquad \\begin{pmatrix} 1 &amp; -8 \\ 1 &amp; -5 \\end{pmatrix}\\begin{pmatrix} 4\\1 \\end{pmatrix} = -1\\begin{pmatrix} 4\\1 \\end{pmatrix} $$\n">
+<title>[데이터분석 수학] 고윳값, 고유벡터, 행렬의 대각화</title>
+
+
+<link rel="canonical" href="https://lucaspark-10.github.io/data-analysis/python_data_analysis_14/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
+
+
+<link rel="stylesheet" href="/scss/style.min.e62e09c60ba428a627e03568fa3df938f6a8224f815b5846f00816c17d4a0be4.css"><meta property='og:title' content="[데이터분석 수학] 고윳값, 고유벡터, 행렬의 대각화">
+<meta property='og:description' content="들어가며 고윳값, 고유벡터, 행렬의 대각화를 정리한 내용입니다.\n1. 고윳값, 고유벡터의 정의 1.1 동기: $A^{100}$을 어떻게 계산할까? $$ A = \\begin{pmatrix} 1 &amp; -8 \\ 1 &amp; -5 \\end{pmatrix} $$\n에 대해 $A^{100}$ 을 직접 계산하는 것은 매우 번거롭습니다.\n그런데 다음 두 벡터는 특별한 성질을 가집니다.\n$$ \\begin{pmatrix} 1 &amp; -8 \\ 1 &amp; -5 \\end{pmatrix}\\begin{pmatrix} 2\\1 \\end{pmatrix} = -3\\begin{pmatrix} 2\\1 \\end{pmatrix}, \\qquad \\begin{pmatrix} 1 &amp; -8 \\ 1 &amp; -5 \\end{pmatrix}\\begin{pmatrix} 4\\1 \\end{pmatrix} = -1\\begin{pmatrix} 4\\1 \\end{pmatrix} $$\n">
+<meta property='og:url' content='https://lucaspark-10.github.io/data-analysis/python_data_analysis_14/'>
+<meta property='og:site_name' content='LucasPark Blog'>
+<meta property='og:type' content='article'><meta property='article:section' content='Data-Analysis' /><meta property='article:published_time' content='2026-07-16T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2026-07-16T00:00:00&#43;00:00'/>
+<meta name="twitter:title" content="[데이터분석 수학] 고윳값, 고유벡터, 행렬의 대각화">
+<meta name="twitter:description" content="들어가며 고윳값, 고유벡터, 행렬의 대각화를 정리한 내용입니다.\n1. 고윳값, 고유벡터의 정의 1.1 동기: $A^{100}$을 어떻게 계산할까? $$ A = \\begin{pmatrix} 1 &amp; -8 \\ 1 &amp; -5 \\end{pmatrix} $$\n에 대해 $A^{100}$ 을 직접 계산하는 것은 매우 번거롭습니다.\n그런데 다음 두 벡터는 특별한 성질을 가집니다.\n$$ \\begin{pmatrix} 1 &amp; -8 \\ 1 &amp; -5 \\end{pmatrix}\\begin{pmatrix} 2\\1 \\end{pmatrix} = -3\\begin{pmatrix} 2\\1 \\end{pmatrix}, \\qquad \\begin{pmatrix} 1 &amp; -8 \\ 1 &amp; -5 \\end{pmatrix}\\begin{pmatrix} 4\\1 \\end{pmatrix} = -1\\begin{pmatrix} 4\\1 \\end{pmatrix} $$\n">
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-EVK5B22CB3"></script>
+      <script>
+        var doNotTrack = false;
+        if ( true ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-EVK5B22CB3');
+        }
+      </script>
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column compact"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">LucasPark Blog</a></h1>
+            <h2 class="site-description">Lucas Park의 개인 블로그</h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                <span>Home</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/posts/' >
+                
+                <span>Posts</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/data-analysis/' >
+                
+                <span>Data Analysis</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/gold-news-and-analysis/' >
+                
+                <span>Gold Price Check &amp; Analysis</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/atmospheric-environment/' >
+                
+                <span>Atmospheric Environment</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>Dark Mode</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/data-analysis/python_data_analysis_14/">[데이터분석 수학] 고윳값, 고유벡터, 행렬의 대각화</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    
+    
+    
+    
+    
+    
+    <footer class="article-meta">
+        
+            <div class="inline-meta">
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                    <time class="article-time--published" datetime='2026-07-16T00:00:00Z'>2026년 7월 16일 목요일</time>
+                
+
+                
+            </div>
+        
+
+        
+
+        
+    </footer>
+    
+</div>
+
+</header>
+
+    
+
+    <section class="article-content">
+    
+    
+    <h1 id="들어가며">들어가며
+</h1><p>고윳값, 고유벡터, 행렬의 대각화를 정리한 내용입니다.</p>
+<hr>
+<h2 id="1-고윳값-고유벡터의-정의">1. 고윳값, 고유벡터의 정의
+</h2><h3 id="11-동기-a100을-어떻게-계산할까">1.1 동기: $A^{100}$을 어떻게 계산할까?
+</h3><p>$$
+A = \begin{pmatrix} 1 &amp; -8 \ 1 &amp; -5 \end{pmatrix}
+$$</p>
+<p>에 대해 $A^{100}$ 을 직접 계산하는 것은 매우 번거롭습니다.</p>
+<p>그런데 다음 두 벡터는 특별한 성질을 가집니다.</p>
+<p>$$
+\begin{pmatrix} 1 &amp; -8 \ 1 &amp; -5 \end{pmatrix}\begin{pmatrix} 2\1 \end{pmatrix} = -3\begin{pmatrix} 2\1 \end{pmatrix}, \qquad
+\begin{pmatrix} 1 &amp; -8 \ 1 &amp; -5 \end{pmatrix}\begin{pmatrix} 4\1 \end{pmatrix} = -1\begin{pmatrix} 4\1 \end{pmatrix}
+$$</p>
+<p>이 두 식을 하나의 행렬 곱으로 합치면</p>
+<p>$$
+\begin{pmatrix} 1 &amp; -8 \ 1 &amp; -5 \end{pmatrix}\begin{pmatrix} 2 &amp; 4\1 &amp; 1 \end{pmatrix} = \begin{pmatrix} 2 &amp; 4\1 &amp; 1 \end{pmatrix}\begin{pmatrix} -3 &amp; 0\0 &amp; -1 \end{pmatrix}
+$$</p>
+<p>$P = \begin{pmatrix} 2 &amp; 4\1 &amp; 1 \end{pmatrix}$라 하면 $\det P = -2 \neq 0$ 이므로 $P^{-1}$ 이 존재하며,</p>
+<p>$$
+A = P\begin{pmatrix} -3 &amp; 0\0 &amp; -1 \end{pmatrix}P^{-1}
+$$</p>
+<p>로 표현할 수 있습니다. 이때</p>
+<p>$$
+A^{100} = P\begin{pmatrix} (-3)^{100} &amp; 0\0 &amp; (-1)^{100} \end{pmatrix}P^{-1}
+$$</p>
+<p>와 같이 <strong>거듭제곱 계산이 대각행렬의 성분별 거듭제곱으로 단순화</strong>됩니다.</p>
+<h3 id="12-정의">1.2 정의
+</h3><p>고윳값·고유벡터</p>
+<p>$n\times n$ 행렬 $A: \mathbb{R}^n \to \mathbb{R}^n$ 을 선형변환이라 하겠습니다.</p>
+<p>$\mathbf{0}$ 이 아닌 벡터 $v \in \mathbb{R}^n$ 가</p>
+<p>$$
+Av = \lambda v
+$$</p>
+<p>를 만족하면, $\lambda$를 $A$의 <strong>고윳값</strong>(eigenvalue), $v$를 고윳값 $\lambda$에 대한 <strong>고유벡터</strong>(eigenvector)라 부릅니다.</p>
+<ul>
+<li>$Av = \lambda v$이면 임의의 $k \in \mathbb{R}$에 대해 $A(kv) = k\lambda v = \lambda(kv)$이므로, $\lambda \neq 0$일 때 $A$는 고유벡터가 포함된 <strong>1차원 부분공간을 고정</strong>시킵니다.</li>
+<li>$Av = \mathbf{0}$이면 $\lambda = 0$이 고윳값이 됩니다.</li>
+</ul>
+<p><strong>고윳값은 항상 실수입니다</strong> (단, $v \in \mathbb{R}^n$ 인 경우).</p>
+<p>$$
+v^{\top}Av = v^{\top}\lambda v = \lambda v^{\top}v, \qquad v \neq \mathbf{0} \Rightarrow v^{\top}v &gt; 0
+$$</p>
+<p>$$
+\therefore ; \lambda = \frac{v^{\top}Av}{v^{\top}v} \in \mathbb{R}
+$$</p>
+<h3 id="13-예제">1.3 예제
+</h3><p><strong>예제 1</strong>: $A = \begin{pmatrix} 1 &amp; -8 \ 1 &amp; -5 \end{pmatrix}$ 의 고윳값과 고유벡터</p>
+<p>$v=\begin{pmatrix}x\y\end{pmatrix}$ 라 하면 $Av=\lambda v \Leftrightarrow (\lambda I - A)v = \mathbf{0}$ 이고, 자명하지 않은 해가 존재하려면</p>
+<p>$$
+\det(\lambda I - A)=0
+$$</p>
+<p>이어야 합니다. 계산하면 $(\lambda+3)(\lambda+1)=0$이므로 고윳값은 $\lambda=-3,,-1$입니다.</p>
+<ul>
+<li>$\lambda_1=-3$: $v_1 = c_1\begin{pmatrix}2\1\end{pmatrix}$</li>
+<li>$\lambda_2=-1$: $v_2 = c_2\begin{pmatrix}4\1\end{pmatrix}$</li>
+</ul>
+
+    <blockquote>
+        <p><strong>참고</strong>: 고윳값은 개수가 정해져 있지만, 이에 대응하는 고유벡터는 (배수 $c$ 만큼) 무수히 많습니다.</p>
+
+    </blockquote>
+<p><strong>예제 2</strong>: $A = \begin{pmatrix} 3 &amp; 1 \ -1 &amp; 1 \end{pmatrix}$</p>
+<p>$(\lambda-2)^2=0$이므로 <strong>중근</strong> $\lambda=2$가 나오며, 고유벡터는 $v = c\begin{pmatrix}1\-1\end{pmatrix}$입니다.</p>
+<hr>
+<h2 id="2-특성다항식">2. 특성다항식
+</h2><p>$n\times n$ 행렬 $A$에 대해</p>
+<p>$$
+f(\lambda)=\det(\lambda I - A)
+$$</p>
+<p>를 $A$의 <strong>특성다항식</strong>(characteristic polynomial), $f(\lambda)=0$을 <strong>특성방정식</strong>(characteristic equation)이라 합니다.</p>
+<p><strong>예제 3</strong>: $A=\begin{pmatrix}-2&amp;0&amp;0\-4&amp;1&amp;-1\4&amp;0&amp;2\end{pmatrix}$</p>
+<p>$\det(\lambda I-A) = (\lambda+2)(\lambda-1)(\lambda-2)=0$ 이므로 고윳값은 $\lambda=-2,1,2$ 입니다.</p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>고윳값</th>
+          <th>고유벡터</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>$\lambda_1=-2$</td>
+          <td>$v_1=c_1(1,1,-1)^{\top}$</td>
+      </tr>
+      <tr>
+          <td>$\lambda_2=1$</td>
+          <td>$v_2=c_2(0,1,0)^{\top}$</td>
+      </tr>
+      <tr>
+          <td>$\lambda_3=2$</td>
+          <td>$v_3=c_3(0,1,-1)^{\top}$</td>
+      </tr>
+  </tbody>
+</table></div>
+
+    <blockquote>
+        <p>일반적으로 $n\times n$ 행렬의 고윳값·고유벡터를 구하려면 $n$차 특성방정식을 풀어야 합니다.</p>
+
+    </blockquote>
+<hr>
+<h2 id="3-행렬의-대각화">3. 행렬의 대각화
+</h2><h3 id="31-정의">3.1 정의
+</h3><p>$n\times n$ 행렬 $A$에 대해 $n\times n$ 정칙행렬 $P$가 존재하여</p>
+<p>$$
+P^{-1}AP = D \quad (D:\text{대각행렬})
+$$</p>
+<p>을 만족하면 $A$를 <strong>대각화 가능한 행렬</strong>이라 부릅니다.</p>
+<h3 id="32-대각화의-핵심-아이디어">3.2 대각화의 핵심 아이디어
+</h3><p>$3\times 3$ 행렬 $A$가 대각화 가능하다고 가정해 보겠습니다. $AP=PD$ 에서 $P$ 의 열벡터를 $P_1,P_2,P_3$ 라 하면</p>
+<p>$$
+AP_1=\lambda_1 P_1,\quad AP_2=\lambda_2 P_2,\quad AP_3=\lambda_3 P_3
+$$</p>
+<p>즉, <strong>$P$의 열벡터들은 $A$의 고유벡터이고, $D$의 대각성분은 이에 대응하는 고윳값</strong>입니다. 또한 $P$가 정칙행렬이므로 $P_1,P_2,P_3$ 는 일차독립입니다.</p>
+<h3 id="33-핵심-정리">3.3 핵심 정리
+</h3><p>서로 다른 고윳값 $\lambda_1,\dots,\lambda_m$ ($m\le n$)에 대응하는 고유벡터 $v_1,\dots,v_m$은 <strong>일차독립</strong>입니다. (수학적 귀납법으로 증명)</p>
+<p>$n\times n$ 행렬 $A$의 $n$개 고유벡터가 일차독립이면 $A$는 대각화 가능합니다.</p>
+<p>$$
+A = P D P^{-1}, \qquad P = [v_1,\dots,v_n],\quad D=\text{diag}(\lambda_1,\dots,\lambda_n)
+$$</p>
+
+    <blockquote>
+        <p><strong>참고</strong>: 고윳값이 서로 다르면 대각화가 항상 가능합니다. 문제는 <strong>중근</strong>이 나오는 경우인데, 이때는 대각화가 불가능할 수도 있습니다.</p>
+
+    </blockquote>
+<h3 id="34-예제로-보는-대각화-가능불가능">3.4 예제로 보는 대각화 가능/불가능
+</h3><p><strong>예제 5 [고윳값이 모두 다른 경우]</strong>: 예제 3의 $A$는 $P=[v_1,v_2,v_3]$ 를 이용해</p>
+<p>$$
+P^{-1}AP = D = \begin{pmatrix}-2&amp;0&amp;0\0&amp;1&amp;0\0&amp;0&amp;2\end{pmatrix}
+$$</p>
+<p>로 <strong>대각화 가능</strong>합니다.</p>
+<p><strong>예제 6 [중근이지만 대각화 불가능]</strong>: $B=\begin{pmatrix}3&amp;2&amp;0\0&amp;2&amp;0\1&amp;1&amp;2\end{pmatrix}$</p>
+<p>특성방정식 $(\lambda-3)(\lambda-2)^2=0 \Rightarrow \lambda=3,,2(\text{중근})$.</p>
+<p>$\lambda=2$ 일 때 계수행렬의 rank가 2이므로 <strong>고유벡터를 1개밖에</strong> 얻지 못합니다</p>
+<p>→ 일차독립인 고유벡터가 3개 나오지 않으므로 <strong>대각화 불가능</strong>합니다.</p>
+<p><strong>예제 7 [중근이지만 대각화 가능]</strong>: $C=\begin{pmatrix}0&amp;-1&amp;-1\1&amp;2&amp;1\1&amp;1&amp;2\end{pmatrix}$</p>
+<p>특성방정식 $(\lambda-1)^2(\lambda-2)=0$. $\lambda=1$일 때 계수행렬의 rank가 1이므로 <strong>일차독립인 고유벡터를 2개</strong> 얻을 수 있습니다</p>
+<p>→ 총 3개의 일차독립 고유벡터를 확보하여 <strong>대각화 가능</strong>합니다.</p>
+
+    <blockquote>
+        <p>즉 <strong>중근</strong>의 경우, 그 중복도만큼 일차독립인 고유벡터가 나오는지(=고유공간의 차원이 대수적 중복도와 같은지)에 따라 대각화 가능 여부가 갈립니다.</p>
+
+    </blockquote>
+<hr>
+<h2 id="4-대칭-행렬의-대각화-eigen-decomposition">4. 대칭 행렬의 대각화 (Eigen Decomposition)
+</h2><h3 id="41-핵심-성질">4.1 핵심 성질
+</h3><p>일반 정방행렬은 고윳값이 중근일 때 대각화가 안 되는 경우가 있지만, <strong>대칭행렬($A^{\top}=A$)은 고윳값이 중근이어도 항상 일차독립인 고유벡터가 존재</strong>하여 <strong>항상 대각화가 가능</strong>합니다.</p>
+<h3 id="42-유사행렬similar-matrices">4.2 유사행렬(Similar Matrices)
+</h3><p>정칙행렬 $P$에 대해 $A$와 $PAP^{-1}$ (또는 $P^{-1}AP$)를 <strong>유사행렬</strong>이라 합니다.</p>
+<ul>
+<li>유사행렬은 <strong>같은 고윳값</strong>을 갖습니다: $Av=\lambda v \Rightarrow PAP^{-1}(Pv)=\lambda(Pv)$</li>
+</ul>
+<p>유사행렬은 같은 특성다항식을 갖습니다.</p>
+<p>$\det(\lambda I-A)=\det(\lambda I-P^{-1}AP)$</p>
+<h3 id="43-대칭행렬의-직교-고유벡터">4.3 대칭행렬의 직교 고유벡터
+</h3><p>직교 고유벡터 : 대칭행렬 $A$에서 $Av_1=\lambda_1 v_1,\ Av_2=\lambda_2 v_2,\ \lambda_1\neq\lambda_2$이면</p>
+<p>$$
+v_1 \cdot v_2 = v_1^{\top}v_2 = 0
+$$</p>
+<p>즉 <strong>서로 다른 고윳값에 대응하는 고유벡터는 서로 직교</strong>합니다.</p>
+<p>증명 스케치 : $v_2^{\top}Av_1=\lambda_1v_2^{\top}v_1$, $v_1^{\top}Av_2=\lambda_2v_1^{\top}v_2$ 이고 $A^{\top}=A$ 를 이용하면</p>
+<p>$(\lambda_1-\lambda_2)v_1^{\top}v_2=0$ 이 되어 $\lambda_1 \ne \lambda_2$ 이면 $v_1^{\top}v_2=0$ 입니다.</p>
+<h3 id="44-핵심-정리-스펙트럴-정리">4.4 핵심 정리: 스펙트럴 정리
+</h3><p>$n\times n$ 행렬 $A$가 대칭행렬이면, <strong>정규직교행렬</strong> $Q$($Q^{\top}Q=I$)가 존재하여</p>
+<p>$$
+A = Q^{\top}DQ \qquad (D: \text{대각행렬})
+$$</p>
+<p>로 대각화 가능합니다.</p>
+<p>(수학적 귀납법으로 증명 — $n=1$일 때 자명하며, $n-1$에서 성립한다고 가정하면 $n$에서도 성립함을 보일 수 있습니다.)</p>
+<h3 id="45-예제">4.5 예제
+</h3><p><strong>예제 10</strong>: $A=\begin{pmatrix}1&amp;2\2&amp;1\end{pmatrix}$</p>
+<p>고윳값 $\lambda=3,-1$, 고유벡터 $v_1=(1,1)^{\top},\ v_2=(1,-1)^{\top}$ → 서로 직교함을 확인할 수 있습니다. 대각화하면 다음과 같습니다.</p>
+<p>$$
+\begin{pmatrix}3&amp;0\0&amp;-1\end{pmatrix} = \begin{pmatrix}1&amp;1\1&amp;-1\end{pmatrix}^{-1}\begin{pmatrix}1&amp;2\2&amp;1\end{pmatrix}\begin{pmatrix}1&amp;1\1&amp;-1\end{pmatrix}
+$$</p>
+<p><strong>예제 11~12</strong>: $A=\begin{pmatrix}2&amp;1&amp;1\1&amp;2&amp;1\1&amp;1&amp;2\end{pmatrix}$</p>
+<p>고윳값 $\lambda=4,,1(\text{중근})$입니다.</p>
+<p>$\lambda=4$일 때 $v_1=(1,1,1)^{\top}$, $\lambda=1$일 때 평면 $x+y+z=0$ 위에서 2개의 고유벡터 $v_2,v_3$을 선택할 수 있습니다.</p>
+<p>$v_1\perp v_2,\ v_1\perp v_3$ 이지만, <strong>같은 고윳값에 속한 $v_2,v_3$는 자동으로 직교하지는 않으므로</strong>(단, 그람-슈미트 등으로 직교하게 고를 수 있습니다.)</p>
+<p>직교하는 두 벡터 $(-2,1,1)^{\top}, (0,1,-1)^{\top}$ 을 선택합니다.</p>
+<p>각 벡터를 정규화($|v_1|=\sqrt3,\ |v_2|=\sqrt6,\ |v_3|=\sqrt2$)하여 정규직교행렬 $Q$를 구성하면</p>
+<p>$$
+Q^{\top}AQ = \begin{pmatrix}4&amp;0&amp;0\0&amp;1&amp;0\0&amp;0&amp;1\end{pmatrix}=D
+$$</p>
+<hr>
+<h2 id="5-양의-정부호-행렬-positive-definite-matrix">5. 양의 정부호 행렬 (Positive Definite Matrix)
+</h2><h3 id="51-정의">5.1 정의
+</h3><p>대칭행렬 $A$ ($A^{\top}=A$)에 대해</p>
+<ol>
+<li>모든 $x\neq 0$에 대해 $x^{\top}Ax &gt; 0$이면 $A$ 를 <strong>양의 정부호 행렬</strong>(PDM)이라 합니다.</li>
+<li>$x^{\top}Ax \ge 0$ 이면 $A$를 <strong>양의 준정부호 행렬</strong>(PSDM)이라 합니다.</li>
+</ol>
+<p><strong>보기 14</strong>:</p>
+<ul>
+<li>단위행렬은 PDM입니다.</li>
+<li>임의의 행렬 $A$에 대해 $A^{\top}A,\ AA^{\top}$는 PSDM입니다. ($x^{\top}A^{\top}Ax=(Ax)^{\top}Ax\ge0$)</li>
+</ul>
+<h3 id="52-동치-조건">5.2 동치 조건
+</h3><p>대칭행렬 $A$가 PDM일 필요충분조건은 <strong>모든 고윳값이 양수</strong>인 것입니다.</p>
+<p>$n\times n$ 행렬 $A$에 대해 다음은 모두 동치입니다.</p>
+<ol>
+<li>$A$가 양의 정부호 행렬입니다.</li>
+<li>$A$의 모든 고윳값이 양의 실수입니다.</li>
+<li>정칙행렬 $U$가 존재하여 $A=U^{\top}U$입니다.</li>
+<li>$A$의 모든 sub-determinant(주소행렬식)가 양의 실수입니다.</li>
+</ol>
+<p>예시 : $A=\begin{pmatrix}2&amp;-1&amp;0\-1&amp;2&amp;-1\0&amp;-1&amp;2\end{pmatrix}$ 의 sub-determinant는 $2,,3,,4$로 모두 양수이므로 PDM입니다.</p>
+<p>$A,B$가 PDM이면</p>
+<ol>
+<li>$A^{\top}$, $sA+tB\ (s,t&gt;0)$도 PDM입니다.</li>
+<li>$A^{-1}$도 PDM입니다.</li>
+</ol>
+<p>PSDM에 대해서도 유사한 동치 조건이 성립합니다. (모든 고윳값 $\ge 0$, $A=U^{\top}U$, sub-determinant $\ge 0$)</p>
+<hr>
+<h2 id="6-외적과-행렬의-제곱근">6. 외적과 행렬의 제곱근
+</h2><h3 id="61-외적-outer-product">6.1 외적 (Outer Product)
+</h3><p>$x=(x_1,x_2,x_3),\ y=(y_1,y_2,y_3)$ 에 대해 <strong>외적</strong>은</p>
+<p>$$
+x^{\top}y = \begin{pmatrix}x_1\x_2\x_3\end{pmatrix}(y_1\ y_2\ y_3) = \begin{pmatrix}x_1y_1&amp;x_1y_2&amp;x_1y_3\x_2y_1&amp;x_2y_2&amp;x_2y_3\x_3y_1&amp;x_3y_2&amp;x_3y_3\end{pmatrix}
+$$</p>
+<p>특히 $x^{\top}x$ 는 <strong>대칭행렬</strong>이며, <strong>양의 준정부호 행렬</strong>입니다.</p>
+<p>$A=(a_1,a_2,\cdots,a_k)$ ($a_i$는 열벡터)이면</p>
+<p>$$
+AA^{\top} = \sum_{i=1}^{k} a_i a_i^{\top}
+$$</p>
+<h3 id="62-행렬의-제곱근">6.2 행렬의 제곱근
+</h3><p>실수의 제곱근 $y=\sqrt{x}\Leftrightarrow y^2=x,\ x\ge0$ 을 행렬로 일반화하면</p>
+<p>$$
+B=\sqrt{A} ;\Leftrightarrow; B^2=A,\quad A\ge 0
+$$</p>
+<p>$A$가 PDM이면 $A=PDP^{\top}$로 대각화 가능하며, $D=\text{diag}(\lambda_1,\dots,\lambda_n)$ ($\lambda_i&gt;0$)에 대해</p>
+<p>$$
+\sqrt{D}=\text{diag}(\sqrt{\lambda_1},\dots,\sqrt{\lambda_n})
+$$</p>
+<p>라 하면</p>
+<p>$$
+\sqrt{A} = P\sqrt{D}P^{\top}, \qquad (\sqrt{A})^2 = P\sqrt{D}P^{\top}P\sqrt{D}P^{\top}=P(\sqrt{D})^2P^{\top}=A
+$$</p>
+<hr>
+<h2 id="7-스펙트럴-클러스터링-spectral-clustering">7. 스펙트럴 클러스터링 (Spectral Clustering)
+</h2><h3 id="71-배경-지도학습-vs-비지도학습">7.1 배경: 지도학습 vs 비지도학습
+</h3><ul>
+<li><strong>지도학습</strong>(Supervised learning) : 입력과 정답 레이블 사이의 관계를 모델링. &ldquo;선생님의 지도 아래&rdquo; 학습합니다.</li>
+<li><strong>비지도학습</strong>(Unsupervised learning) : 정답 레이블 없이 데이터의 패턴/구조를 발견합니다. 대표적으로 <strong>군집화</strong>(Clustering)가 있습니다.
+<ul>
+<li>대표 방법: K-means, Gaussian Mixture, EM, <strong>Spectral Clustering</strong></li>
+</ul>
+</li>
+</ul>
+<h3 id="72-그래프와-인접행렬">7.2 그래프와 인접행렬
+</h3><p>그래프 $G=(V,E)$ 는 정점(노드) 집합 $V={v_1,v_2,\dots}$와 모서리(에지) 집합 $E={e_1,e_2,\dots}$로 구성됩니다.</p>
+<p><strong>인접행렬</strong>(adjacency matrix) $W$ : 각 정점 쌍의 거리에 따라 가중치를 부여한 대칭행렬입니다. 가까울수록 가중치가 크고, 연결이 없으면 $w_{ij}=0$입니다. $w_{ij}=w_{ji}$를 만족합니다.</p>
+<p>Degree Matrix : $D=\text{diag}(d_1,\dots,d_n)$, 단 $d_i=\sum_j w_{ij}$ (노드 $v_i$의 연결 가중치 합입니다).</p>
+<h3 id="73-정점집합의-분할과-비용함수">7.3 정점집합의 분할과 비용함수
+</h3><p>$V$를 $A$와 $A^c$로 분할할 때, 두 집합 간 거리를</p>
+<p>$$
+d(A,A^c) = \sum_{i\in A,, j\in A^c} w_{ij}
+$$</p>
+<p>로 정의합니다. <strong>목표는 $d(A,A^c)$가 최소가 되는 분할을 찾는 것</strong>입니다.</p>
+<p>이를 지시벡터(indicator vector) $f=(f_1,\dots,f_n)^{\top}$ ($f_i \in {0,1}$)를 이용하여 아래 <strong>비용함수</strong>(cost function) 로 표현합니다.</p>
+<p>$$
+R = \sum w_{ij}(f_i-f_j)^2
+$$</p>
+<p>$f_i=1 \Leftrightarrow v_i \in A$, $f_i=0 \Leftrightarrow v_i \in A^c$일 때, $R$은 $2\times d(A,A^c)$ 형태로 실제 분할 거리와 대응됩니다.</p>
+<h3 id="74-라플라시안-행렬laplacian-matrix-유도">7.4 라플라시안 행렬(Laplacian Matrix) 유도
+</h3><p>$$
+R = \sum w_{ij}f_i^2 - 2\sum w_{ij}f_if_j + \sum w_{ij}f_j^2
+$$</p>
+<p>각 항을 정리하면</p>
+<p>$$
+\sum w_{ij}f_i^2 = f^{\top}Df, \qquad \sum w_{ij}f_j^2 = f^{\top}Df, \qquad \sum w_{ij}f_if_j = f^{\top}Wf
+$$</p>
+<p>이므로</p>
+<p>$$
+R = 2f^{\top}Df - 2f^{\top}Wf = 2f^{\top}[D-W]f
+$$</p>
+<p><strong>라플라시안 행렬</strong>을 $L=D-W$로 정의하면</p>
+<p>$$
+\underset{f}{\text{argmin}}; \sum w_{ij}(f_i-f_j)^2 = \underset{f}{\text{argmin}}; 2,f^{\top}Lf
+$$</p>
+<h3 id="75-라그랑주-승수법을-이용한-해">7.5 라그랑주 승수법을 이용한 해
+</h3><p>이상적으로는 $f_i \in {0,1}$이어야 하지만, 완화(relaxation)하여 실수 벡터로 풀어도 무방합니다. 제약조건 $f^{\top}f=1$, $L^{\top}=L$ 하에</p>
+<p>$$
+\underset{f}{\text{argmin}}; f^{\top}Lf \quad \text{s.t. } f^{\top}f=1
+$$</p>
+<p><strong>라그랑주 함수</strong>: $\mathcal{L}(f,\lambda)=f^{\top}Lf-\lambda(f^{\top}f-1)$</p>
+<p>$$
+0 = \frac{\partial \mathcal{L}}{\partial f} = 2Lf - 2\lambda f ;;\Rightarrow;; Lf = \lambda f
+$$</p>
+<p>즉 <strong>$f$는 라플라시안 행렬 $L$의 고유벡터</strong>가 되어야 합니다. 이때</p>
+<p>$$
+f^{\top}Lf = f^{\top}\lambda f = \lambda
+$$</p>
+<p>이므로 <strong>$R$을 최소화하려면 가장 작은 고윳값에 대응하는 고유벡터를 선택</strong>해야 합니다.</p>
+<h3 id="76-가우시안-커널">7.6 가우시안 커널
+</h3><p>실전에서 두 노드 간의 가중치 $w_{ij}$는 보통 <strong>가우시안 커널</strong>로 계산합니다.</p>
+<p>$$
+w_{ij} = e^{-\dfrac{|x_i-x_j|^2}{2\sigma^2}}
+$$</p>
+<p><em>예시</em>: $v_3=(2,1),\ v_4=(5,2)$이면</p>
+<p>$$
+w_{34}=e^{-\frac{|(-3,-1)|^2}{2\sigma^2}}=e^{-\frac{10}{2\sigma^2}}
+$$</p>
+<h3 id="77-결론">7.7 결론
+</h3><ul>
+<li>$L$의 (가장 작은 고윳값에 대응하는) 고유벡터는 $V$를 두 군집 $A, A^c$로 분할합니다.</li>
+<li>군집이 3개 이상($A,B,C,\dots$)인 경우, <strong>여러 개의 고유벡터를 순차적으로</strong> 사용해 이진분할을 반복합니다.
+<ul>
+<li>1번째 고유벡터 → $V=A\cup A^c$</li>
+<li>2번째 고유벡터 → $V=B\cup B^c$</li>
+<li>3번째 고유벡터 → $V=C\cup C^c$</li>
+</ul>
+</li>
+<li>즉, <strong>스펙트럴 클러스터링의 본질은 반복적인 이진 분류</strong>(binary classification)입니다.</li>
+</ul>
+<hr>
+<h2 id="마무리">마무리
+</h2><p>행렬, 선형변환, Rank, 행렬식, 직교행렬 개념을 정리했습니다.</p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>개념</th>
+          <th>핵심 내용</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>고윳값·고유벡터</td>
+          <td>$Av=\lambda v$, $\lambda \in \mathbb{R}$ (실수)</td>
+      </tr>
+      <tr>
+          <td>특성다항식</td>
+          <td>$\det(\lambda I - A)=0$을 풀어 고윳값을 구함</td>
+      </tr>
+      <tr>
+          <td>대각화</td>
+          <td>$P^{-1}AP=D$, 고유벡터가 일차독립이면 가능</td>
+      </tr>
+      <tr>
+          <td>대칭행렬</td>
+          <td>항상 대각화 가능, $A=Q^{\top}DQ$ ($Q$는 직교행렬)</td>
+      </tr>
+      <tr>
+          <td>양의 정부호 행렬</td>
+          <td>모든 고윳값 &gt; 0, $A=U^{\top}U$로 분해 가능</td>
+      </tr>
+      <tr>
+          <td>행렬의 제곱근</td>
+          <td>$\sqrt{A}=P\sqrt{D}P^{\top}$ (PDM에 대해 정의)</td>
+      </tr>
+      <tr>
+          <td>스펙트럴 클러스터링</td>
+          <td>라플라시안 $L=D-W$의 최소 고윳값 고유벡터로 그래프를 이진 분할</td>
+      </tr>
+  </tbody>
+</table></div>
+<p>다음은 고윳값, 고유벡터, 행렬의 대각화를 정리하겠습니다.</p>
+
+</section>
+
+
+    <footer class="article-meta article-footer">
+    
+
+    </footer>
+
+
+    
+        <link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI&#43;WdtXRGWt2kTvGFasHpSy3SV"crossorigin="anonymous"
+            ><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG&#43;vnGctmUb0ZY0l8"crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"integrity="sha384-&#43;VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4&#43;/RRE05"crossorigin="anonymous"
+                defer
+                >
+            </script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        const elementsToRender = [".main-article", ".widget--toc"];
+
+        elementsToRender.forEach(selector => {
+            const element = document.querySelector(selector);
+            if (element) {
+                renderMathInElement(element, {
+                    delimiters: [
+                        { left: "$$", right: "$$", display: true },
+                        { left: "$", right: "$", display: false },
+                        { left: "\\(", right: "\\)", display: false },
+                        { left: "\\[", right: "\\]", display: true }
+                    ],
+                    ignoredClasses: ["gist"]
+                });
+            }
+        });
+    });
+</script>
+    
+</article>
+
+    
+
+    
+
+     
+    
+        
+
+        <div class="disqus-container">
+    
+</div>
+
+<style>
+    .disqus-container {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+</style>
+
+<script>
+    window.addEventListener('onColorSchemeChange', (e) => {
+        if (typeof DISQUS == 'object') {
+            DISQUS.reset({
+                reload: true
+            });
+        }
+    })
+</script>
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2026 LucasPark Blog
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="4.0.3">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+
+
+
+<script type="module">
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script>
+
+    
+
+            </main>
+        </div>
+        
+<script type="text/javascript" src="/ts/main.1ff1e5fdc4e178ed422e50aa407526dc552f26342d729343fded19416194382c.js" defer></script>
+
+
+    </body>
+</html>
