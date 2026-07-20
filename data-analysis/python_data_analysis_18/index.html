@@ -231,16 +231,17 @@ $$\lim_{h\to0}\frac{f(x+h)-f(x)}{h}=f&rsquo;(x)$$
     </blockquote>
 <p><strong>예제2 (시그모이드 함수의 미분)</strong>: $S(x)=\dfrac{1}{1+e^{-ax}}$ ($a\ne0$인 상수)에서 $\dfrac{dS(x)}{dx}$를 구하면</p>
 <p>$$\frac{dS(x)}{dx}=\frac{-(1+e^{-ax})&rsquo;}{(1+e^{-ax})^2}=\frac{ae^{-ax}}{(1+e^{-ax})^2}=a\cdot\frac{1}{1+e^{-ax}}\left(1-\frac{1}{1+e^{-ax}}\right)=aS(x)(1-S(x))$$</p>
-<p>즉 <strong>시그모이드 함수의 도함수는 자기 자신으로 표현</strong>됩니다: $S&rsquo;(x)=aS(x)(1-S(x))$. 이 성질 때문에 $S(x)$를 <strong>Sigmoid function</strong>이라 부르며,</p>
-<p>신경망 이론의 <strong>역전파</strong>(backpropagation) 알고리즘에서 핵심적으로 사용됩니다.</p>
+<p>즉, <strong>시그모이드 함수의 도함수는 자기 자신으로 표현</strong>됩니다.</p>
+<p>$S&rsquo;(x)=aS(x)(1-S(x))$</p>
+<p>이 성질 때문에 $S(x)$를 <strong>Sigmoid function</strong>이라 부르며, 신경망 이론의 <strong>역전파</strong>(backpropagation) 알고리즘에서 핵심적으로 사용됩니다.</p>
 <h3 id="13-합성함수의-미분-연쇄법칙-chain-rule">1.3 합성함수의 미분 (연쇄법칙, Chain Rule)
 </h3>
     <blockquote>
         <p>합성함수의 미분 : 두 함수 $f(x), g(x)$가 미분가능일 때, $f(x)$와 $g(x)$의 합성함수를 $u(x)=g(f(x))$라 하면
-$$u&rsquo;(x)=g&rsquo;(f(x)),f&rsquo;(x)\quad\cdots①$$
-①을 $\dfrac{du}{dx}=\dfrac{du}{df}\cdot\dfrac{df}{dx}$라고도 종종 씁니다.</p>
+$$u&rsquo;(x)=g&rsquo;(f(x)),f&rsquo;(x)\quad\cdots①$$</p>
 
     </blockquote>
+<p>①을 $\dfrac{du}{dx}=\dfrac{du}{df}\cdot\dfrac{df}{dx}$라고도 종종 씁니다.</p>
 <p><strong>예제3</strong>: 다음을 연쇄법칙으로 구해 보겠습니다.</p>
 <p><strong>(1)</strong> $u(x)=(2x^2+x)^3$</p>
 <p>$f(x)=2x^2+x,\ g(x)=x^3$ 이라 하면 $u(x)=g(f(x))$이고 $f&rsquo;(x)=4x+1,\ g&rsquo;(x)=3x^2$이므로</p>
@@ -346,12 +347,13 @@ $$f(x)=f(x^<em>)+f&rsquo;(x^</em>)(x-x^<em>)+\frac{f&rsquo;&rsquo;(x^</em>)}{2!}
 <h3 id="25-일변수-함수-최대최소이론-종합">2.5 일변수 함수 최대최소이론 종합
 </h3>
     <blockquote>
-        <p>일변수 함수 최대최소이론 : $I=[a,b]$라 하겠습니다. $f:I\to\mathbb{R}$인 함수에 대하여 $f(x), f&rsquo;(x), f&rsquo;&rsquo;(x)$가 모두 연속 함수라 하겠습니다.
-$x^<em>\in(a,b)$에 대하여 $f&rsquo;(x^</em>)=0$이라 하겠습니다.</p>
+        <p>일변수 함수 최대최소이론 : $I=[a,b]$라 하겠습니다.
+$f:I\to\mathbb{R}$인 함수에 대하여 $f(x), f&rsquo;(x), f&rsquo;&rsquo;(x)$ 가 모두 연속 함수라 하겠습니다.
+$x^<em>\in(a,b)$에 대하여 $f&rsquo;(x^</em>)=0$ 이라 하겠습니다.</p>
 <ol>
 <li>모든 $x\in I$에 대하여 $f&rsquo;&rsquo;(x)\ge0$이면 $x^*$는 <strong>전역최소자</strong>(global minimizer)입니다.</li>
-<li>모든 $x\in I\ (x\ne x^<em>)$에 대하여 $f&rsquo;&rsquo;(x)&gt;0$이면 $x^</em>$는 <strong>강 전역최소자</strong>(strict global minimizer)입니다.</li>
-<li>$f&rsquo;&rsquo;(x^<em>)&gt;0$이면, $x^</em>$는 <strong>강 국소최소자</strong>(strict local minimizer)입니다.</li>
+<li>모든 $x\in I\ (x\ne x^<em>)$에 대하여 $f&rsquo;&rsquo;(x)&gt;0$이면 $x^</em>$는 <strong>강전역최소자</strong>(strict global minimizer)입니다.</li>
+<li>$f&rsquo;&rsquo;(x^<em>)&gt;0$이면, $x^</em>$는 <strong>강국소최소자</strong>(strict local minimizer)입니다.</li>
 </ol>
 
     </blockquote>
@@ -379,7 +381,7 @@ $$f(b)=f(a)+f&rsquo;(a)(b-a)+\frac{f&rsquo;&rsquo;(a)}{2!}(b-a)^2+\cdots+\frac{f
 <p>$$-\frac{f^{(n)}(c)}{(n-1)!}(b-c)^{n-1}+kn(b-c)^{n-1}=0$$</p>
 <p>양변을 $(b-c)^{n-1}$으로 나누고 정리하면</p>
 <p>$$k=\frac{f^{(n)}(c)}{n!}$$</p>
-<p>이것을 ①에 대입하면 정리를 얻습니다. $\blacksquare$</p>
+<p>이것을 ①에 대입하면 정리를 얻습니다.</p>
 <h3 id="32-일반형과-매클로린maclaurin-급수">3.2 일반형과 매클로린(Maclaurin) 급수
 </h3>
     <blockquote>
