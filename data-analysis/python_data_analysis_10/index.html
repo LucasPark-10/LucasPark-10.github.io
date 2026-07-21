@@ -1,250 +1,21 @@
-<!DOCTYPE html>
-<html lang="ko-kr" dir="ltr">
-    <head><meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="들어가며 오늘은 어제 이어 벡터의 내적(Inner product)과 노름(Norm), 예시까지 정리하였습니다.\n1. 벡터의 내적(Inner product)과 노름(Norm) 벡터 사이의 거리나 벡터들의 자체 크기, 벡터들 사이의 사잇각을 재는 방법을 보겠습니다.\n특히 두 벡터가 수직을 이루고 있는지도 중요한 관심사입니다.\n두 점 사이의 거리 실수 직선 상에서 두 점 $x, y$ 사이의 거리는 $|x - y|$로 구할 수 있음 $R^n$ 공간 상의 두 점 $(x_1,\\cdots,x_n), (y_1,\\cdots,y_n)$의 거리는 $$ \\sqrt{(x_1-y_1)^2 + \\cdots + (x_n-y_n)^2} $$\n">
-<title>[데이터분석 수학] 벡터 이해하기 02</title>
-
-
-<link rel="canonical" href="https://lucaspark-10.github.io/data-analysis/python_data_analysis_10/">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
-
-
-<link rel="stylesheet" href="/scss/style.min.e62e09c60ba428a627e03568fa3df938f6a8224f815b5846f00816c17d4a0be4.css"><meta property='og:title' content="[데이터분석 수학] 벡터 이해하기 02">
-<meta property='og:description' content="들어가며 오늘은 어제 이어 벡터의 내적(Inner product)과 노름(Norm), 예시까지 정리하였습니다.\n1. 벡터의 내적(Inner product)과 노름(Norm) 벡터 사이의 거리나 벡터들의 자체 크기, 벡터들 사이의 사잇각을 재는 방법을 보겠습니다.\n특히 두 벡터가 수직을 이루고 있는지도 중요한 관심사입니다.\n두 점 사이의 거리 실수 직선 상에서 두 점 $x, y$ 사이의 거리는 $|x - y|$로 구할 수 있음 $R^n$ 공간 상의 두 점 $(x_1,\\cdots,x_n), (y_1,\\cdots,y_n)$의 거리는 $$ \\sqrt{(x_1-y_1)^2 + \\cdots + (x_n-y_n)^2} $$\n">
-<meta property='og:url' content='https://lucaspark-10.github.io/data-analysis/python_data_analysis_10/'>
-<meta property='og:site_name' content='LucasPark Blog'>
-<meta property='og:type' content='article'><meta property='article:section' content='Data-Analysis' /><meta property='article:published_time' content='2026-07-11T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2026-07-11T00:00:00&#43;00:00'/>
-<meta name="twitter:title" content="[데이터분석 수학] 벡터 이해하기 02">
-<meta name="twitter:description" content="들어가며 오늘은 어제 이어 벡터의 내적(Inner product)과 노름(Norm), 예시까지 정리하였습니다.\n1. 벡터의 내적(Inner product)과 노름(Norm) 벡터 사이의 거리나 벡터들의 자체 크기, 벡터들 사이의 사잇각을 재는 방법을 보겠습니다.\n특히 두 벡터가 수직을 이루고 있는지도 중요한 관심사입니다.\n두 점 사이의 거리 실수 직선 상에서 두 점 $x, y$ 사이의 거리는 $|x - y|$로 구할 수 있음 $R^n$ 공간 상의 두 점 $(x_1,\\cdots,x_n), (y_1,\\cdots,y_n)$의 거리는 $$ \\sqrt{(x_1-y_1)^2 + \\cdots + (x_n-y_n)^2} $$\n">
-      <script async src="https://www.googletagmanager.com/gtag/js?id=G-EVK5B22CB3"></script>
-      <script>
-        var doNotTrack = false;
-        if ( true ) {
-          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
-          var doNotTrack = (dnt == "1" || dnt == "yes");
-        }
-        if (!doNotTrack) {
-          window.dataLayer = window.dataLayer || [];
-          function gtag(){dataLayer.push(arguments);}
-          gtag('js', new Date());
-          gtag('config', 'G-EVK5B22CB3');
-        }
-      </script>
-    </head>
-    <body class="
-    article-page
-    ">
-    <script>
-        (function() {
-            const colorSchemeKey = 'StackColorScheme';
-            if(!localStorage.getItem(colorSchemeKey)){
-                localStorage.setItem(colorSchemeKey, "auto");
-            }
-        })();
-    </script><script>
-    (function() {
-        const colorSchemeKey = 'StackColorScheme';
-        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
-        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
-
-        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
-            
-
-            document.documentElement.dataset.scheme = 'dark';
-        } else {
-            document.documentElement.dataset.scheme = 'light';
-        }
-    })();
-</script>
-<div class="container main-container flex on-phone--column compact"><aside class="sidebar left-sidebar sticky ">
-    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
-        <span class="hamburger-box">
-            <span class="hamburger-inner"></span>
-        </span>
-    </button>
-
-    <header>
-        
-        
-        <div class="site-meta">
-            <h1 class="site-name"><a href="/">LucasPark Blog</a></h1>
-            <h2 class="site-description">Lucas Park의 개인 블로그</h2>
-        </div>
-    </header><ol class="menu" id="main-menu">
-        
-        
-        
-        <li >
-            <a href='/' >
-                
-                <span>Home</span>
-            </a>
-        </li>
-        
-        
-        <li >
-            <a href='/posts/' >
-                
-                <span>Posts</span>
-            </a>
-        </li>
-        
-        
-        <li >
-            <a href='/data-analysis/' >
-                
-                <span>Data Analysis</span>
-            </a>
-        </li>
-        
-        
-        <li >
-            <a href='/gold-news-and-analysis/' >
-                
-                <span>Gold Price Check &amp; Analysis</span>
-            </a>
-        </li>
-        
-        
-        <li >
-            <a href='/atmospheric-environment/' >
-                
-                <span>Atmospheric Environment</span>
-            </a>
-        </li>
-        
-        <li class="menu-bottom-section">
-            <ol class="menu">
-
-                
-                    <li id="dark-mode-toggle">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-  <path stroke="none" d="M0 0h24v24H0z"/>
-  <circle cx="8" cy="12" r="2" />
-  <rect x="2" y="6" width="20" height="12" rx="6" />
-</svg>
-
-
-
-                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-  <path stroke="none" d="M0 0h24v24H0z"/>
-  <circle cx="16" cy="12" r="2" />
-  <rect x="2" y="6" width="20" height="12" rx="6" />
-</svg>
-
-
-
-                        <span>Dark Mode</span>
-                    </li>
-                
-            </ol>
-        </li>
-    </ol>
-</aside>
-
-    
-
-            <main class="main full-width">
-    <article class="main-article">
-    <header class="article-header">
-
-    <div class="article-details">
-    
-
-    <div class="article-title-wrapper">
-        <h2 class="article-title">
-            <a href="/data-analysis/python_data_analysis_10/">[데이터분석 수학] 벡터 이해하기 02</a>
-        </h2>
-    
-        
-    </div>
-
-    
-    
-    
-    
-    
-    
-    
-    <footer class="article-meta">
-        
-            <div class="inline-meta">
-                
-                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-  <path stroke="none" d="M0 0h24v24H0z"/>
-  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
-  <circle cx="18" cy="18" r="4" />
-  <path d="M15 3v4" />
-  <path d="M7 3v4" />
-  <path d="M3 11h16" />
-  <path d="M18 16.496v1.504l1 1" />
-</svg>
-                    <time class="article-time--published" datetime='2026-07-11T00:00:00Z'>2026년 7월 11일 토요일</time>
-                
-
-                
-            </div>
-        
-
-        
-
-        
-    </footer>
-    
-</div>
-
-</header>
-
-    
-
-    <section class="article-content">
-    
-    
-    <h1 id="들어가며">들어가며
-</h1><p>오늘은 어제 이어 벡터의 내적(Inner product)과 노름(Norm), 예시까지 정리하였습니다.</p>
-<hr>
-<h2 id="1-벡터의-내적inner-product과-노름norm">1. 벡터의 내적(Inner product)과 노름(Norm)
-</h2><p><strong>벡터 사이의 거리</strong>나 <strong>벡터들의 자체 크기</strong>, <strong>벡터들 사이의 사잇각</strong>을 재는 방법을 보겠습니다.</p>
-<p>특히 <strong>두 벡터가 수직을 이루고 있는지</strong>도 중요한 관심사입니다.</p>
-<h3 id="두-점-사이의-거리">두 점 사이의 거리
-</h3><ul>
-<li>실수 직선 상에서 두 점 $x, y$ 사이의 거리는 $|x - y|$로 구할 수 있음</li>
-<li>$R^n$ 공간 상의 두 점 $(x_1,\cdots,x_n), (y_1,\cdots,y_n)$의 거리는</li>
-</ul>
-<p>$$
+<!doctype html><html lang=ko-kr dir=ltr><head><meta charset=utf-8><meta name=viewport content='width=device-width,initial-scale=1'><meta name=description content="들어가며 오늘은 어제 이어 벡터의 내적(Inner product)과 노름(Norm), 예시까지 정리하였습니다.\n1. 벡터의 내적(Inner product)과 노름(Norm) 벡터 사이의 거리나 벡터들의 자체 크기, 벡터들 사이의 사잇각을 재는 방법을 보겠습니다.\n특히 두 벡터가 수직을 이루고 있는지도 중요한 관심사입니다.\n두 점 사이의 거리 실수 직선 상에서 두 점 $x, y$ 사이의 거리는 $|x - y|$로 구할 수 있음 $R^n$ 공간 상의 두 점 $(x_1,\\cdots,x_n), (y_1,\\cdots,y_n)$의 거리는 $$ \\sqrt{(x_1-y_1)^2 + \\cdots + (x_n-y_n)^2} $$\n"><title>[데이터분석 수학] 벡터 이해하기 02</title><link rel=canonical href=https://lucaspark-10.github.io/data-analysis/python_data_analysis_10/><link rel=preconnect href=https://fonts.googleapis.com><link rel=preconnect href=https://fonts.gstatic.com crossorigin><link rel=preload as=style href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap"><link rel=stylesheet href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap"><link rel=stylesheet href=/scss/style.min.e62e09c60ba428a627e03568fa3df938f6a8224f815b5846f00816c17d4a0be4.css><meta property='og:title' content="[데이터분석 수학] 벡터 이해하기 02"><meta property='og:description' content="들어가며 오늘은 어제 이어 벡터의 내적(Inner product)과 노름(Norm), 예시까지 정리하였습니다.\n1. 벡터의 내적(Inner product)과 노름(Norm) 벡터 사이의 거리나 벡터들의 자체 크기, 벡터들 사이의 사잇각을 재는 방법을 보겠습니다.\n특히 두 벡터가 수직을 이루고 있는지도 중요한 관심사입니다.\n두 점 사이의 거리 실수 직선 상에서 두 점 $x, y$ 사이의 거리는 $|x - y|$로 구할 수 있음 $R^n$ 공간 상의 두 점 $(x_1,\\cdots,x_n), (y_1,\\cdots,y_n)$의 거리는 $$ \\sqrt{(x_1-y_1)^2 + \\cdots + (x_n-y_n)^2} $$\n"><meta property='og:url' content='https://lucaspark-10.github.io/data-analysis/python_data_analysis_10/'><meta property='og:site_name' content='LucasPark Blog'><meta property='og:type' content='article'><meta property='article:section' content='Data-Analysis'><meta property='article:published_time' content='2026-07-11T00:00:00+00:00'><meta property='article:modified_time' content='2026-07-11T00:00:00+00:00'><meta name=twitter:title content="[데이터분석 수학] 벡터 이해하기 02"><meta name=twitter:description content="들어가며 오늘은 어제 이어 벡터의 내적(Inner product)과 노름(Norm), 예시까지 정리하였습니다.\n1. 벡터의 내적(Inner product)과 노름(Norm) 벡터 사이의 거리나 벡터들의 자체 크기, 벡터들 사이의 사잇각을 재는 방법을 보겠습니다.\n특히 두 벡터가 수직을 이루고 있는지도 중요한 관심사입니다.\n두 점 사이의 거리 실수 직선 상에서 두 점 $x, y$ 사이의 거리는 $|x - y|$로 구할 수 있음 $R^n$ 공간 상의 두 점 $(x_1,\\cdots,x_n), (y_1,\\cdots,y_n)$의 거리는 $$ \\sqrt{(x_1-y_1)^2 + \\cdots + (x_n-y_n)^2} $$\n"><script async src="https://www.googletagmanager.com/gtag/js?id=G-EVK5B22CB3"></script><script>var doNotTrack=!1,dnt=navigator.doNotTrack||window.doNotTrack||navigator.msDoNotTrack,doNotTrack=dnt=="1"||dnt=="yes";if(!doNotTrack){window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag("js",new Date),gtag("config","G-EVK5B22CB3")}</script></head><body class=article-page><script>(function(){const e="StackColorScheme";localStorage.getItem(e)||localStorage.setItem(e,"auto")})()</script><script>(function(){const t="StackColorScheme",e=localStorage.getItem(t),n=window.matchMedia("(prefers-color-scheme: dark)").matches===!0;e=="dark"||e==="auto"&&n?document.documentElement.dataset.scheme="dark":document.documentElement.dataset.scheme="light"})()</script><div class="container main-container flex on-phone--column compact"><aside class="sidebar left-sidebar sticky"><button class="hamburger hamburger--spin" type=button id=toggle-menu aria-label="Toggle Menu">
+<span class=hamburger-box><span class=hamburger-inner></span></span></button><header><div class=site-meta><h1 class=site-name><a href=/>LucasPark Blog</a></h1><h2 class=site-description>Lucas Park의 개인 블로그</h2></div></header><ol class=menu id=main-menu><li><a href=/><span>Home</span></a></li><li><a href=/posts/><span>Posts</span></a></li><li><a href=/data-analysis/><span>Data Analysis</span></a></li><li><a href=/gold-news-and-analysis/><span>Gold Price Check & Analysis</span></a></li><li><a href=/atmospheric-environment/><span>Atmospheric Environment</span></a></li><li class=menu-bottom-section><ol class=menu><li id=dark-mode-toggle><svg class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="8" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<svg class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="16" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<span>Dark Mode</span></li></ol></li></ol></aside><main class="main full-width"><article class=main-article><header class=article-header><div class=article-details><div class=article-title-wrapper><h2 class=article-title><a href=/data-analysis/python_data_analysis_10/>[데이터분석 수학] 벡터 이해하기 02</a></h2></div><footer class=article-meta><div class=inline-meta><svg class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M11.795 21H5a2 2 0 01-2-2V7a2 2 0 012-2h12a2 2 0 012 2v4"/><circle cx="18" cy="18" r="4"/><path d="M15 3v4"/><path d="M7 3v4"/><path d="M3 11h16"/><path d="M18 16.496V18l1 1"/></svg>
+<time class=article-time--published datetime=2026-07-11T00:00:00Z>2026년 7월 11일 토요일</time></div></footer></div></header><section class=article-content><h1 id=들어가며>들어가며</h1><p>오늘은 어제 이어 벡터의 내적(Inner product)과 노름(Norm), 예시까지 정리하였습니다.</p><hr><h2 id=1-벡터의-내적inner-product과-노름norm>1. 벡터의 내적(Inner product)과 노름(Norm)</h2><p><strong>벡터 사이의 거리</strong>나 <strong>벡터들의 자체 크기</strong>, <strong>벡터들 사이의 사잇각</strong>을 재는 방법을 보겠습니다.</p><p>특히 <strong>두 벡터가 수직을 이루고 있는지</strong>도 중요한 관심사입니다.</p><h3 id=두-점-사이의-거리>두 점 사이의 거리</h3><ul><li>실수 직선 상에서 두 점 $x, y$ 사이의 거리는 $|x - y|$로 구할 수 있음</li><li>$R^n$ 공간 상의 두 점 $(x_1,\cdots,x_n), (y_1,\cdots,y_n)$의 거리는</li></ul><p>$$
 \sqrt{(x_1-y_1)^2 + \cdots + (x_n-y_n)^2}
-$$</p>
-<p>로 구합니다. 이는 두 점 사이의 <strong>최단거리가 직선</strong>이라는 개념을 사용합니다.</p>
-<h3 id="수학에서의-거리-metric">수학에서의 거리 (Metric)
-</h3><p>수학에서 거리란 어느 특정한 조건을 만족하는 함수로 정의할 수 있습니다.</p>
-<p>(예: 확률벡터들 사이의 거리를 재는 <strong>마할라노비스 거리(Mahalanobis distance)</strong>)</p>
-<p>함수 $d: R^n \times R^n \to R$가 다음 네 조건을 만족하면 $d$를 $R^n$ 상의 <strong>metric</strong>이라 부릅니다.</p>
-<p>$$
+$$</p><p>로 구합니다. 이는 두 점 사이의 <strong>최단거리가 직선</strong>이라는 개념을 사용합니다.</p><h3 id=수학에서의-거리-metric>수학에서의 거리 (Metric)</h3><p>수학에서 거리란 어느 특정한 조건을 만족하는 함수로 정의할 수 있습니다.</p><p>(예: 확률벡터들 사이의 거리를 재는 <strong>마할라노비스 거리(Mahalanobis distance)</strong>)</p><p>함수 $d: R^n \times R^n \to R$가 다음 네 조건을 만족하면 $d$를 $R^n$ 상의 <strong>metric</strong>이라 부릅니다.</p><p>$$
 (1); d(v,w) \geq 0, \quad (2); d(v,w)=0 \iff v=w
 $$
 $$
 (3); d(v,w)=d(w,v), \quad (4); d(v,w) \leq d(v,z)+d(z,w) ;\text{(삼각 부등식)}
-$$</p>
-<p>일반적으로 $p \geq 1$에 대해 $d_p(x,y) = \sqrt[p]{|x_1-y_1|^p + \cdots + |x_n-y_n|^p}$로 정의하며, <strong>$p=2$가 우리가 흔히 사용하는 거리 개념</strong>입니다.</p>
-<h3 id="노름-norm">노름 (Norm)
-</h3><p>벡터공간 $R^n$ 에서 함수 $\lVert\cdot\rVert: R^n \to R$ 가 다음 네 조건을 만족하면 이를 <strong>노름</strong>(norm)이라 부릅니다.</p>
-<p>$$
+$$</p><p>일반적으로 $p \geq 1$에 대해 $d_p(x,y) = \sqrt[p]{|x_1-y_1|^p + \cdots + |x_n-y_n|^p}$로 정의하며, <strong>$p=2$가 우리가 흔히 사용하는 거리 개념</strong>입니다.</p><h3 id=노름-norm>노름 (Norm)</h3><p>벡터공간 $R^n$ 에서 함수 $\lVert\cdot\rVert: R^n \to R$ 가 다음 네 조건을 만족하면 이를 <strong>노름</strong>(norm)이라 부릅니다.</p><p>$$
 (1); \lVert v \rVert \geq 0 \qquad (2); \lVert v \rVert = 0 \iff v = 0
 $$
 $$
 (3); \lVert \lambda v \rVert = |\lambda| \lVert v \rVert \qquad (4); \lVert v+w \rVert \leq \lVert v \rVert + \lVert w \rVert ;\text{(삼각 부등식)}
-$$</p>
-
-    <blockquote>
-        <p><strong>노름과 거리(metric)의 차이</strong>: 노름의 3번 성질 $\lVert \lambda v \rVert = |\lambda|\lVert v \rVert$로 인해 노름은 <strong>벡터공간에서만</strong> 정의됩니다.
-반면 거리(metric)함수는 벡터공간 조건이 없어도 성립합니다.</p>
-
-    </blockquote>
-<p>대표적인 노름 함수들:</p>
-<p>$$
+$$</p><blockquote><p><strong>노름과 거리(metric)의 차이</strong>: 노름의 3번 성질 $\lVert \lambda v \rVert = |\lambda|\lVert v \rVert$로 인해 노름은 <strong>벡터공간에서만</strong> 정의됩니다.
+반면 거리(metric)함수는 벡터공간 조건이 없어도 성립합니다.</p></blockquote><p>대표적인 노름 함수들:</p><p>$$
 l_1;노름: \lVert v \rVert_1 = \sum_{i=1}^{n}|x_i|
 $$
 $$
@@ -252,41 +23,19 @@ l_p;노름: \lVert v \rVert_p = \left(\sum_{i=1}^{n}|x_i|^p\right)^{\frac{1}{p}}
 $$
 $$
 l_\infty;노름: \lVert v \rVert_\infty = \max_{i=1,\cdots,n}|x_i|
-$$</p>
-<p>$p=2$ 일 때의 노름을 <strong>유클리디안 노름</strong>(Euclidean norm)이라 부르며, 가장 흔히 사용됩니다.</p>
-<p>거리(metric)함수나 노름(norm)함수는 벡터의 크기 또는 두 벡터 사이의 거리를 측정할 수 있습니다.</p>
-<p>반면 <strong>내적</strong>(inner product)은 벡터의 크기뿐 아니라 <strong>두 벡터의 사이각</strong>도 측정할 수 있습니다.</p>
-<h3 id="r3에서의-내적의-정의">$R^3$에서의 내적의 정의
-</h3><p>벡터공간 $R^3$에서 두 벡터 $x = (x_1,x_2,x_3), y = (y_1,y_2,y_3)$의 내적은 다음과 같이 정의합니다.</p>
-<p>$$
+$$</p><p>$p=2$ 일 때의 노름을 <strong>유클리디안 노름</strong>(Euclidean norm)이라 부르며, 가장 흔히 사용됩니다.</p><p>거리(metric)함수나 노름(norm)함수는 벡터의 크기 또는 두 벡터 사이의 거리를 측정할 수 있습니다.</p><p>반면 <strong>내적</strong>(inner product)은 벡터의 크기뿐 아니라 <strong>두 벡터의 사이각</strong>도 측정할 수 있습니다.</p><h3 id=r3에서의-내적의-정의>$R^3$에서의 내적의 정의</h3><p>벡터공간 $R^3$에서 두 벡터 $x = (x_1,x_2,x_3), y = (y_1,y_2,y_3)$의 내적은 다음과 같이 정의합니다.</p><p>$$
 x \cdot y = x_1 y_1 + x_2 y_2 + x_3 y_3 = \lVert x \rVert \lVert y \rVert \cos\theta \quad (단, \lVert v \rVert = \sqrt{v_1^2+v_2^2+v_3^2})
-$$</p>
-<ul>
-<li>$x \cdot x = \lVert x \rVert^2 \cos 0 = \lVert x \rVert^2$ 이므로, 내적을 통해 벡터의 크기를 잴 수 있음</li>
-<li>$\cos\theta = \dfrac{x \cdot y}{\lVert x \rVert \lVert y \rVert}$ 에서 두 벡터 사이의 사이각을 잴 수 있음</li>
-</ul>
-<h3 id="rn에서의-내적의-정의">$R^n$에서의 내적의 정의
-</h3><p>벡터공간 $R^n$에서의 내적은 다음과 같이 정의됩니다.</p>
-<p>$$
+$$</p><ul><li>$x \cdot x = \lVert x \rVert^2 \cos 0 = \lVert x \rVert^2$ 이므로, 내적을 통해 벡터의 크기를 잴 수 있음</li><li>$\cos\theta = \dfrac{x \cdot y}{\lVert x \rVert \lVert y \rVert}$ 에서 두 벡터 사이의 사이각을 잴 수 있음</li></ul><h3 id=rn에서의-내적의-정의>$R^n$에서의 내적의 정의</h3><p>벡터공간 $R^n$에서의 내적은 다음과 같이 정의됩니다.</p><p>$$
 \forall x=(x_1,\cdots,x_n), y=(y_1,\cdots,y_n): ; \langle x,y \rangle = x_1y_1 + \cdots + x_ny_n
-$$</p>
-<p>또는 행렬 곱으로,</p>
-<p>$$
+$$</p><p>또는 행렬 곱으로,</p><p>$$
 \langle x,y \rangle = xy^\top = x \cdot y
-$$</p>
-<p>내적을 나타낼 때는 경우에 따라 $\langle x,y \rangle$, $xy^\top$, $x \cdot y$를 혼용해서 사용합니다.</p>
-<p><strong>예시</strong></p>
-<p>$(1)$ $x=(1,-1,2), y=(-1,0,2)$일 때
+$$</p><p>내적을 나타낼 때는 경우에 따라 $\langle x,y \rangle$, $xy^\top$, $x \cdot y$를 혼용해서 사용합니다.</p><p><strong>예시</strong></p><p>$(1)$ $x=(1,-1,2), y=(-1,0,2)$일 때
 $$
 \langle x,y \rangle = x \cdot y = 1\times(-1) + (-1)\times0 + 2\times2 = 3
-$$</p>
-<p>$(2)$ $u=(1,0,-1,2), v=(1,0,-1,-2)$일 때
+$$</p><p>$(2)$ $u=(1,0,-1,2), v=(1,0,-1,-2)$일 때
 $$
 \langle u,v \rangle = 1\times1 + 0\times0 + (-1)\times(-1) + 2\times(-2) = -3
-$$</p>
-<h3 id="rn에서의-내적-연산법칙">$R^n$에서의 내적 연산법칙
-</h3><p>임의의 벡터 $u, v, w \in R^n$과 $\lambda \in R$에 대해 다음 법칙이 성립합니다.</p>
-<p>$$
+$$</p><h3 id=rn에서의-내적-연산법칙>$R^n$에서의 내적 연산법칙</h3><p>임의의 벡터 $u, v, w \in R^n$과 $\lambda \in R$에 대해 다음 법칙이 성립합니다.</p><p>$$
 (1); \langle v+u, w \rangle = \langle v,w \rangle + \langle u,w \rangle, \quad \langle \lambda v, w \rangle = \lambda\langle v,w \rangle
 $$
 $$
@@ -297,259 +46,104 @@ $$
 $$
 $$
 (4); \langle v,v \rangle \geq 0, \quad \langle v,v \rangle = 0 \iff v = 0
-$$</p>
-<p><strong>연습문제 1</strong>: 정리 (2), (4)를 증명하라.</p>
-<p>$v=(v_1,\cdots,v_n), w=(w_1,\cdots,w_n), u=(u_1,\cdots,u_n), \lambda \in R$이라 하면,</p>
-<p>$$
+$$</p><p><strong>연습문제 1</strong>: 정리 (2), (4)를 증명하라.</p><p>$v=(v_1,\cdots,v_n), w=(w_1,\cdots,w_n), u=(u_1,\cdots,u_n), \lambda \in R$이라 하면,</p><p>$$
 \langle v, w+u \rangle = v_1(w_1+u_1)+\cdots+v_n(w_n+u_n) = \langle v,w \rangle + \langle v,u \rangle
 $$
 $$
 \langle v,v \rangle = v_1^2 + \cdots + v_n^2 \geq 0, \quad \langle v,v \rangle = 0 \iff v_1=\cdots=v_n=0 \iff v=0
-$$</p>
-<p><strong>연습문제 2</strong>: 벡터 $a \in R^n$이 모든 $x \in R^n$에 대하여 $\langle a,x \rangle = 0$이면 $a=0$임을 증명하라.</p>
-<p>$a=(a_1,\cdots,a_n)$이라 하고, $e_i = (0,\cdots,1,\cdots,0)$(i번째만 1)이라 하면 $\langle a, e_i \rangle = a_i = 0$이 모든 $i$에 대해 성립하므로 $a=0$이다.</p>
-<h3 id="벡터의-크기-magnitude">벡터의 크기 (Magnitude)
-</h3><p>$v = (x_1,\cdots,x_n) \in R^n$ 에 대한 벡터 $v$ 의 크기(magnitude)를 <strong>노름</strong>(norm)이라는 명칭으로 정의합니다.</p>
-<p>$$
+$$</p><p><strong>연습문제 2</strong>: 벡터 $a \in R^n$이 모든 $x \in R^n$에 대하여 $\langle a,x \rangle = 0$이면 $a=0$임을 증명하라.</p><p>$a=(a_1,\cdots,a_n)$이라 하고, $e_i = (0,\cdots,1,\cdots,0)$(i번째만 1)이라 하면 $\langle a, e_i \rangle = a_i = 0$이 모든 $i$에 대해 성립하므로 $a=0$이다.</p><h3 id=벡터의-크기-magnitude>벡터의 크기 (Magnitude)</h3><p>$v = (x_1,\cdots,x_n) \in R^n$ 에 대한 벡터 $v$ 의 크기(magnitude)를 <strong>노름</strong>(norm)이라는 명칭으로 정의합니다.</p><p>$$
 \lVert v \rVert = \sqrt{\langle v,v \rangle} = \sqrt{x_1^2 + \cdots + x_n^2}
-$$</p>
-<p>$\langle v,v \rangle \geq 0$이고 $\langle v,v \rangle=0 \iff v=0$이므로 $\lVert v \rVert = 0 \iff v = 0$이 성립하며, 임의의 실수 $\lambda$에 대해 $\lVert \lambda v \rVert = |\lambda| \lVert v \rVert$를 만족합니다.</p>
-<h3 id="벡터-사이의-거리">벡터 사이의 거리
-</h3><p>벡터의 길이 개념을 활용하여 두 벡터 사이의 거리를 정의할 수 있습니다.</p>
-<p>$$
+$$</p><p>$\langle v,v \rangle \geq 0$이고 $\langle v,v \rangle=0 \iff v=0$이므로 $\lVert v \rVert = 0 \iff v = 0$이 성립하며, 임의의 실수 $\lambda$에 대해 $\lVert \lambda v \rVert = |\lambda| \lVert v \rVert$를 만족합니다.</p><h3 id=벡터-사이의-거리>벡터 사이의 거리</h3><p>벡터의 길이 개념을 활용하여 두 벡터 사이의 거리를 정의할 수 있습니다.</p><p>$$
 d(v,w) = \lVert w-v \rVert = \sqrt{(y_1-x_1)^2 + \cdots + (y_n-x_n)^2}
-$$</p>
-<p><strong>예시</strong>: $x=(1,-1,2), y=(-1,0,2)$일 때
+$$</p><p><strong>예시</strong>: $x=(1,-1,2), y=(-1,0,2)$일 때
 $$
 \lVert x \rVert = \sqrt{1^2+(-1)^2+2^2} = \sqrt{6}, \quad d(x,y) = \lVert x-y \rVert = \sqrt{5}
-$$</p>
-<p><strong>연습문제</strong>: 임의의 두 벡터 $v,w \in R^n$에 대하여 다음이 성립함을 증명하라.</p>
-<p>$(1)$ $\lVert v+w \rVert^2 = \lVert v \rVert^2 + \lVert w \rVert^2 + 2\langle v,w \rangle$ — <strong>피타고라스 정리</strong></p>
-<p>$(2)$ $\lVert v+w \rVert^2 + \lVert v-w \rVert^2 = 2\lVert v \rVert^2 + 2\lVert w \rVert^2$ — <strong>평행 정리</strong></p>
-<h3 id="cauchy-schwarz-부등식">Cauchy-Schwarz 부등식
-</h3><p>임의의 $v, w \in R^n$에 대하여 다음 부등식이 성립합니다.</p>
-<p>$$
+$$</p><p><strong>연습문제</strong>: 임의의 두 벡터 $v,w \in R^n$에 대하여 다음이 성립함을 증명하라.</p><p>$(1)$ $\lVert v+w \rVert^2 = \lVert v \rVert^2 + \lVert w \rVert^2 + 2\langle v,w \rangle$ — <strong>피타고라스 정리</strong></p><p>$(2)$ $\lVert v+w \rVert^2 + \lVert v-w \rVert^2 = 2\lVert v \rVert^2 + 2\lVert w \rVert^2$ — <strong>평행 정리</strong></p><h3 id=cauchy-schwarz-부등식>Cauchy-Schwarz 부등식</h3><p>임의의 $v, w \in R^n$에 대하여 다음 부등식이 성립합니다.</p><p>$$
 |\langle v,w \rangle| \leq \lVert v \rVert \lVert w \rVert
-$$</p>
-<p>$w \neq 0$이면 다음 성질을 만족합니다.</p>
-<p>$$
+$$</p><p>$w \neq 0$이면 다음 성질을 만족합니다.</p><p>$$
 |\langle v,w \rangle| = \lVert v \rVert \lVert w \rVert \iff \exists \rho \in R: v = \rho w
-$$</p>
-<p><strong>증명 아이디어</strong>: $w=0$이면 자명하게 성립합니다. $w \neq 0$이라 가정하고 $\lambda = \langle w,w \rangle = \lVert w \rVert^2 &gt; 0$, $\mu = -\langle v,w \rangle$로 놓으면,</p>
-<p>$$
+$$</p><p><strong>증명 아이디어</strong>: $w=0$이면 자명하게 성립합니다. $w \neq 0$이라 가정하고 $\lambda = \langle w,w \rangle = \lVert w \rVert^2 > 0$, $\mu = -\langle v,w \rangle$로 놓으면,</p><p>$$
 0 \leq \langle \lambda v+\mu w, \lambda v+\mu w \rangle = \lambda(\lVert v \rVert^2 \lVert w \rVert^2 - \langle v,w \rangle^2)
-$$</p>
-<p>$\lambda &gt; 0$이므로 $\lVert v \rVert^2\lVert w \rVert^2 - \langle v,w \rangle^2 \geq 0$, 즉 $\langle v,w \rangle^2 \leq \lVert v \rVert^2 \lVert w \rVert^2$가 성립하여 Cauchy-Schwarz 부등식이 증명됩니다.</p>
-<h3 id="삼각부등식-triangle-inequality">삼각부등식 (Triangle inequality)
-</h3><p>Cauchy-Schwarz 부등식을 이용하여 다음과 같은 중요한 결과들이 유도됩니다.</p>
-<p>$$
+$$</p><p>$\lambda > 0$이므로 $\lVert v \rVert^2\lVert w \rVert^2 - \langle v,w \rangle^2 \geq 0$, 즉 $\langle v,w \rangle^2 \leq \lVert v \rVert^2 \lVert w \rVert^2$가 성립하여 Cauchy-Schwarz 부등식이 증명됩니다.</p><h3 id=삼각부등식-triangle-inequality>삼각부등식 (Triangle inequality)</h3><p>Cauchy-Schwarz 부등식을 이용하여 다음과 같은 중요한 결과들이 유도됩니다.</p><p>$$
 \lVert v+w \rVert \leq \lVert v \rVert + \lVert w \rVert
 $$
 $$
 d(v_1,v_3) \leq d(v_1,v_2) + d(v_2,v_3)
-$$</p>
-<p><strong>증명</strong>:</p>
-<p>$$
+$$</p><p><strong>증명</strong>:</p><p>$$
 \lVert v+w \rVert^2 = \langle v,v \rangle + 2\langle v,w \rangle + \langle w,w \rangle \leq \lVert v \rVert^2 + 2\lVert v \rVert\lVert w \rVert + \lVert w \rVert^2 = (\lVert v \rVert+\lVert w \rVert)^2
-$$</p>
-<p>두 번째 부등식은, $v = v_2-v_1, w = v_3-v_2$로 놓으면 $v+w = v_3-v_1$이 되므로 첫 번째 부등식으로부터 바로 유도됩니다.</p>
-<h3 id="두-벡터-사이의-각">두 벡터 사이의 각
-</h3><p>Cauchy-Schwarz 부등식을 이용하면 두 벡터 간의 <strong>각</strong>(angle)을 정의할 수 있습니다. $v \neq 0, w \neq 0$ 이라 하면 Cauchy-Schwarz 부등식으로부터</p>
-<p>$$
+$$</p><p>두 번째 부등식은, $v = v_2-v_1, w = v_3-v_2$로 놓으면 $v+w = v_3-v_1$이 되므로 첫 번째 부등식으로부터 바로 유도됩니다.</p><h3 id=두-벡터-사이의-각>두 벡터 사이의 각</h3><p>Cauchy-Schwarz 부등식을 이용하면 두 벡터 간의 <strong>각</strong>(angle)을 정의할 수 있습니다. $v \neq 0, w \neq 0$ 이라 하면 Cauchy-Schwarz 부등식으로부터</p><p>$$
 -1 \leq \frac{\langle v,w \rangle}{\lVert v \rVert \lVert w \rVert} \leq 1
-$$</p>
-<p>따라서 $\cos\theta = \dfrac{\langle v,w \rangle}{\lVert v \rVert \lVert w \rVert};(\theta \in [0,\pi])$인 $\theta$가 유일하게 존재하며, 이 각 $\theta$를 두 벡터 $v,w$ 사이의 각이라고 합니다.</p>
-<p>$$
+$$</p><p>따라서 $\cos\theta = \dfrac{\langle v,w \rangle}{\lVert v \rVert \lVert w \rVert};(\theta \in [0,\pi])$인 $\theta$가 유일하게 존재하며, 이 각 $\theta$를 두 벡터 $v,w$ 사이의 각이라고 합니다.</p><p>$$
 \langle v,w \rangle = \lVert v \rVert \lVert w \rVert \cos\theta
-$$</p>
-<p>두 직선 $A = u+Rv$, $B=u+Rw$가 $u$에서 만날 때, 두 직선 사이의 각은 두 직선의 방향벡터 $v,w$의 각을 의미합니다.</p>
-<h3 id="두-벡터의-수직-orthogonal">두 벡터의 수직 (Orthogonal)
-</h3><p>만일 $\cos\theta = 0$, 즉 $\theta = \dfrac{\pi}{2}$일 때 $\langle v,w \rangle = 0$이고 두 벡터 $v,w$가 <strong>수직</strong>한다고 합니다. 기호로는 $v \perp w$를 사용합니다.</p>
-<hr>
-<h2 id="4-코드로-확인해보기">4. 코드로 확인해보기
-</h2><p>강의에서 다룬 벡터 연산들을 <code>numpy</code>로 직접 확인해봅니다.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> numpy <span style="color:#66d9ef">as</span> np
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>x <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>array([<span style="color:#ae81ff">1</span>, <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span>])
-</span></span><span style="display:flex;"><span>y <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>array([<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">2</span>])
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># 내적 (Inner product)</span>
-</span></span><span style="display:flex;"><span>inner_product <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>dot(x, y)
-</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">&#34;내적 &lt;x, y&gt;:&#34;</span>, inner_product)  <span style="color:#75715e"># 3</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># 노름 (벡터의 크기)</span>
-</span></span><span style="display:flex;"><span>norm_x <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>linalg<span style="color:#f92672">.</span>norm(x)
-</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">&#34;||x||:&#34;</span>, norm_x)  <span style="color:#75715e"># sqrt(6) ≈ 2.449</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># 두 벡터 사이의 거리</span>
-</span></span><span style="display:flex;"><span>distance <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>linalg<span style="color:#f92672">.</span>norm(x <span style="color:#f92672">-</span> y)
-</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">&#34;d(x, y):&#34;</span>, distance)  <span style="color:#75715e"># sqrt(5) ≈ 2.236</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># 두 벡터 사이의 각 (cos theta)</span>
-</span></span><span style="display:flex;"><span>cos_theta <span style="color:#f92672">=</span> inner_product <span style="color:#f92672">/</span> (np<span style="color:#f92672">.</span>linalg<span style="color:#f92672">.</span>norm(x) <span style="color:#f92672">*</span> np<span style="color:#f92672">.</span>linalg<span style="color:#f92672">.</span>norm(y))
-</span></span><span style="display:flex;"><span>theta <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>arccos(cos_theta)
-</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">&#34;두 벡터 사이의 각(도):&#34;</span>, np<span style="color:#f92672">.</span>degrees(theta))
-</span></span></code></pre></div><h3 id="추가-예시---cauchy-schwarz-부등식-검증">추가 예시 ① — Cauchy-Schwarz 부등식 검증
-</h3><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> numpy <span style="color:#66d9ef">as</span> np
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>v <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>array([<span style="color:#ae81ff">3</span>, <span style="color:#f92672">-</span><span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">5</span>])
-</span></span><span style="display:flex;"><span>w <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>array([<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">4</span>, <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>])
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>lhs <span style="color:#f92672">=</span> abs(np<span style="color:#f92672">.</span>dot(v, w))                          <span style="color:#75715e"># |&lt;v, w&gt;|</span>
-</span></span><span style="display:flex;"><span>rhs <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>linalg<span style="color:#f92672">.</span>norm(v) <span style="color:#f92672">*</span> np<span style="color:#f92672">.</span>linalg<span style="color:#f92672">.</span>norm(w)       <span style="color:#75715e"># ||v|| * ||w||</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;|&lt;v, w&gt;| = </span><span style="color:#e6db74">{</span>lhs<span style="color:#e6db74">:</span><span style="color:#e6db74">.3f</span><span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
-</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;||v||*||w|| = </span><span style="color:#e6db74">{</span>rhs<span style="color:#e6db74">:</span><span style="color:#e6db74">.3f</span><span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
-</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">&#34;Cauchy-Schwarz 부등식 성립 여부:&#34;</span>, lhs <span style="color:#f92672">&lt;=</span> rhs)
-</span></span></code></pre></div><h3 id="추가-예시---삼각부등식-검증">추가 예시 ② — 삼각부등식 검증
-</h3><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> numpy <span style="color:#66d9ef">as</span> np
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>v <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>array([<span style="color:#ae81ff">2</span>, <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">3</span>])
-</span></span><span style="display:flex;"><span>w <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>array([<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">1</span>])
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>lhs <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>linalg<span style="color:#f92672">.</span>norm(v <span style="color:#f92672">+</span> w)
-</span></span><span style="display:flex;"><span>rhs <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>linalg<span style="color:#f92672">.</span>norm(v) <span style="color:#f92672">+</span> np<span style="color:#f92672">.</span>linalg<span style="color:#f92672">.</span>norm(w)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;||v + w|| = </span><span style="color:#e6db74">{</span>lhs<span style="color:#e6db74">:</span><span style="color:#e6db74">.3f</span><span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
-</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;||v|| + ||w|| = </span><span style="color:#e6db74">{</span>rhs<span style="color:#e6db74">:</span><span style="color:#e6db74">.3f</span><span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
-</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">&#34;삼각부등식 성립 여부:&#34;</span>, lhs <span style="color:#f92672">&lt;=</span> rhs)
-</span></span></code></pre></div><h3 id="추가-예시---두-벡터의-수직orthogonal-여부-판별">추가 예시 ③ — 두 벡터의 수직(orthogonal) 여부 판별
-</h3><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> numpy <span style="color:#66d9ef">as</span> np
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">is_orthogonal</span>(v, w, tol<span style="color:#f92672">=</span><span style="color:#ae81ff">1e-9</span>):
-</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;&#34;&#34;두 벡터의 내적이 0이면 수직&#34;&#34;&#34;</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> abs(np<span style="color:#f92672">.</span>dot(v, w)) <span style="color:#f92672">&lt;</span> tol
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>v1 <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>array([<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>])
-</span></span><span style="display:flex;"><span>v2 <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>array([<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>])
-</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">&#34;v1과 v2는 수직인가?&#34;</span>, is_orthogonal(v1, v2))  <span style="color:#75715e"># True</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>v3 <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>array([<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>])
-</span></span><span style="display:flex;"><span>v4 <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>array([<span style="color:#ae81ff">1</span>, <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>])
-</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">&#34;v3과 v4는 수직인가?&#34;</span>, is_orthogonal(v3, v4))  <span style="color:#75715e"># True (직교하는 대각선)</span>
-</span></span></code></pre></div><h3 id="추가-예시---l_1-l_2-l_infty-노름-비교">추가 예시 ④ — $l_1$, $l_2$, $l_\infty$ 노름 비교
-</h3><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> numpy <span style="color:#66d9ef">as</span> np
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>v <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>array([<span style="color:#ae81ff">3</span>, <span style="color:#f92672">-</span><span style="color:#ae81ff">4</span>, <span style="color:#ae81ff">12</span>])
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>l1_norm <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>linalg<span style="color:#f92672">.</span>norm(v, ord<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>)      <span style="color:#75715e"># 맨해튼 거리 노름</span>
-</span></span><span style="display:flex;"><span>l2_norm <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>linalg<span style="color:#f92672">.</span>norm(v, ord<span style="color:#f92672">=</span><span style="color:#ae81ff">2</span>)      <span style="color:#75715e"># 유클리디안 노름 (기본값)</span>
-</span></span><span style="display:flex;"><span>linf_norm <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>linalg<span style="color:#f92672">.</span>norm(v, ord<span style="color:#f92672">=</span>np<span style="color:#f92672">.</span>inf)  <span style="color:#75715e"># 최댓값 노름</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;l1 노름: </span><span style="color:#e6db74">{</span>l1_norm<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)     <span style="color:#75715e"># |3| + |-4| + |12| = 19</span>
-</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;l2 노름: </span><span style="color:#e6db74">{</span>l2_norm<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)     <span style="color:#75715e"># sqrt(9+16+144) = 13.0</span>
-</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;l∞ 노름: </span><span style="color:#e6db74">{</span>linf_norm<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)   <span style="color:#75715e"># max(3,4,12) = 12</span>
-</span></span></code></pre></div><hr>
-<h2 id="마무리">마무리
-</h2><p>벡터공간의 핵심 개념을 한 줄로 요약하면 다음과 같습니다.</p>
-<ul>
-<li><strong>벡터</strong>: 크기와 방향을 동시에 표현하는 수단이며, 덧셈은 평행사변형 법칙을 따름</li>
-<li><strong>벡터공간 $R^n$</strong>: 덧셈과 스칼라 곱이라는 두 연산이 정의된 $n$개 변수의 집합</li>
-<li><strong>노름(Norm)</strong>: 벡터 하나의 크기를 재는 함수 (예: 유클리디안 노름)</li>
-<li><strong>내적(Inner product)</strong>: 벡터의 크기뿐 아니라 두 벡터 사이의 <strong>사잇각</strong>까지 측정 가능</li>
-<li><strong>Cauchy-Schwarz 부등식</strong>: $|\langle v,w \rangle| \leq \lVert v \rVert \lVert w \rVert$ — 두 벡터의 각을 정의하는 데 사용되는 핵심 부등식</li>
-<li><strong>삼각부등식</strong>: $\lVert v+w \rVert \leq \lVert v \rVert + \lVert w \rVert$</li>
-</ul>
-<p>머신러닝에서 데이터를 벡터로 표현하고, 두 데이터(벡터) 사이의 <strong>거리</strong>나 <strong>유사도</strong>(코사인 유사도 등)를 계산하는 모든 과정이 노름과 내적 개념에 기반하고 있습니다.</p>
-<p>다음은 행렬에 대해서 정리하겠습니다.</p>
-<p>당분간은 계속 수학을 정리할 것 같습니다.</p>
-
-</section>
-
-
-    <footer class="article-meta article-footer">
-    
-
-    </footer>
-
-
-    
-        <link 
-                rel="stylesheet" 
-                href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI&#43;WdtXRGWt2kTvGFasHpSy3SV"crossorigin="anonymous"
-            ><script 
-                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG&#43;vnGctmUb0ZY0l8"crossorigin="anonymous"
-                defer
-                >
-            </script><script 
-                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"integrity="sha384-&#43;VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4&#43;/RRE05"crossorigin="anonymous"
-                defer
-                >
-            </script><script>
-    window.addEventListener("DOMContentLoaded", () => {
-        const elementsToRender = [".main-article", ".widget--toc"];
-
-        elementsToRender.forEach(selector => {
-            const element = document.querySelector(selector);
-            if (element) {
-                renderMathInElement(element, {
-                    delimiters: [
-                        { left: "$$", right: "$$", display: true },
-                        { left: "$", right: "$", display: false },
-                        { left: "\\(", right: "\\)", display: false },
-                        { left: "\\[", right: "\\]", display: true }
-                    ],
-                    ignoredClasses: ["gist"]
-                });
-            }
-        });
-    });
-</script>
-    
-</article>
-
-    
-
-    
-
-     
-    
-        
-
-        <div class="disqus-container">
-    
-</div>
-
-<style>
-    .disqus-container {
-        background-color: var(--card-background);
-        border-radius: var(--card-border-radius);
-        box-shadow: var(--shadow-l1);
-        padding: var(--card-padding);
-    }
-</style>
-
-<script>
-    window.addEventListener('onColorSchemeChange', (e) => {
-        if (typeof DISQUS == 'object') {
-            DISQUS.reset({
-                reload: true
-            });
-        }
-    })
-</script>
-
-    
-
-    <footer class="site-footer">
-    <section class="copyright">
-        &copy; 
-        
-        2026 LucasPark Blog
-    </section>
-    
-    <section class="powerby">
-        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
-        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="4.0.3">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
-    </section>
-</footer>
-
-
-    
-
-
-
-<script type="module">
+$$</p><p>두 직선 $A = u+Rv$, $B=u+Rw$가 $u$에서 만날 때, 두 직선 사이의 각은 두 직선의 방향벡터 $v,w$의 각을 의미합니다.</p><h3 id=두-벡터의-수직-orthogonal>두 벡터의 수직 (Orthogonal)</h3><p>만일 $\cos\theta = 0$, 즉 $\theta = \dfrac{\pi}{2}$일 때 $\langle v,w \rangle = 0$이고 두 벡터 $v,w$가 <strong>수직</strong>한다고 합니다. 기호로는 $v \perp w$를 사용합니다.</p><hr><h2 id=4-코드로-확인해보기>4. 코드로 확인해보기</h2><p>강의에서 다룬 벡터 연산들을 <code>numpy</code>로 직접 확인해봅니다.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#f92672>import</span> numpy <span style=color:#66d9ef>as</span> np
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>x <span style=color:#f92672>=</span> np<span style=color:#f92672>.</span>array([<span style=color:#ae81ff>1</span>, <span style=color:#f92672>-</span><span style=color:#ae81ff>1</span>, <span style=color:#ae81ff>2</span>])
+</span></span><span style=display:flex><span>y <span style=color:#f92672>=</span> np<span style=color:#f92672>.</span>array([<span style=color:#f92672>-</span><span style=color:#ae81ff>1</span>, <span style=color:#ae81ff>0</span>, <span style=color:#ae81ff>2</span>])
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 내적 (Inner product)</span>
+</span></span><span style=display:flex><span>inner_product <span style=color:#f92672>=</span> np<span style=color:#f92672>.</span>dot(x, y)
+</span></span><span style=display:flex><span>print(<span style=color:#e6db74>&#34;내적 &lt;x, y&gt;:&#34;</span>, inner_product)  <span style=color:#75715e># 3</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 노름 (벡터의 크기)</span>
+</span></span><span style=display:flex><span>norm_x <span style=color:#f92672>=</span> np<span style=color:#f92672>.</span>linalg<span style=color:#f92672>.</span>norm(x)
+</span></span><span style=display:flex><span>print(<span style=color:#e6db74>&#34;||x||:&#34;</span>, norm_x)  <span style=color:#75715e># sqrt(6) ≈ 2.449</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 두 벡터 사이의 거리</span>
+</span></span><span style=display:flex><span>distance <span style=color:#f92672>=</span> np<span style=color:#f92672>.</span>linalg<span style=color:#f92672>.</span>norm(x <span style=color:#f92672>-</span> y)
+</span></span><span style=display:flex><span>print(<span style=color:#e6db74>&#34;d(x, y):&#34;</span>, distance)  <span style=color:#75715e># sqrt(5) ≈ 2.236</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 두 벡터 사이의 각 (cos theta)</span>
+</span></span><span style=display:flex><span>cos_theta <span style=color:#f92672>=</span> inner_product <span style=color:#f92672>/</span> (np<span style=color:#f92672>.</span>linalg<span style=color:#f92672>.</span>norm(x) <span style=color:#f92672>*</span> np<span style=color:#f92672>.</span>linalg<span style=color:#f92672>.</span>norm(y))
+</span></span><span style=display:flex><span>theta <span style=color:#f92672>=</span> np<span style=color:#f92672>.</span>arccos(cos_theta)
+</span></span><span style=display:flex><span>print(<span style=color:#e6db74>&#34;두 벡터 사이의 각(도):&#34;</span>, np<span style=color:#f92672>.</span>degrees(theta))
+</span></span></code></pre></div><h3 id=추가-예시---cauchy-schwarz-부등식-검증>추가 예시 ① — Cauchy-Schwarz 부등식 검증</h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#f92672>import</span> numpy <span style=color:#66d9ef>as</span> np
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>v <span style=color:#f92672>=</span> np<span style=color:#f92672>.</span>array([<span style=color:#ae81ff>3</span>, <span style=color:#f92672>-</span><span style=color:#ae81ff>2</span>, <span style=color:#ae81ff>5</span>])
+</span></span><span style=display:flex><span>w <span style=color:#f92672>=</span> np<span style=color:#f92672>.</span>array([<span style=color:#ae81ff>1</span>, <span style=color:#ae81ff>4</span>, <span style=color:#f92672>-</span><span style=color:#ae81ff>1</span>])
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>lhs <span style=color:#f92672>=</span> abs(np<span style=color:#f92672>.</span>dot(v, w))                          <span style=color:#75715e># |&lt;v, w&gt;|</span>
+</span></span><span style=display:flex><span>rhs <span style=color:#f92672>=</span> np<span style=color:#f92672>.</span>linalg<span style=color:#f92672>.</span>norm(v) <span style=color:#f92672>*</span> np<span style=color:#f92672>.</span>linalg<span style=color:#f92672>.</span>norm(w)       <span style=color:#75715e># ||v|| * ||w||</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>print(<span style=color:#e6db74>f</span><span style=color:#e6db74>&#34;|&lt;v, w&gt;| = </span><span style=color:#e6db74>{</span>lhs<span style=color:#e6db74>:</span><span style=color:#e6db74>.3f</span><span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>)
+</span></span><span style=display:flex><span>print(<span style=color:#e6db74>f</span><span style=color:#e6db74>&#34;||v||*||w|| = </span><span style=color:#e6db74>{</span>rhs<span style=color:#e6db74>:</span><span style=color:#e6db74>.3f</span><span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>)
+</span></span><span style=display:flex><span>print(<span style=color:#e6db74>&#34;Cauchy-Schwarz 부등식 성립 여부:&#34;</span>, lhs <span style=color:#f92672>&lt;=</span> rhs)
+</span></span></code></pre></div><h3 id=추가-예시---삼각부등식-검증>추가 예시 ② — 삼각부등식 검증</h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#f92672>import</span> numpy <span style=color:#66d9ef>as</span> np
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>v <span style=color:#f92672>=</span> np<span style=color:#f92672>.</span>array([<span style=color:#ae81ff>2</span>, <span style=color:#f92672>-</span><span style=color:#ae81ff>1</span>, <span style=color:#ae81ff>3</span>])
+</span></span><span style=display:flex><span>w <span style=color:#f92672>=</span> np<span style=color:#f92672>.</span>array([<span style=color:#f92672>-</span><span style=color:#ae81ff>1</span>, <span style=color:#ae81ff>2</span>, <span style=color:#ae81ff>1</span>])
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>lhs <span style=color:#f92672>=</span> np<span style=color:#f92672>.</span>linalg<span style=color:#f92672>.</span>norm(v <span style=color:#f92672>+</span> w)
+</span></span><span style=display:flex><span>rhs <span style=color:#f92672>=</span> np<span style=color:#f92672>.</span>linalg<span style=color:#f92672>.</span>norm(v) <span style=color:#f92672>+</span> np<span style=color:#f92672>.</span>linalg<span style=color:#f92672>.</span>norm(w)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>print(<span style=color:#e6db74>f</span><span style=color:#e6db74>&#34;||v + w|| = </span><span style=color:#e6db74>{</span>lhs<span style=color:#e6db74>:</span><span style=color:#e6db74>.3f</span><span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>)
+</span></span><span style=display:flex><span>print(<span style=color:#e6db74>f</span><span style=color:#e6db74>&#34;||v|| + ||w|| = </span><span style=color:#e6db74>{</span>rhs<span style=color:#e6db74>:</span><span style=color:#e6db74>.3f</span><span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>)
+</span></span><span style=display:flex><span>print(<span style=color:#e6db74>&#34;삼각부등식 성립 여부:&#34;</span>, lhs <span style=color:#f92672>&lt;=</span> rhs)
+</span></span></code></pre></div><h3 id=추가-예시---두-벡터의-수직orthogonal-여부-판별>추가 예시 ③ — 두 벡터의 수직(orthogonal) 여부 판별</h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#f92672>import</span> numpy <span style=color:#66d9ef>as</span> np
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>def</span> <span style=color:#a6e22e>is_orthogonal</span>(v, w, tol<span style=color:#f92672>=</span><span style=color:#ae81ff>1e-9</span>):
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#34;&#34;&#34;두 벡터의 내적이 0이면 수직&#34;&#34;&#34;</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> abs(np<span style=color:#f92672>.</span>dot(v, w)) <span style=color:#f92672>&lt;</span> tol
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>v1 <span style=color:#f92672>=</span> np<span style=color:#f92672>.</span>array([<span style=color:#ae81ff>1</span>, <span style=color:#ae81ff>0</span>])
+</span></span><span style=display:flex><span>v2 <span style=color:#f92672>=</span> np<span style=color:#f92672>.</span>array([<span style=color:#ae81ff>0</span>, <span style=color:#ae81ff>1</span>])
+</span></span><span style=display:flex><span>print(<span style=color:#e6db74>&#34;v1과 v2는 수직인가?&#34;</span>, is_orthogonal(v1, v2))  <span style=color:#75715e># True</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>v3 <span style=color:#f92672>=</span> np<span style=color:#f92672>.</span>array([<span style=color:#ae81ff>1</span>, <span style=color:#ae81ff>1</span>])
+</span></span><span style=display:flex><span>v4 <span style=color:#f92672>=</span> np<span style=color:#f92672>.</span>array([<span style=color:#ae81ff>1</span>, <span style=color:#f92672>-</span><span style=color:#ae81ff>1</span>])
+</span></span><span style=display:flex><span>print(<span style=color:#e6db74>&#34;v3과 v4는 수직인가?&#34;</span>, is_orthogonal(v3, v4))  <span style=color:#75715e># True (직교하는 대각선)</span>
+</span></span></code></pre></div><h3 id=추가-예시---l_1-l_2-l_infty-노름-비교>추가 예시 ④ — $l_1$, $l_2$, $l_\infty$ 노름 비교</h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#f92672>import</span> numpy <span style=color:#66d9ef>as</span> np
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>v <span style=color:#f92672>=</span> np<span style=color:#f92672>.</span>array([<span style=color:#ae81ff>3</span>, <span style=color:#f92672>-</span><span style=color:#ae81ff>4</span>, <span style=color:#ae81ff>12</span>])
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>l1_norm <span style=color:#f92672>=</span> np<span style=color:#f92672>.</span>linalg<span style=color:#f92672>.</span>norm(v, ord<span style=color:#f92672>=</span><span style=color:#ae81ff>1</span>)      <span style=color:#75715e># 맨해튼 거리 노름</span>
+</span></span><span style=display:flex><span>l2_norm <span style=color:#f92672>=</span> np<span style=color:#f92672>.</span>linalg<span style=color:#f92672>.</span>norm(v, ord<span style=color:#f92672>=</span><span style=color:#ae81ff>2</span>)      <span style=color:#75715e># 유클리디안 노름 (기본값)</span>
+</span></span><span style=display:flex><span>linf_norm <span style=color:#f92672>=</span> np<span style=color:#f92672>.</span>linalg<span style=color:#f92672>.</span>norm(v, ord<span style=color:#f92672>=</span>np<span style=color:#f92672>.</span>inf)  <span style=color:#75715e># 최댓값 노름</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>print(<span style=color:#e6db74>f</span><span style=color:#e6db74>&#34;l1 노름: </span><span style=color:#e6db74>{</span>l1_norm<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>)     <span style=color:#75715e># |3| + |-4| + |12| = 19</span>
+</span></span><span style=display:flex><span>print(<span style=color:#e6db74>f</span><span style=color:#e6db74>&#34;l2 노름: </span><span style=color:#e6db74>{</span>l2_norm<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>)     <span style=color:#75715e># sqrt(9+16+144) = 13.0</span>
+</span></span><span style=display:flex><span>print(<span style=color:#e6db74>f</span><span style=color:#e6db74>&#34;l∞ 노름: </span><span style=color:#e6db74>{</span>linf_norm<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>)   <span style=color:#75715e># max(3,4,12) = 12</span>
+</span></span></code></pre></div><hr><h2 id=마무리>마무리</h2><p>벡터공간의 핵심 개념을 한 줄로 요약하면 다음과 같습니다.</p><ul><li><strong>벡터</strong>: 크기와 방향을 동시에 표현하는 수단이며, 덧셈은 평행사변형 법칙을 따름</li><li><strong>벡터공간 $R^n$</strong>: 덧셈과 스칼라 곱이라는 두 연산이 정의된 $n$개 변수의 집합</li><li><strong>노름(Norm)</strong>: 벡터 하나의 크기를 재는 함수 (예: 유클리디안 노름)</li><li><strong>내적(Inner product)</strong>: 벡터의 크기뿐 아니라 두 벡터 사이의 <strong>사잇각</strong>까지 측정 가능</li><li><strong>Cauchy-Schwarz 부등식</strong>: $|\langle v,w \rangle| \leq \lVert v \rVert \lVert w \rVert$ — 두 벡터의 각을 정의하는 데 사용되는 핵심 부등식</li><li><strong>삼각부등식</strong>: $\lVert v+w \rVert \leq \lVert v \rVert + \lVert w \rVert$</li></ul><p>머신러닝에서 데이터를 벡터로 표현하고, 두 데이터(벡터) 사이의 <strong>거리</strong>나 <strong>유사도</strong>(코사인 유사도 등)를 계산하는 모든 과정이 노름과 내적 개념에 기반하고 있습니다.</p><p>다음은 행렬에 대해서 정리하겠습니다.</p><p>당분간은 계속 수학을 정리할 것 같습니다.</p></section><footer class="article-meta article-footer"></footer><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css integrity=sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV crossorigin=anonymous><script src=https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js integrity=sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG+vnGctmUb0ZY0l8 crossorigin=anonymous defer></script><script src=https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js integrity=sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05 crossorigin=anonymous defer></script><script>window.addEventListener("DOMContentLoaded",()=>{const e=[".main-article",".widget--toc"];e.forEach(e=>{const t=document.querySelector(e);t&&renderMathInElement(t,{delimiters:[{left:"$$",right:"$$",display:!0},{left:"$",right:"$",display:!1},{left:"\\(",right:"\\)",display:!1},{left:"\\[",right:"\\]",display:!0}],ignoredClasses:["gist"]})})})</script></article><div class=disqus-container></div><style>.disqus-container{background-color:var(--card-background);border-radius:var(--card-border-radius);box-shadow:var(--shadow-l1);padding:var(--card-padding)}</style><script>window.addEventListener("onColorSchemeChange",e=>{typeof DISQUS=="object"&&DISQUS.reset({reload:!0})})</script><footer class=site-footer><section class=copyright>&copy;
+2026 LucasPark Blog</section><section class=powerby>Built with <a href=https://gohugo.io/ target=_blank rel=noopener>Hugo</a><br>Theme <b><a href=https://github.com/CaiJimmy/hugo-theme-stack target=_blank rel=noopener data-version=4.0.3>Stack</a></b> designed by <a href=https://jimmycai.com target=_blank rel=noopener>Jimmy</a></section></footer><script type=module>
     import gallery from '\/ts\/gallery.js';
 
     const articleContent = document.querySelector('.article-content');
@@ -573,15 +167,4 @@ $$</p>
         });
         lightbox.init();
     }
-</script>
-
-    
-
-            </main>
-        </div>
-        
-<script type="text/javascript" src="/ts/main.1ff1e5fdc4e178ed422e50aa407526dc552f26342d729343fded19416194382c.js" defer></script>
-
-
-    </body>
-</html>
+</script></main></div><script type=text/javascript src=/ts/main.1ff1e5fdc4e178ed422e50aa407526dc552f26342d729343fded19416194382c.js defer></script></body></html>
