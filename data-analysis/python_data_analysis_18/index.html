@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko-kr" dir="ltr">
     <head><meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="들어가며 도함수의 정의와 미분법칙부터 테일러 증명까지 정리했습니다.\n1. 일변수 함수 미분 1.1 도함수의 정의 $f:(a,b)\\to\\mathbb{R}$에서 $x\\in(a,b)$인 점에서 다음 극한값 $$\\lim_{h\\to0}\\frac{f(x+h)-f(x)}{h}=f^{\\prime}(x)$$ 이 존재할 때, 이 극한값을 $f^{\\prime}(x)$라 표시하고 점 $x$에서의 $f(x)$의 도함수(derivative)라 합니다.\n$f^{\\prime}(x)$ 외에 $y^{\\prime}$, $\\dfrac{dy}{dx}$, $\\dfrac{df(x)}{dx}$, $\\dfrac{d}{dx}f(x)$ 등의 표기도 흔히 쓰입니다.\n예제1: 도함수의 정의를 이용해 $f(x)=c$(상수), $f(x)=\\ln x$, $f(x)=e^x$, $f(x)=\\sin x$의 도함수를 구하는 연습 문제가 제시됩니다. (극한의 정의로부터 직접 유도합니다)\n1.2 미분의 법칙 미분의 법칙 : 두 함수 $f(x), g(x)$가 미분가능하면 다음이 성립합니다.\n">
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="들어가며 도함수의 정의와 미분법칙부터 테일러 증명까지 정리했습니다.\n1. 일변수 함수 미분 1.1 도함수의 정의 $f:(a,b)\\to\\mathbb{R}$에서 $x\\in(a,b)$인 점에서 다음 극한값 $$\\lim_{h\\to0}\\frac{f(x+h)-f(x)}{h}=f&rsquo;(x)$$ 이 존재할 때, 이 극한값을 $f&rsquo;(x)$라 표시하고 점 $x$에서의 $f(x)$의 도함수(derivative)라 합니다.\n$f&rsquo;(x)$ 외에 $y&rsquo;$, $\\dfrac{dy}{dx}$, $\\dfrac{df(x)}{dx}$, $\\dfrac{d}{dx}f(x)$ 등의 표기도 흔히 쓰입니다.\n예제1: 도함수의 정의를 이용해 $f(x)=c$(상수), $f(x)=\\ln x$, $f(x)=e^x$, $f(x)=\\sin x$의 도함수를 구하는 연습 문제가 제시됩니다. (극한의 정의로부터 직접 유도합니다)\n1.2 미분의 법칙 미분의 법칙 : 두 함수 $f(x), g(x)$가 미분가능하면 다음이 성립합니다.\n">
 <title>[데이터분석 수학] 미분의 기초: 일변수 함수의 최대 최소 이론</title>
 
 
@@ -13,12 +13,12 @@
 
 
 <link rel="stylesheet" href="/scss/style.min.e62e09c60ba428a627e03568fa3df938f6a8224f815b5846f00816c17d4a0be4.css"><meta property='og:title' content="[데이터분석 수학] 미분의 기초: 일변수 함수의 최대 최소 이론">
-<meta property='og:description' content="들어가며 도함수의 정의와 미분법칙부터 테일러 증명까지 정리했습니다.\n1. 일변수 함수 미분 1.1 도함수의 정의 $f:(a,b)\\to\\mathbb{R}$에서 $x\\in(a,b)$인 점에서 다음 극한값 $$\\lim_{h\\to0}\\frac{f(x+h)-f(x)}{h}=f^{\\prime}(x)$$ 이 존재할 때, 이 극한값을 $f^{\\prime}(x)$라 표시하고 점 $x$에서의 $f(x)$의 도함수(derivative)라 합니다.\n$f^{\\prime}(x)$ 외에 $y^{\\prime}$, $\\dfrac{dy}{dx}$, $\\dfrac{df(x)}{dx}$, $\\dfrac{d}{dx}f(x)$ 등의 표기도 흔히 쓰입니다.\n예제1: 도함수의 정의를 이용해 $f(x)=c$(상수), $f(x)=\\ln x$, $f(x)=e^x$, $f(x)=\\sin x$의 도함수를 구하는 연습 문제가 제시됩니다. (극한의 정의로부터 직접 유도합니다)\n1.2 미분의 법칙 미분의 법칙 : 두 함수 $f(x), g(x)$가 미분가능하면 다음이 성립합니다.\n">
+<meta property='og:description' content="들어가며 도함수의 정의와 미분법칙부터 테일러 증명까지 정리했습니다.\n1. 일변수 함수 미분 1.1 도함수의 정의 $f:(a,b)\\to\\mathbb{R}$에서 $x\\in(a,b)$인 점에서 다음 극한값 $$\\lim_{h\\to0}\\frac{f(x+h)-f(x)}{h}=f&rsquo;(x)$$ 이 존재할 때, 이 극한값을 $f&rsquo;(x)$라 표시하고 점 $x$에서의 $f(x)$의 도함수(derivative)라 합니다.\n$f&rsquo;(x)$ 외에 $y&rsquo;$, $\\dfrac{dy}{dx}$, $\\dfrac{df(x)}{dx}$, $\\dfrac{d}{dx}f(x)$ 등의 표기도 흔히 쓰입니다.\n예제1: 도함수의 정의를 이용해 $f(x)=c$(상수), $f(x)=\\ln x$, $f(x)=e^x$, $f(x)=\\sin x$의 도함수를 구하는 연습 문제가 제시됩니다. (극한의 정의로부터 직접 유도합니다)\n1.2 미분의 법칙 미분의 법칙 : 두 함수 $f(x), g(x)$가 미분가능하면 다음이 성립합니다.\n">
 <meta property='og:url' content='https://lucaspark-10.github.io/data-analysis/python_data_analysis_18/'>
 <meta property='og:site_name' content='LucasPark Blog'>
 <meta property='og:type' content='article'><meta property='article:section' content='Data-Analysis' /><meta property='article:published_time' content='2026-07-20T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2026-07-20T00:00:00&#43;00:00'/>
 <meta name="twitter:title" content="[데이터분석 수학] 미분의 기초: 일변수 함수의 최대 최소 이론">
-<meta name="twitter:description" content="들어가며 도함수의 정의와 미분법칙부터 테일러 증명까지 정리했습니다.\n1. 일변수 함수 미분 1.1 도함수의 정의 $f:(a,b)\\to\\mathbb{R}$에서 $x\\in(a,b)$인 점에서 다음 극한값 $$\\lim_{h\\to0}\\frac{f(x+h)-f(x)}{h}=f^{\\prime}(x)$$ 이 존재할 때, 이 극한값을 $f^{\\prime}(x)$라 표시하고 점 $x$에서의 $f(x)$의 도함수(derivative)라 합니다.\n$f^{\\prime}(x)$ 외에 $y^{\\prime}$, $\\dfrac{dy}{dx}$, $\\dfrac{df(x)}{dx}$, $\\dfrac{d}{dx}f(x)$ 등의 표기도 흔히 쓰입니다.\n예제1: 도함수의 정의를 이용해 $f(x)=c$(상수), $f(x)=\\ln x$, $f(x)=e^x$, $f(x)=\\sin x$의 도함수를 구하는 연습 문제가 제시됩니다. (극한의 정의로부터 직접 유도합니다)\n1.2 미분의 법칙 미분의 법칙 : 두 함수 $f(x), g(x)$가 미분가능하면 다음이 성립합니다.\n">
+<meta name="twitter:description" content="들어가며 도함수의 정의와 미분법칙부터 테일러 증명까지 정리했습니다.\n1. 일변수 함수 미분 1.1 도함수의 정의 $f:(a,b)\\to\\mathbb{R}$에서 $x\\in(a,b)$인 점에서 다음 극한값 $$\\lim_{h\\to0}\\frac{f(x+h)-f(x)}{h}=f&rsquo;(x)$$ 이 존재할 때, 이 극한값을 $f&rsquo;(x)$라 표시하고 점 $x$에서의 $f(x)$의 도함수(derivative)라 합니다.\n$f&rsquo;(x)$ 외에 $y&rsquo;$, $\\dfrac{dy}{dx}$, $\\dfrac{df(x)}{dx}$, $\\dfrac{d}{dx}f(x)$ 등의 표기도 흔히 쓰입니다.\n예제1: 도함수의 정의를 이용해 $f(x)=c$(상수), $f(x)=\\ln x$, $f(x)=e^x$, $f(x)=\\sin x$의 도함수를 구하는 연습 문제가 제시됩니다. (극한의 정의로부터 직접 유도합니다)\n1.2 미분의 법칙 미분의 법칙 : 두 함수 $f(x), g(x)$가 미분가능하면 다음이 성립합니다.\n">
       <script async src="https://www.googletagmanager.com/gtag/js?id=G-EVK5B22CB3"></script>
       <script>
         var doNotTrack = false;
@@ -211,48 +211,48 @@
 </h3>
     <blockquote>
         <p>$f:(a,b)\to\mathbb{R}$에서 $x\in(a,b)$인 점에서 다음 극한값
-$$\lim_{h\to0}\frac{f(x+h)-f(x)}{h}=f^{\prime}(x)$$
-이 존재할 때, 이 극한값을 $f^{\prime}(x)$라 표시하고 점 $x$에서의 $f(x)$의 <strong>도함수</strong>(derivative)라 합니다.</p>
+$$\lim_{h\to0}\frac{f(x+h)-f(x)}{h}=f&rsquo;(x)$$
+이 존재할 때, 이 극한값을 $f&rsquo;(x)$라 표시하고 점 $x$에서의 $f(x)$의 <strong>도함수</strong>(derivative)라 합니다.</p>
 
     </blockquote>
-<p>$f^{\prime}(x)$ 외에 $y^{\prime}$, $\dfrac{dy}{dx}$, $\dfrac{df(x)}{dx}$, $\dfrac{d}{dx}f(x)$ 등의 표기도 흔히 쓰입니다.</p>
+<p>$f&rsquo;(x)$ 외에 $y&rsquo;$, $\dfrac{dy}{dx}$, $\dfrac{df(x)}{dx}$, $\dfrac{d}{dx}f(x)$ 등의 표기도 흔히 쓰입니다.</p>
 <p><strong>예제1</strong>: 도함수의 정의를 이용해 $f(x)=c$(상수), $f(x)=\ln x$, $f(x)=e^x$, $f(x)=\sin x$의 도함수를 구하는 연습 문제가 제시됩니다. (극한의 정의로부터 직접 유도합니다)</p>
 <h3 id="12-미분의-법칙">1.2 미분의 법칙
 </h3>
     <blockquote>
         <p>미분의 법칙 : 두 함수 $f(x), g(x)$가 미분가능하면 다음이 성립합니다.</p>
 <ol>
-<li>$(f+g)^{\prime}(x)=f^{\prime}(x)+g^{\prime}(x)$ — 덧셈에 대한 미분</li>
-<li>$(cf)^{\prime}(x)=cf^{\prime}(x)$ — 상수곱에 대한 미분</li>
-<li>$(fg)^{\prime}(x)=f^{\prime}(x)g(x)+f(x)g^{\prime}(x)$ — 곱셈에 대한 미분</li>
-<li>$\left(\dfrac{f}{g}\right)^{\prime}(x)=\dfrac{f^{\prime}(x)g(x)-f(x)g^{\prime}(x)}{g(x)^2}$, ($g(x)\ne0$) — 나눗셈에 대한 미분</li>
+<li>$(f+g)&rsquo;(x)=f&rsquo;(x)+g&rsquo;(x)$ — 덧셈에 대한 미분</li>
+<li>$(cf)&rsquo;(x)=cf&rsquo;(x)$ — 상수곱에 대한 미분</li>
+<li>$(fg)&rsquo;(x)=f&rsquo;(x)g(x)+f(x)g&rsquo;(x)$ — 곱셈에 대한 미분</li>
+<li>$\left(\dfrac{f}{g}\right)&rsquo;(x)=\dfrac{f&rsquo;(x)g(x)-f(x)g&rsquo;(x)}{g(x)^2}$, ($g(x)\ne0$) — 나눗셈에 대한 미분</li>
 </ol>
 
     </blockquote>
 <p><strong>예제2 (시그모이드 함수의 미분)</strong>: $S(x)=\dfrac{1}{1+e^{-ax}}$ ($a\ne0$인 상수)에서 $\dfrac{dS(x)}{dx}$를 구하면</p>
-<p>$$\frac{dS(x)}{dx}=\frac{-(1+e^{-ax})^{\prime}}{(1+e^{-ax})^2}=\frac{ae^{-ax}}{(1+e^{-ax})^2}=a\cdot\frac{1}{1+e^{-ax}}\left(1-\frac{1}{1+e^{-ax}}\right)=aS(x)(1-S(x))$$</p>
+<p>$$\frac{dS(x)}{dx}=\frac{-(1+e^{-ax})&rsquo;}{(1+e^{-ax})^2}=\frac{ae^{-ax}}{(1+e^{-ax})^2}=a\cdot\frac{1}{1+e^{-ax}}\left(1-\frac{1}{1+e^{-ax}}\right)=aS(x)(1-S(x))$$</p>
 <p>즉, <strong>시그모이드 함수의 도함수는 자기 자신으로 표현</strong>됩니다.</p>
-<p>$S^{\prime}(x)=aS(x)(1-S(x))$</p>
+<p>$S&rsquo;(x)=aS(x)(1-S(x))$</p>
 <p>이 성질 때문에 $S(x)$를 <strong>Sigmoid function</strong>이라 부르며, 신경망 이론의 <strong>역전파</strong>(backpropagation) 알고리즘에서 핵심적으로 사용됩니다.</p>
 <h3 id="13-합성함수의-미분-연쇄법칙-chain-rule">1.3 합성함수의 미분 (연쇄법칙, Chain Rule)
 </h3>
     <blockquote>
         <p>합성함수의 미분 : 두 함수 $f(x), g(x)$가 미분가능일 때, $f(x)$와 $g(x)$의 합성함수를 $u(x)=g(f(x))$라 하면
-$$u^{\prime}(x)=g^{\prime}(f(x))\,f^{\prime}(x)\quad\cdots①$$</p>
+$$u&rsquo;(x)=g&rsquo;(f(x)),f&rsquo;(x)\quad\cdots①$$</p>
 
     </blockquote>
 <p>①을 $\dfrac{du}{dx}=\dfrac{du}{df}\cdot\dfrac{df}{dx}$라고도 종종 씁니다.</p>
 <p><strong>예제3</strong>: 다음을 연쇄법칙으로 구해 보겠습니다.</p>
 <p><strong>(1)</strong> $u(x)=(2x^2+x)^3$</p>
-<p>$f(x)=2x^2+x,\ g(x)=x^3$ 이라 하면 $u(x)=g(f(x))$이고 $f^{\prime}(x)=4x+1,\ g^{\prime}(x)=3x^2$이므로</p>
-<p>$$u^{\prime}(x)=g^{\prime}(f(x))f^{\prime}(x)=3f(x)^2(4x+1)=3(2x^2+x)^2(4x+1)$$</p>
+<p>$f(x)=2x^2+x,\ g(x)=x^3$ 이라 하면 $u(x)=g(f(x))$이고 $f&rsquo;(x)=4x+1,\ g&rsquo;(x)=3x^2$이므로</p>
+<p>$$u&rsquo;(x)=g&rsquo;(f(x))f&rsquo;(x)=3f(x)^2(4x+1)=3(2x^2+x)^2(4x+1)$$</p>
 <p><strong>(2)</strong> $u(x)=\left(\dfrac{x+1}{x-1}\right)^3$</p>
-<p>$f(x)=\dfrac{x+1}{x-1},\ g(x)=x^3$이라 하면 $f^{\prime}(x)=\dfrac{x-1-(x+1)}{(x-1)^2}=\dfrac{-2}{(x-1)^2},\ g^{\prime}(x)=3x^2$이고</p>
-<p>$$u^{\prime}(x)=g^{\prime}(f(x))f^{\prime}(x)=3\left(\frac{x+1}{x-1}\right)^2\cdot\frac{-2}{(x-1)^2}=-6\frac{(x+1)^2}{(x-1)^3}$$</p>
+<p>$f(x)=\dfrac{x+1}{x-1},\ g(x)=x^3$이라 하면 $f&rsquo;(x)=\dfrac{x-1-(x+1)}{(x-1)^2}=\dfrac{-2}{(x-1)^2},\ g&rsquo;(x)=3x^2$이고</p>
+<p>$$u&rsquo;(x)=g&rsquo;(f(x))f&rsquo;(x)=3\left(\frac{x+1}{x-1}\right)^2\cdot\frac{-2}{(x-1)^2}=-6\frac{(x+1)^2}{(x-1)^3}$$</p>
 <h3 id="14-고차-도함수-higher-order-derivative">1.4 고차 도함수 (Higher Order Derivative)
 </h3>
     <blockquote>
-        <p>미분 가능한 함수 $f(x)$에 대해 $f^{\prime}(x)$가 존재하고, 다시 $f^{\prime}(x)$의 도함수 $(f^{\prime}(x))^{\prime}$를 $f^{\prime\prime}(x)$, $\dfrac{d^2f(x)}{dx^2}$,</p>
+        <p>미분 가능한 함수 $f(x)$에 대해 $f&rsquo;(x)$가 존재하고, 다시 $f&rsquo;(x)$의 도함수 $(f&rsquo;(x))&rsquo;$를 $f&rsquo;&rsquo;(x)$, $\dfrac{d^2f(x)}{dx^2}$,</p>
 
     </blockquote>
 
@@ -263,16 +263,16 @@ $$u^{\prime}(x)=g^{\prime}(f(x))\,f^{\prime}(x)\quad\cdots①$$</p>
 <p>같은 방법으로 $n$차 도함수 $f^{(n)}(x)$ (또는 $\dfrac{d^nf(x)}{dx^n}$)가 정의됩니다.</p>
 <p><strong>예제4</strong>: 다음 함수들의 $n$차 도함수를 구해 보겠습니다.</p>
 <p><strong>(1)</strong> $f(x)=x^\alpha$ ($x&gt;0,\ \alpha\ne-1$)
-$$f^{\prime}(x)=\alpha x^{\alpha-1},\ f^{\prime\prime}(x)=\alpha(\alpha-1)x^{\alpha-2},\ \dots,\quad f^{(n)}(x)=\alpha(\alpha-1)\cdots(\alpha-n+1)x^{\alpha-n}$$</p>
+$$f&rsquo;(x)=\alpha x^{\alpha-1},\ f&rsquo;&rsquo;(x)=\alpha(\alpha-1)x^{\alpha-2},\ \dots,\quad f^{(n)}(x)=\alpha(\alpha-1)\cdots(\alpha-n+1)x^{\alpha-n}$$</p>
 <p><strong>(2)</strong> $f(x)=\ln(1+x)$
-$$f^{\prime}(x)=\frac{1}{1+x},\ f^{\prime\prime}(x)=-\frac{1}{(1+x)^2},\ f^{\prime\prime\prime}(x)=\frac{1\cdot2}{(1+x)^3},\dots,\quad f^{(n)}(x)=(-1)^{n-1}\frac{(n-1)!}{(1+x)^n}$$</p>
+$$f&rsquo;(x)=\frac{1}{1+x},\ f&rsquo;&rsquo;(x)=-\frac{1}{(1+x)^2},\ f&rsquo;&rsquo;&rsquo;(x)=\frac{1\cdot2}{(1+x)^3},\dots,\quad f^{(n)}(x)=(-1)^{n-1}\frac{(n-1)!}{(1+x)^n}$$</p>
 <p><strong>(3)</strong> $f(x)=\sin x$
-$$f^{\prime}(x)=\cos x=\sin\!\left(x+\frac{\pi}{2}\right),\ f^{\prime\prime}(x)=\cos\!\left(x+\frac{\pi}{2}\right)=\sin\!\left(x+2\frac{\pi}{2}\right),\dots,\quad f^{(n)}(x)=\sin\!\left(x+\frac{n\pi}{2}\right)$$</p>
+$$f&rsquo;(x)=\cos x=\sin!\left(x+\frac{\pi}{2}\right),\ f&rsquo;&rsquo;(x)=\cos!\left(x+\frac{\pi}{2}\right)=\sin!\left(x+2\frac{\pi}{2}\right),\dots,\quad f^{(n)}(x)=\sin!\left(x+\frac{n\pi}{2}\right)$$</p>
 <h3 id="15-평균값-정리-mean-value-theorem">1.5 평균값 정리 (Mean Value Theorem)
 </h3>
     <blockquote>
         <p>평균값 정리 : 함수 $f(x)$가 구간 $[a,b]$에서 미분 가능하면
-$$\frac{f(b)-f(a)}{b-a}=f^{\prime}(c),\quad (a&lt;c&lt;b)$$
+$$\frac{f(b)-f(a)}{b-a}=f&rsquo;(c),\quad (a&lt;c&lt;b)$$
 를 만족시키는 $c$가 존재합니다.</p>
 
     </blockquote>
@@ -365,18 +365,18 @@ $x^<em>\in(a,b)$에 대하여 $f^{\prime}(x^</em>)=0$ 이라 하겠습니다.</p
 </h3>
     <blockquote>
         <p>함수 $f(x)$가 구간 $[a,b]$에서 $n$회 미분가능하면
-$$f(b)=f(a)+f^{\prime}(a)(b-a)+\frac{f^{\prime\prime}(a)}{2!}(b-a)^2+\cdots+\frac{f^{(n-1)}(a)}{(n-1)!}(b-a)^{n-1}+\frac{f^{(n)}(c)}{n!}(b-a)^n,\quad a&lt;c&lt;b$$
+$$f(b)=f(a)+f&rsquo;(a)(b-a)+\frac{f&rsquo;&rsquo;(a)}{2!}(b-a)^2+\cdots+\frac{f^{(n-1)}(a)}{(n-1)!}(b-a)^{n-1}+\frac{f^{(n)}(c)}{n!}(b-a)^n,\quad a&lt;c&lt;b$$
 를 만족하는 $c$가 존재합니다.</p>
 
     </blockquote>
 <p><strong>[증명]</strong> 다음을 만족시키는 상수 $k$를 정합니다.</p>
-<p>$$f(b)-f(a)-f^{\prime}(a)(b-a)-\frac{f^{\prime\prime}(a)}{2!}(b-a)^2-\cdots-\frac{f^{(n-1)}(a)}{(n-1)!}(b-a)^{n-1}-k(b-a)^n=0\quad\cdots①$$</p>
+<p>$$f(b)-f(a)-f&rsquo;(a)(b-a)-\frac{f&rsquo;&rsquo;(a)}{2!}(b-a)^2-\cdots-\frac{f^{(n-1)}(a)}{(n-1)!}(b-a)^{n-1}-k(b-a)^n=0\quad\cdots①$$</p>
 <p>이제 함수</p>
-<p>$$F(x)=f(b)-f(x)-f^{\prime}(x)(b-x)-\frac{f^{\prime\prime}(x)}{2!}(b-x)^2-\cdots-\frac{f^{(n-1)}(x)}{(n-1)!}(b-x)^{n-1}-k(b-x)^n$$</p>
+<p>$$F(x)=f(b)-f(x)-f&rsquo;(x)(b-x)-\frac{f&rsquo;&rsquo;(x)}{2!}(b-x)^2-\cdots-\frac{f^{(n-1)}(x)}{(n-1)!}(b-x)^{n-1}-k(b-x)^n$$</p>
 <p>라고 놓으면 $F(x)$는 $[a,b]$에서 미분가능이고 $F(a)=F(b)=0$ 입니다 ($F(a)=0$은 ①에 의해, $F(b)=0$은 대입하면 자명합니다).</p>
-<p>따라서 **롤의 정리(평균값 정리의 특수한 경우)**에 의해 $F^{\prime}(c)=0,\ a&lt;c&lt;b$를 만족시키는 $c$가 존재합니다.</p>
+<p>따라서 **롤의 정리(평균값 정리의 특수한 경우)**에 의해 $F&rsquo;(c)=0,\ a&lt;c&lt;b$를 만족시키는 $c$가 존재합니다.</p>
 <p>$F(x)$를 미분하면 각 항이 순차적으로 상쇄되며 (곱의 미분법칙을 반복 적용)</p>
-<p>$$F^{\prime}(x)=-\frac{f^{(n)}(x)}{(n-1)!}(b-x)^{n-1}+kn(b-x)^{n-1}$$</p>
+<p>$$F&rsquo;(x)=-\frac{f^{(n)}(x)}{(n-1)!}(b-x)^{n-1}+kn(b-x)^{n-1}$$</p>
 <p>만 남습니다. 여기에 $x=c$를 대입하면</p>
 <p>$$-\frac{f^{(n)}(c)}{(n-1)!}(b-c)^{n-1}+kn(b-c)^{n-1}=0$$</p>
 <p>양변을 $(b-c)^{n-1}$으로 나누고 정리하면</p>
@@ -390,10 +390,10 @@ $$f(b)=f(a)+f^{\prime}(a)(b-a)+\frac{f^{\prime\prime}(a)}{2!}(b-a)^2+\cdots+\fra
         <p><strong>(1)</strong> 함수 $f(x)$가 $n$회 미분가능이고 그 정의역이 $a$를 품고 있으면 다음을 만족시키는 $\theta$가 존재합니다.</p>
 
     </blockquote>
-<p>(i) $f(a+h)=f(a)+f^{\prime}(a)h+\dfrac{f^{\prime\prime}(a)}{2!}h^2+\cdots+\dfrac{f^{(n-1)}(a)}{(n-1)!}h^{n-1}+\dfrac{f^{(n)}(a+\theta h)}{n!}h^n,\quad 0&lt;\theta&lt;1$</p>
-<p>(ii) $f(x)=f(a)+f^{\prime}(a)(x-a)+\dfrac{f^{\prime\prime}(a)}{2!}(x-a)^2+\cdots+\dfrac{f^{(n-1)}(a)}{(n-1)!}(x-a)^{n-1}+\dfrac{f^{(n)}(a+\theta(x-a))}{n!}(x-a)^n,\quad 0&lt;\theta&lt;1$</p>
+<p>(i) $f(a+h)=f(a)+f&rsquo;(a)h+\dfrac{f&rsquo;&rsquo;(a)}{2!}h^2+\cdots+\dfrac{f^{(n-1)}(a)}{(n-1)!}h^{n-1}+\dfrac{f^{(n)}(a+\theta h)}{n!}h^n,\quad 0&lt;\theta&lt;1$</p>
+<p>(ii) $f(x)=f(a)+f&rsquo;(a)(x-a)+\dfrac{f&rsquo;&rsquo;(a)}{2!}(x-a)^2+\cdots+\dfrac{f^{(n-1)}(a)}{(n-1)!}(x-a)^{n-1}+\dfrac{f^{(n)}(a+\theta(x-a))}{n!}(x-a)^n,\quad 0&lt;\theta&lt;1$</p>
 <p><strong>(2) (Maclaurin)</strong> 함수 $f(x)$가 $n$회 미분가능이고 그 정의역이 $0$을 품고 있으면 다음을 만족하는 $\theta$가 존재합니다.
-$$f(x)=f(0)+f^{\prime}(0)x+\frac{f^{\prime\prime}(0)}{2!}x^2+\cdots+\frac{f^{(n-1)}(0)}{(n-1)!}x^{n-1}+\frac{f^{(n)}(\theta x)}{n!}x^n,\quad 0&lt;\theta&lt;1$$</p>
+$$f(x)=f(0)+f&rsquo;(0)x+\frac{f&rsquo;&rsquo;(0)}{2!}x^2+\cdots+\frac{f^{(n-1)}(0)}{(n-1)!}x^{n-1}+\frac{f^{(n)}(\theta x)}{n!}x^n,\quad 0&lt;\theta&lt;1$$</p>
 
     </blockquote>
 <p><strong>[증명]</strong> (1)-(i)의 증명은 $h=b-a$라 놓으면 앞선 3.1 정리로 환원됩니다.</p>
@@ -404,7 +404,7 @@ $$f(x)=f(0)+f^{\prime}(0)x+\frac{f^{\prime\prime}(0)}{2!}x^2+\cdots+\frac{f^{(n-
 <p>함수 $f(x)$가 무한 번 미분가능하고</p>
 <p>$$\lim_{n\to\infty}R_n=\lim_{n\to\infty}\frac{f^{(n)}(a+\theta(x-a))}{n!}(x-a)^n=0$$</p>
 <p>이 성립할 때,</p>
-<p>$$f(x)=f(a)+f^{\prime}(a)(x-a)+\frac{f^{\prime\prime}(a)}{2!}(x-a)^2+\cdots+\frac{f^{(n-1)}(a)}{(n-1)!}(x-a)^{n-1}+\cdots$$</p>
+<p>$$f(x)=f(a)+f&rsquo;(a)(x-a)+\frac{f&rsquo;&rsquo;(a)}{2!}(x-a)^2+\cdots+\frac{f^{(n-1)}(a)}{(n-1)!}(x-a)^{n-1}+\cdots$$</p>
 <p>로 표시하고 우변 식을 Taylor 급수 또는 Taylor 전개라고 합니다.</p>
 <p>같은 방식으로 $a=0$인 경우($R_n=\dfrac{f^{(n)}(\theta x)}{n!}x^n\to0$)의 전개를 Maclaurin 급수 또는 Maclaurin 전개라고 합니다.</p>
 <h3 id="33-나머지항이-0으로-수렴함을-보장하는-보조정리">3.3 나머지항이 0으로 수렴함을 보장하는 보조정리
@@ -443,8 +443,8 @@ $$f(x)=f(0)+f^{\prime}(0)x+\frac{f^{\prime\prime}(0)}{2!}x^2+\cdots+\frac{f^{(n-
 </h2><p>이번 강의는 <strong>도함수의 정의 → 미분법칙(합, 곱, 몫, 연쇄법칙) → 고차 도함수 → 평균값 정리</strong>라는 미분의 기본기를 다진 뒤, 이를 발판 삼아 <strong>테일러 급수</strong>로 함수를 다항식으로 근사하고, <strong>2차 미분 테스트</strong>로 임계점이 최댓값/최솟값인지 판별하는 방법을 배웠습니다. 마지막으로 테일러 정리 자체를 평균값 정리로부터 엄밀하게 증명하며 이론적 기반을 다졌습니다.</p>
 <p>핵심 포인트를 정리하면 다음과 같습니다.</p>
 <ol>
-<li><strong>시그모이드 함수의 미분</strong> $S^{\prime}(x)=aS(x)(1-S(x))$은 신경망 역전파 알고리즘의 핵심 계산입니다.</li>
-<li><strong>임계점($f^{\prime}(x^*)=0$) + 2차 도함수의 부호</strong>로 극값(최대/최소)을 판정하는 것이 머신러닝 최적화 이론(경사하강법, 뉴턴법, 헤시안 분석 등)의 1차원 버전입니다.</li>
+<li><strong>시그모이드 함수의 미분</strong> $S&rsquo;(x)=aS(x)(1-S(x))$은 신경망 역전파 알고리즘의 핵심 계산입니다.</li>
+<li><strong>임계점($f&rsquo;(x^*)=0$) + 2차 도함수의 부호</strong>로 극값(최대/최소)을 판정하는 것이 머신러닝 최적화 이론(경사하강법, 뉴턴법, 헤시안 분석 등)의 1차원 버전입니다.</li>
 <li><strong>테일러 급수</strong>는 함수를 다항식으로 근사하는 강력한 도구이며, 나머지항이 0으로 수렴함을 보장하는 것이 근사의 정당성을 뒷받침합니다.</li>
 </ol>
 <p>다음은 데이터 탐색에 대해서 정리하겠습니다.</p>
