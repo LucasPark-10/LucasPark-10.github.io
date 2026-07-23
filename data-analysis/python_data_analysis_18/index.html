@@ -282,7 +282,7 @@ $$\frac{f(b)-f(a)}{b-a}=f&rsquo;(c),\quad (a&lt;c&lt;b)$$
 <h2 id="2-테일러-급수와-2차-미분-테스트-최대-최소">2. 테일러 급수와 2차 미분 테스트 (최대 최소)
 </h2><h3 id="21-테일러-급수-taylor-series">2.1 테일러 급수 (Taylor Series)
 </h3><p><strong>테일러 급수</strong>(Taylor series)란 함수 $y=f(x)$가 $x=x^*$에서 무한 번 미분 가능하면 함수 $y=f(x)$를 무한한 다항식의 합으로 표시할 수 있다는 이론입니다.</p>
-<p>$$f(x)=f(x^<em>)+f&rsquo;(x^</em>)(x-x^<em>)+\frac{f&rsquo;&rsquo;(x^</em>)}{2!}(x-x^<em>)^2+\cdots+\frac{f^{(n-1)}(x^</em>)}{(n-1)!}(x-x^<em>)^{n-1}+\frac{f^{(n)}(x^</em>)}{n!}(x-x^*)^n+\cdots$$</p>
+<p>$$f(x)=f(x^<em>)+f^{\prime}(x^</em>)(x-x^<em>)+\frac{f^{\prime\prime}(x^</em>)}{2!}(x-x^<em>)^2+\cdots+\frac{f^{(n-1)}(x^</em>)}{(n-1)!}(x-x^<em>)^{n-1}+\frac{f^{(n)}(x^</em>)}{n!}(x-x^*)^n+\cdots$$</p>
 <p><strong>예시 ($e^x$의 테일러 전개)</strong>: $f(x)=e^x$이면 $f^{(n)}(x)=e^x$입니다. $x=0$에서 전개하면 $f^{(n)}(0)=e^0=1$이므로</p>
 <p>$$e^x=1+x+\frac{x^2}{2!}+\cdots+\frac{x^n}{n!}+\cdots,\quad x\in\mathbb{R}$$</p>
 <p>$x=1$에서 전개하면 $f^{(n)}(1)=e^1=e$이므로</p>
@@ -290,40 +290,40 @@ $$\frac{f(b)-f(a)}{b-a}=f&rsquo;(c),\quad (a&lt;c&lt;b)$$
 
     <blockquote>
         <p>구간 $[a,b]$에서 $n$회 미분가능하고 $x^<em>,x\in[a,b]$, $x\ne x^</em>$이면 다음 식을 만족하는 $0&lt;\theta&lt;1$이 존재한다는 이론입니다.
-$$f(x)=f(x^<em>)+f&rsquo;(x^</em>)(x-x^<em>)+\frac{f&rsquo;&rsquo;(x^</em>)}{2!}(x-x^<em>)^2+\cdots+\frac{f^{(n-1)}(x^</em>)}{(n-1)!}(x-x^<em>)^{n-1}+\frac{f^{(n)}(x^</em>+\theta(x-x^<em>))}{n!}(x-x^</em>)^n$$</p>
+$$f(x)=f(x^<em>)+f^{\prime}(x^</em>)(x-x^<em>)+\frac{f^{\prime\prime}(x^</em>)}{2!}(x-x^<em>)^2+\cdots+\frac{f^{(n-1)}(x^</em>)}{(n-1)!}(x-x^<em>)^{n-1}+\frac{f^{(n)}(x^</em>+\theta(x-x^<em>))}{n!}(x-x^</em>)^n$$</p>
 
     </blockquote>
 <p>즉, 유한 항까지 전개했을 때 남는 나머지항(remainder)을 $x^*$와 $x$ 사이의 어떤 점에서의 $n$차 도함수 값으로 정확히 표현할 수 있다는 것이 핵심입니다.</p>
-<p><strong>보기1</strong>: $f(x)=x^3-3x^2+4$이면 $f&rsquo;(x)=3x^2-6x,\ f&rsquo;&rsquo;(x)=6x-6,\ f^{(3)}(x)=6,\ f^{(n)}(x)=0\ (n\ge4)$ 이므로</p>
+<p><strong>보기1</strong>: $f(x)=x^3-3x^2+4$이면 $f^{\prime}(x)=3x^2-6x,\ f^{\prime\prime}(x)=6x-6,\ f^{(3)}(x)=6,\ f^{(n)}(x)=0\ (n\ge4)$ 이므로</p>
 <p>$$f(x)=f(x^<em>)+(3x^{<em>2}-6x^</em>)(x-x^</em>)+\frac{6x^<em>-6}{2!}(x-x^</em>)^2+\frac{6}{3!}(x-x^*)^3$$</p>
 <p>$x^*=0$이라 하면 $f(x)=4-3x^2+x^3$ 이므로 원식과 정확히 같게 됩니다.</p>
 <p>(다항함수는 유한 번 미분 후 나머지항이 0이 되어 테일러 전개가 정확한 등식이 됨을 확인할 수 있습니다.)</p>
 <h3 id="22-2차-미분-테스트-second-derivative-test">2.2 2차 미분 테스트 (Second Derivative Test)
 </h3><p>최대·최소를 구하는 문제는 보통 <strong>2회 미분 가능</strong>이면 충분합니다. 즉,</p>
-<p>$$f(x)=f(x^<em>)+f&rsquo;(x^</em>)(x-x^<em>)+\frac{f&rsquo;&rsquo;(x^</em>+\theta(x-x^<em>))}{2}(x-x^</em>)^2\quad\cdots(1),\quad 0&lt;\theta&lt;1$$</p>
-<p>미분 가능한 함수가 최대 또는 최솟값을 가지는 위치는 $f&rsquo;(x^*)=0$인 경우입니다.</p>
-<p>$(1)$식에서 $f&rsquo;(x^*)=0$ 인 경우를 살펴보면</p>
-<p>$$f(x)=f(x^<em>)+\frac{f&rsquo;&rsquo;(x^</em>+\theta(x-x^<em>))}{2}(x-x^</em>)^2\quad\cdots(2),\quad 0&lt;\theta&lt;1$$</p>
-<p>$(x-x^<em>)^2\ge0$이므로 $f&rsquo;&rsquo;(x^</em>+\theta(x-x^*))$의 값에 따라서 판정이 가능합니다.</p>
+<p>$$f(x)=f(x^<em>)+f^{\prime}(x^</em>)(x-x^<em>)+\frac{f^{\prime\prime}(x^</em>+\theta(x-x^<em>))}{2}(x-x^</em>)^2\quad\cdots(1),\quad 0&lt;\theta&lt;1$$</p>
+<p>미분 가능한 함수가 최대 또는 최솟값을 가지는 위치는 $f^{\prime}(x^*)=0$인 경우입니다.</p>
+<p>$(1)$식에서 $f^{\prime}(x^*)=0$ 인 경우를 살펴보면</p>
+<p>$$f(x)=f(x^<em>)+\frac{f^{\prime\prime}(x^</em>+\theta(x-x^<em>))}{2}(x-x^</em>)^2\quad\cdots(2),\quad 0&lt;\theta&lt;1$$</p>
+<p>$(x-x^<em>)^2\ge0$이므로 $f^{\prime\prime}(x^</em>+\theta(x-x^*))$의 값에 따라서 판정이 가능합니다.</p>
 <p>(단, $\theta$가 변수이므로 $x^<em>+\theta(x-x^</em>)$은 고정된 값이 아님에 주의해야 합니다.)</p>
 <ul>
-<li><strong>(i)</strong> $f&rsquo;(x^<em>)=0$이고 $x\in[a,b]$에서 $f&rsquo;&rsquo;(x)&gt;0$이면, $(2)$식은 $f(x)=f(x^</em>)+d,\ d&gt;0$ 형태가 되어 $f(x)&gt;f(x^<em>)$. 즉 $f(x)$는 $x^</em>$에서 <strong>최솟값</strong>을 갖습니다.</li>
-<li><strong>(ii)</strong> $f&rsquo;(x^<em>)=0$이고 $x\in[a,b]$에서 $f&rsquo;&rsquo;(x)&lt;0$이면, $f(x)=f(x^</em>)-d,\ d&gt;0$ 형태가 되어 $f(x)&lt;f(x^<em>)$. 즉 $f(x)$는 $x^</em>$에서 <strong>최댓값</strong>을 갖습니다.</li>
+<li><strong>(i)</strong> $f^{\prime}(x^<em>)=0$이고 $x\in[a,b]$에서 $f^{\prime\prime}(x)&gt;0$이면, $(2)$식은 $f(x)=f(x^</em>)+d,\ d&gt;0$ 형태가 되어 $f(x)&gt;f(x^<em>)$. 즉 $f(x)$는 $x^</em>$에서 <strong>최솟값</strong>을 갖습니다.</li>
+<li><strong>(ii)</strong> $f^{\prime}(x^<em>)=0$이고 $x\in[a,b]$에서 $f^{\prime\prime}(x)&lt;0$이면, $f(x)=f(x^</em>)-d,\ d&gt;0$ 형태가 되어 $f(x)&lt;f(x^<em>)$. 즉 $f(x)$는 $x^</em>$에서 <strong>최댓값</strong>을 갖습니다.</li>
 </ul>
 <p>이러한 관찰을 보통 **2차 미분 테스트(Second Derivative Test)**라 부릅니다.</p>
-<p><strong>보기2</strong>: $f(x)=e^{x^2}$ 이라 하면 $f&rsquo;(x)=2xe^{x^2},\ f&rsquo;&rsquo;(x)=(2+4x^2)e^{x^2}$ 입니다.</p>
-<p>$f&rsquo;(x^<em>)=0$ 인 경우는 $x^</em>=0$ 이고 모든 실수 $x$ 에 대해 $f&rsquo;&rsquo;(x)&gt;0$ 이므로 $x^*=0$ 에서 최솟값 $f(0)=1$ 을 갖습니다.</p>
+<p><strong>보기2</strong>: $f(x)=e^{x^2}$ 이라 하면 $f^{\prime}(x)=2xe^{x^2},\ f^{\prime\prime}(x)=(2+4x^2)e^{x^2}$ 입니다.</p>
+<p>$f^{\prime}(x^<em>)=0$ 인 경우는 $x^</em>=0$ 이고 모든 실수 $x$ 에 대해 $f^{\prime\prime}(x)&gt;0$ 이므로 $x^*=0$ 에서 최솟값 $f(0)=1$ 을 갖습니다.</p>
 <h3 id="23-최소자와-최솟값--용어-구분">2.3 최소자와 최솟값 — 용어 구분
 </h3>
     <blockquote>
         <p>최솟값이라는 용어는 잘 사용하나 최소자란 용어는 잘 사용하지 않지만, 여기서는 아주 중요한 용어입니다.</p>
 <ul>
-<li><strong>최소자</strong>(minimizer) : $\operatorname*{argmin}_{x\in I}{f(x)}$ — $f(x)$를 최소로 만드는 $x$값</li>
-<li><strong>최솟값</strong>: $\min_{x\in I}{f(x)}$ — $f(x)$의 최솟값</li>
+<li><strong>최소자</strong>(minimizer) : $\operatorname*{argmin}_{x\in I}\{f(x)\}$ — $f(x)$를 최소로 만드는 $x$값</li>
+<li><strong>최솟값</strong>: $\min_{x\in I}\{f(x)\}$ — $f(x)$의 최솟값</li>
 </ul>
 
     </blockquote>
-<p><strong>보기3</strong>: $f(x)=(x-1)^2+3$이면 $\min{f(x)}=3$, $\operatorname*{argmin}{f(x)}=1$.</p>
+<p><strong>보기3</strong>: $f(x)=(x-1)^2+3$이면 $\min\{f(x)\}=3$, $\operatorname*{argmin}\{f(x)\}=1$.</p>
 <p>최솟값은 3이고 최소자는 $x=1$입니다.</p>
 <h3 id="24-전역최소자-국소최소자-임계점">2.4 전역최소자, 국소최소자, 임계점
 </h3>
@@ -334,26 +334,26 @@ $$f(x)=f(x^<em>)+f&rsquo;(x^</em>)(x-x^<em>)+\frac{f&rsquo;&rsquo;(x^</em>)}{2!}
 <li><strong>강 전역최소자</strong>(strict global minimizer) : 모든 $x\in I,\ x\ne x^<em>$에 대해 $f(x^</em>)&lt;f(x)$</li>
 <li><strong>국소최소자</strong>(local minimizer) : 어떤 실수 $\delta$가 존재하여 모든 $x\in(x^<em>-\delta,x^</em>+\delta)$에 대해 $f(x^*)\le f(x)$</li>
 <li><strong>강 국소최소자</strong>(strict local minimizer) : 어떤 실수 $\delta$가 존재하여 모든 $x\in(x^<em>-\delta,x^</em>+\delta),\ x\ne x^<em>$에 대해 $f(x^</em>)&lt;f(x)$</li>
-<li><strong>임계점</strong>(critical point) : $f&rsquo;(x^<em>)$가 존재하고 $f&rsquo;(x^</em>)=0$</li>
+<li><strong>임계점</strong>(critical point) : $f^{\prime}(x^<em>)$가 존재하고 $f^{\prime}(x^</em>)=0$</li>
 </ol>
 
     </blockquote>
 <p>여러 개념 중 실제로 주로 사용되는 것은 <strong>전역최소자, 국소최소자, 임계점</strong> 세 가지입니다.</p>
 <p>함수의 그래프 위에서 국소최소자는 주변 구간 안에서만 최소, 전역최소자는 정의역 전체에서 최소인 점을 뜻합니다.</p>
 <p><strong>예제5 (임계점 구하기)</strong>: 다음 함수들의 임계점을 구해 보겠습니다.</p>
-<p><strong>(1)</strong> $f(x)=x^3-3x^2+4$: $f&rsquo;(x)=3x^2-6x=3x(x-2)$, $f&rsquo;(x)=0$에서 $x=0,2$</p>
-<p><strong>(2)</strong> $f(x)=3x^4-4x^3+1$: $f&rsquo;(x)=12x^3-12x^2=12x^2(x-1)$, $f&rsquo;(x)=0$에서 $x=0,1$</p>
-<p><strong>(3)</strong> $f(x)=\dfrac{2x}{x^2+1}$: $f&rsquo;(x)=\dfrac{-2(x+1)(x-1)}{(x^2+1)^2}$, $f&rsquo;(x)=0$에서 $x=-1,1$</p>
+<p><strong>(1)</strong> $f(x)=x^3-3x^2+4$: $f^{\prime}(x)=3x^2-6x=3x(x-2)$, $f^{\prime}(x)=0$에서 $x=0,2$</p>
+<p><strong>(2)</strong> $f(x)=3x^4-4x^3+1$: $f^{\prime}(x)=12x^3-12x^2=12x^2(x-1)$, $f^{\prime}(x)=0$에서 $x=0,1$</p>
+<p><strong>(3)</strong> $f(x)=\dfrac{2x}{x^2+1}$: $f^{\prime}(x)=\dfrac{-2(x+1)(x-1)}{(x^2+1)^2}$, $f^{\prime}(x)=0$에서 $x=-1,1$</p>
 <h3 id="25-일변수-함수-최대최소이론-종합">2.5 일변수 함수 최대최소이론 종합
 </h3>
     <blockquote>
         <p>일변수 함수 최대최소이론 : $I=[a,b]$라 하겠습니다.
-$f:I\to\mathbb{R}$인 함수에 대하여 $f(x), f&rsquo;(x), f&rsquo;&rsquo;(x)$ 가 모두 연속 함수라 하겠습니다.
-$x^<em>\in(a,b)$에 대하여 $f&rsquo;(x^</em>)=0$ 이라 하겠습니다.</p>
+$f:I\to\mathbb{R}$인 함수에 대하여 $f(x), f^{\prime}(x), f^{\prime\prime}(x)$ 가 모두 연속 함수라 하겠습니다.
+$x^<em>\in(a,b)$에 대하여 $f^{\prime}(x^</em>)=0$ 이라 하겠습니다.</p>
 <ol>
-<li>모든 $x\in I$에 대하여 $f&rsquo;&rsquo;(x)\ge0$이면 $x^*$는 <strong>전역최소자</strong>(global minimizer)입니다.</li>
-<li>모든 $x\in I\ (x\ne x^<em>)$에 대하여 $f&rsquo;&rsquo;(x)&gt;0$이면 $x^</em>$는 <strong>강전역최소자</strong>(strict global minimizer)입니다.</li>
-<li>$f&rsquo;&rsquo;(x^<em>)&gt;0$이면, $x^</em>$는 <strong>강국소최소자</strong>(strict local minimizer)입니다.</li>
+<li>모든 $x\in I$에 대하여 $f^{\prime\prime}(x)\ge0$이면 $x^*$는 <strong>전역최소자</strong>(global minimizer)입니다.</li>
+<li>모든 $x\in I\ (x\ne x^<em>)$에 대하여 $f^{\prime\prime}(x)&gt;0$이면 $x^</em>$는 <strong>강전역최소자</strong>(strict global minimizer)입니다.</li>
+<li>$f^{\prime\prime}(x^<em>)&gt;0$이면, $x^</em>$는 <strong>강국소최소자</strong>(strict local minimizer)입니다.</li>
 </ol>
 
     </blockquote>
