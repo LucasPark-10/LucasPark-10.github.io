@@ -296,19 +296,19 @@ $$\frac{f(b)-f(a)}{b-a}=f^{\prime}(c),\quad (a&lt;c&lt;b)$$
 <p>(다항함수는 유한 번 미분 후 나머지항이 0이 되어 테일러 전개가 정확한 등식이 됨을 확인할 수 있습니다.)</p>
 <h3 id="22-2차-미분-테스트-second-derivative-test">2.2 2차 미분 테스트 (Second Derivative Test)
 </h3><p>최대·최소를 구하는 문제는 보통 <strong>2회 미분 가능</strong>이면 충분합니다. 즉,</p>
-<p>$$f(x)=f(x^<em>)+f^{\prime}(x^</em>)(x-x^<em>)+\frac{f^{\prime\prime}(x^</em>+\theta(x-x^<em>))}{2}(x-x^</em>)^2\quad\cdots(1),\quad 0&lt;\theta&lt;1$$</p>
+<p>$$f(x)=f(x_0)+f&rsquo;(x_0)(x-x_0)+\frac{f&rsquo;&rsquo;(x_0+\theta(x-x_0))}{2}(x-x_0)^2\quad\cdots(1),\quad 0&lt;\theta&lt;1$$</p>
 <p>미분 가능한 함수가 최대 또는 최솟값을 가지는 위치는 $f^{\prime}(x^*)=0$인 경우입니다.</p>
-<p>$(1)$식에서 $f^{\prime}(x^*)=0$ 인 경우를 살펴보면</p>
-<p>$$f(x)=f(x^<em>)+\frac{f^{\prime\prime}(x^</em>+\theta(x-x^<em>))}{2}(x-x^</em>)^2\quad\cdots(2),\quad 0&lt;\theta&lt;1$$</p>
-<p>$(x-x^<em>)^2\ge0$이므로 $f^{\prime\prime}(x^</em>+\theta(x-x^*))$의 값에 따라서 판정이 가능합니다.</p>
-<p>(단, $\theta$가 변수이므로 $x^<em>+\theta(x-x^</em>)$은 고정된 값이 아님에 주의해야 합니다.)</p>
+<p>$(1)$식에서 $f&rsquo;(x_0)=0$ 인 경우를 살펴보면</p>
+<p>$$f(x)=f(x_0)+\frac{f&rsquo;&rsquo;(x_0+\theta(x-x_0))}{2}(x-x_0)^2\quad\cdots(2),\quad 0&lt;\theta&lt;1$$</p>
+<p>$(x-x_0)^2\ge0$이므로 $f&rsquo;&rsquo;(x_0+\theta(x-x_0))$의 값에 따라서 판정이 가능합니다.</p>
+<p>(단, $\theta$가 변수이므로 $x_0+\theta(x-x_0)$은 고정된 값이 아님에 주의해야 합니다.)</p>
 <ul>
-<li><strong>(i)</strong> $f^{\prime}(x^<em>)=0$이고 $x\in[a,b]$에서 $f^{\prime\prime}(x)&gt;0$이면, $(2)$식은 $f(x)=f(x^</em>)+d,\ d&gt;0$ 형태가 되어 $f(x)&gt;f(x^<em>)$. 즉 $f(x)$는 $x^</em>$에서 <strong>최솟값</strong>을 갖습니다.</li>
-<li><strong>(ii)</strong> $f^{\prime}(x^<em>)=0$이고 $x\in[a,b]$에서 $f^{\prime\prime}(x)&lt;0$이면, $f(x)=f(x^</em>)-d,\ d&gt;0$ 형태가 되어 $f(x)&lt;f(x^<em>)$. 즉 $f(x)$는 $x^</em>$에서 <strong>최댓값</strong>을 갖습니다.</li>
+<li><strong>(i)</strong> $f&rsquo;(x_0)=0$이고 $x\in[a,b]$에서 $f&rsquo;&rsquo;(x)&gt;0$이면, $(2)$식은 $f(x)=f(x_0)+d,\ d&gt;0$ 형태가 되어 $f(x)&gt;f(x_0)$. 즉 $f(x)$는 $x_0$에서 <strong>최솟값</strong>을 갖습니다.</li>
+<li><strong>(ii)</strong> $f&rsquo;(x_0)=0$이고 $x\in[a,b]$에서 $f&rsquo;&rsquo;(x)&lt;0$이면, $f(x)=f(x_0)-d,\ d&gt;0$ 형태가 되어 $f(x)&lt;f(x_0)$. 즉 $f(x)$는 $x_0$에서 <strong>최댓값</strong>을 갖습니다.</li>
 </ul>
 <p>이러한 관찰을 보통 **2차 미분 테스트(Second Derivative Test)**라 부릅니다.</p>
 <p><strong>보기2</strong>: $f(x)=e^{x^2}$ 이라 하면 $f^{\prime}(x)=2xe^{x^2},\ f^{\prime\prime}(x)=(2+4x^2)e^{x^2}$ 입니다.</p>
-<p>$f^{\prime}(x^<em>)=0$ 인 경우는 $x^</em>=0$ 이고 모든 실수 $x$ 에 대해 $f^{\prime\prime}(x)&gt;0$ 이므로 $x^*=0$ 에서 최솟값 $f(0)=1$ 을 갖습니다.</p>
+<p>$f&rsquo;(x_0)=0$ 인 경우는 $x_0=0$ 이고 모든 실수 $x$ 에 대해 $f&rsquo;&rsquo;(x)&gt;0$ 이므로 $x_0=0$ 에서 최솟값 $f(0)=1$ 을 갖습니다.</p>
 <h3 id="23-최소자와-최솟값--용어-구분">2.3 최소자와 최솟값 — 용어 구분
 </h3>
     <blockquote>
@@ -326,11 +326,11 @@ $$\frac{f(b)-f(a)}{b-a}=f^{\prime}(c),\quad (a&lt;c&lt;b)$$
     <blockquote>
         <p>$I=[a,b]$라 하겠습니다. $f:I\to\mathbb{R}$인 함수에 대해</p>
 <ol>
-<li><strong>전역최소자</strong>(global minimizer) : 모든 $x\in I$에 대해 $f(x^*)\le f(x)$</li>
-<li><strong>강 전역최소자</strong>(strict global minimizer) : 모든 $x\in I,\ x\ne x^<em>$에 대해 $f(x^</em>)&lt;f(x)$</li>
-<li><strong>국소최소자</strong>(local minimizer) : 어떤 실수 $\delta$가 존재하여 모든 $x\in(x^<em>-\delta,x^</em>+\delta)$에 대해 $f(x^*)\le f(x)$</li>
-<li><strong>강 국소최소자</strong>(strict local minimizer) : 어떤 실수 $\delta$가 존재하여 모든 $x\in(x^<em>-\delta,x^</em>+\delta),\ x\ne x^<em>$에 대해 $f(x^</em>)&lt;f(x)$</li>
-<li><strong>임계점</strong>(critical point) : $f^{\prime}(x^<em>)$가 존재하고 $f^{\prime}(x^</em>)=0$</li>
+<li><strong>전역최소자</strong>(global minimizer) : 모든 $x\in I$에 대해 $f(x_0)\le f(x)$</li>
+<li><strong>강 전역최소자</strong>(strict global minimizer) : 모든 $x\in I,\ x\ne x_0$에 대해 $f(x_0)&lt;f(x)$</li>
+<li><strong>국소최소자</strong>(local minimizer) : 어떤 실수 $\delta$가 존재하여 모든 $x\in(x_0-\delta,x_0+\delta)$에 대해 $f(x_0)\le f(x)$</li>
+<li><strong>강 국소최소자</strong>(strict local minimizer) : 어떤 실수 $\delta$가 존재하여 모든 $x\in(x_0-\delta,x_0+\delta),\ x\ne x_0$에 대해 $f(x_0)&lt;f(x)$</li>
+<li><strong>임계점</strong>(critical point) : $f&rsquo;(x_0)$가 존재하고 $f&rsquo;(x_0)=0$</li>
 </ol>
 
     </blockquote>
@@ -344,12 +344,12 @@ $$\frac{f(b)-f(a)}{b-a}=f^{\prime}(c),\quad (a&lt;c&lt;b)$$
 </h3>
     <blockquote>
         <p>일변수 함수 최대최소이론 : $I=[a,b]$라 하겠습니다.
-$f:I\to\mathbb{R}$인 함수에 대하여 $f(x), f^{\prime}(x), f^{\prime\prime}(x)$ 가 모두 연속 함수라 하겠습니다.
-$x^<em>\in(a,b)$에 대하여 $f^{\prime}(x^</em>)=0$ 이라 하겠습니다.</p>
+$f:I\to\mathbb{R}$인 함수에 대하여 $f(x), f&rsquo;(x), f&rsquo;&rsquo;(x)$ 가 모두 연속 함수라 하겠습니다.
+$x_0\in(a,b)$에 대하여 $f&rsquo;(x_0)=0$ 이라 하겠습니다.</p>
 <ol>
-<li>모든 $x\in I$에 대하여 $f^{\prime\prime}(x)\ge0$이면 $x^*$는 <strong>전역최소자</strong>(global minimizer)입니다.</li>
-<li>모든 $x\in I\ (x\ne x^<em>)$에 대하여 $f^{\prime\prime}(x)&gt;0$이면 $x^</em>$는 <strong>강전역최소자</strong>(strict global minimizer)입니다.</li>
-<li>$f^{\prime\prime}(x^<em>)&gt;0$이면, $x^</em>$는 <strong>강국소최소자</strong>(strict local minimizer)입니다.</li>
+<li>모든 $x\in I$에 대하여 $f&rsquo;&rsquo;(x)\ge0$이면 $x_0$는 <strong>전역최소자</strong>(global minimizer)입니다.</li>
+<li>모든 $x\in I\ (x\ne x_0)$에 대하여 $f&rsquo;&rsquo;(x)&gt;0$이면 $x_0$는 <strong>강전역최소자</strong>(strict global minimizer)입니다.</li>
+<li>$f&rsquo;&rsquo;(x_0)&gt;0$이면, $x_0$는 <strong>강국소최소자</strong>(strict local minimizer)입니다.</li>
 </ol>
 
     </blockquote>
