@@ -12,7 +12,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
 
 
-<link rel="stylesheet" href="/scss/style.min.63ce9b383ae5c04938940ee678e7e77eb4e2b6b916786c7f7414755c4c75d325.css"><meta property='og:title' content="긴급 정리! 분류 알고리즘 평가 지표">
+<link rel="stylesheet" href="/scss/style.min.fb752e576e08b6fd47ba6bc38e589bad48bf6d3cf903ceb4e871ae44df5e0e49.css"><meta property='og:title' content="긴급 정리! 분류 알고리즘 평가 지표">
 <meta property='og:description' content="들어가며 이번에는 모델들 중에 긴급히 정리할 내용이 있어서 정리해보려고 합니다.\n데이터분석에는 다양한 모델이 있는데, 크게 예측, 분류, 군집, 차원축소 4가지로 나뉩니다.\n그중 분류 모델에서 단순히 &ldquo;정확도&quot;만으로는 모델의 진짜 성능을 알기 어려운 이유와, 이를 보완하는 평가 지표(정밀도, 재현율, F1 Score, ROC-AUC 등)를 정리하겠습니다.\n1. 혼동 행렬 (Confusion Matrix) 분류 모델의 성능을 평가하기 위해 사용되는 행렬\n모델이 예측한 값과 실제 데이터를 교차해서 4가지 경우로 나눕니다.\n예측: Positive 예측: Negative 실제: Positive True Positive (TP) False Negative (FN) — Type-2 error 실제: Negative False Positive (FP) — Type-1 error True Negative (TN) Positive (긍정 클래스, 양성): 모델이 관심 있는 클래스 Negative (부정 클래스, 음성): 모델이 관심 없는 클래스 예시: 스팸 메일 분류기의 경우, 스팸 메일 = Positive, 비 스팸 메일 = Negative 이 4가지 값(TP, FN, FP, TN)을 조합해서 아래와 같은 다양한 평가 지표를 계산할 수 있습니다.\n">
 <meta property='og:url' content='https://lucaspark-10.github.io/data-analysis/python_data_analysis_08/'>
 <meta property='og:site_name' content='LucasPark Blog'>
