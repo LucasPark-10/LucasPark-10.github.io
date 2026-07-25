@@ -1,17 +1,418 @@
-<!doctype html><html lang=ko-kr dir=ltr><head><meta charset=utf-8><meta name=viewport content='width=device-width,initial-scale=1'><meta name=description content="가우시안 확산 모델 (Gaussian Dispersion Model) 개요 가우시안 확산 모델은 대기 중으로 배출된 오염물질이 바람에 의해 이동하고, 난류(Turbulence)에 의해 확산되는 과정을 수학적으로 모사하는 가장 대표적인 대기질 모델링 기법입니다. 이 모델은 오염물질의 농도 분포가 가우시안(정규) 분포를 따른다는 가정을 바탕으로 합니다.\n핵심 개념 정상 상태 (Steady-state): 배출원에서의 배출량과 풍향/풍속이 일정하다고 가정합니다. 질량 보존: 오염물질은 소멸되거나 생성되지 않고 이동과 확산만 합니다. 가우시안 분포: 연기(Plume)의 중심축을 기준으로 가로(y) 방향과 세로(z) 방향의 농도 분포가 정규 분포 곡선을 그립니다. 수학적 공식 지상 배출원 혹은 굴뚝에서 배출된 오염물질의 지상 농도 $C(x, y, z)$를 계산하는 기본 식은 다음과 같습니다.\n"><title>가우시안 확산 모델 (Gaussian Dispersion Model) 완전 정리</title><link rel=canonical href=https://lucaspark-10.github.io/atmospheric-environment/gaussian-dispersion-model/><link rel=preconnect href=https://fonts.googleapis.com><link rel=preconnect href=https://fonts.gstatic.com crossorigin><link rel=preload as=style href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap"><link rel=stylesheet href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap"><link rel=stylesheet href=/scss/style.min.e62e09c60ba428a627e03568fa3df938f6a8224f815b5846f00816c17d4a0be4.css><meta property='og:title' content="가우시안 확산 모델 (Gaussian Dispersion Model) 완전 정리"><meta property='og:description' content="가우시안 확산 모델 (Gaussian Dispersion Model) 개요 가우시안 확산 모델은 대기 중으로 배출된 오염물질이 바람에 의해 이동하고, 난류(Turbulence)에 의해 확산되는 과정을 수학적으로 모사하는 가장 대표적인 대기질 모델링 기법입니다. 이 모델은 오염물질의 농도 분포가 가우시안(정규) 분포를 따른다는 가정을 바탕으로 합니다.\n핵심 개념 정상 상태 (Steady-state): 배출원에서의 배출량과 풍향/풍속이 일정하다고 가정합니다. 질량 보존: 오염물질은 소멸되거나 생성되지 않고 이동과 확산만 합니다. 가우시안 분포: 연기(Plume)의 중심축을 기준으로 가로(y) 방향과 세로(z) 방향의 농도 분포가 정규 분포 곡선을 그립니다. 수학적 공식 지상 배출원 혹은 굴뚝에서 배출된 오염물질의 지상 농도 $C(x, y, z)$를 계산하는 기본 식은 다음과 같습니다.\n"><meta property='og:url' content='https://lucaspark-10.github.io/atmospheric-environment/gaussian-dispersion-model/'><meta property='og:site_name' content='LucasPark Blog'><meta property='og:type' content='article'><meta property='article:section' content='Atmospheric-Environment'><meta property='article:published_time' content='2026-07-06T00:00:00+00:00'><meta property='article:modified_time' content='2026-07-06T00:00:00+00:00'><meta name=twitter:title content="가우시안 확산 모델 (Gaussian Dispersion Model) 완전 정리"><meta name=twitter:description content="가우시안 확산 모델 (Gaussian Dispersion Model) 개요 가우시안 확산 모델은 대기 중으로 배출된 오염물질이 바람에 의해 이동하고, 난류(Turbulence)에 의해 확산되는 과정을 수학적으로 모사하는 가장 대표적인 대기질 모델링 기법입니다. 이 모델은 오염물질의 농도 분포가 가우시안(정규) 분포를 따른다는 가정을 바탕으로 합니다.\n핵심 개념 정상 상태 (Steady-state): 배출원에서의 배출량과 풍향/풍속이 일정하다고 가정합니다. 질량 보존: 오염물질은 소멸되거나 생성되지 않고 이동과 확산만 합니다. 가우시안 분포: 연기(Plume)의 중심축을 기준으로 가로(y) 방향과 세로(z) 방향의 농도 분포가 정규 분포 곡선을 그립니다. 수학적 공식 지상 배출원 혹은 굴뚝에서 배출된 오염물질의 지상 농도 $C(x, y, z)$를 계산하는 기본 식은 다음과 같습니다.\n"><script async src="https://www.googletagmanager.com/gtag/js?id=G-EVK5B22CB3"></script><script>var doNotTrack=!1,dnt=navigator.doNotTrack||window.doNotTrack||navigator.msDoNotTrack,doNotTrack=dnt=="1"||dnt=="yes";if(!doNotTrack){window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag("js",new Date),gtag("config","G-EVK5B22CB3")}</script></head><body class=article-page><script>(function(){const e="StackColorScheme";localStorage.getItem(e)||localStorage.setItem(e,"auto")})()</script><script>(function(){const t="StackColorScheme",e=localStorage.getItem(t),n=window.matchMedia("(prefers-color-scheme: dark)").matches===!0;e=="dark"||e==="auto"&&n?document.documentElement.dataset.scheme="dark":document.documentElement.dataset.scheme="light"})()</script><div class="container main-container flex on-phone--column compact"><aside class="sidebar left-sidebar sticky"><button class="hamburger hamburger--spin" type=button id=toggle-menu aria-label="Toggle Menu">
-<span class=hamburger-box><span class=hamburger-inner></span></span></button><header><div class=site-meta><h1 class=site-name><a href=/>LucasPark Blog</a></h1><h2 class=site-description>Lucas Park의 개인 블로그</h2></div></header><ol class=menu id=main-menu><li><a href=/><span>Home</span></a></li><li><a href=/posts/><span>Posts</span></a></li><li><a href=/data-analysis/><span>Data Analysis</span></a></li><li><a href=/gold-news-and-analysis/><span>Gold Price Check & Analysis</span></a></li><li><a href=/atmospheric-environment/><span>Atmospheric Environment</span></a></li><li class=menu-bottom-section><ol class=menu><li id=dark-mode-toggle><svg class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="8" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
-<svg class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="16" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
-<span>Dark Mode</span></li></ol></li></ol></aside><main class="main full-width"><article class=main-article><header class=article-header><div class=article-details><div class=article-title-wrapper><h2 class=article-title><a href=/atmospheric-environment/gaussian-dispersion-model/>가우시안 확산 모델 (Gaussian Dispersion Model) 완전 정리</a></h2></div><footer class=article-meta><div class=inline-meta><svg class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M11.795 21H5a2 2 0 01-2-2V7a2 2 0 012-2h12a2 2 0 012 2v4"/><circle cx="18" cy="18" r="4"/><path d="M15 3v4"/><path d="M7 3v4"/><path d="M3 11h16"/><path d="M18 16.496V18l1 1"/></svg>
-<time class=article-time--published datetime=2026-07-06T00:00:00Z>2026년 7월 6일 월요일</time></div></footer></div></header><section class=article-content><h1 id=가우시안-확산-모델-gaussian-dispersion-model-개요>가우시안 확산 모델 (Gaussian Dispersion Model) 개요</h1><p>가우시안 확산 모델은 대기 중으로 배출된 오염물질이 바람에 의해 이동하고, 난류(Turbulence)에 의해 확산되는 과정을 수학적으로 모사하는 <strong>가장 대표적인 대기질 모델링 기법</strong>입니다. 이 모델은 오염물질의 농도 분포가 <strong>가우시안(정규) 분포</strong>를 따른다는 가정을 바탕으로 합니다.</p><hr><h2 id=핵심-개념>핵심 개념</h2><ul><li><strong>정상 상태 (Steady-state)</strong>: 배출원에서의 배출량과 풍향/풍속이 일정하다고 가정합니다.</li><li><strong>질량 보존</strong>: 오염물질은 소멸되거나 생성되지 않고 이동과 확산만 합니다.</li><li><strong>가우시안 분포</strong>: 연기(Plume)의 중심축을 기준으로 가로(y) 방향과 세로(z) 방향의 농도 분포가 정규 분포 곡선을 그립니다.</li></ul><hr><h2 id=수학적-공식>수학적 공식</h2><p>지상 배출원 혹은 굴뚝에서 배출된 오염물질의 지상 농도 $C(x, y, z)$를 계산하는 기본 식은 다음과 같습니다.</p><p>$$
+<!DOCTYPE html>
+<html lang="ko-kr" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="가우시안 확산 모델 (Gaussian Dispersion Model) 개요 가우시안 확산 모델은 대기 중으로 배출된 오염물질이 바람에 의해 이동하고, 난류(Turbulence)에 의해 확산되는 과정을 수학적으로 모사하는 가장 대표적인 대기질 모델링 기법입니다. 이 모델은 오염물질의 농도 분포가 가우시안(정규) 분포를 따른다는 가정을 바탕으로 합니다.\n핵심 개념 정상 상태 (Steady-state): 배출원에서의 배출량과 풍향/풍속이 일정하다고 가정합니다. 질량 보존: 오염물질은 소멸되거나 생성되지 않고 이동과 확산만 합니다. 가우시안 분포: 연기(Plume)의 중심축을 기준으로 가로(y) 방향과 세로(z) 방향의 농도 분포가 정규 분포 곡선을 그립니다. 수학적 공식 지상 배출원 혹은 굴뚝에서 배출된 오염물질의 지상 농도 $C(x, y, z)$를 계산하는 기본 식은 다음과 같습니다.\n">
+<title>가우시안 확산 모델 (Gaussian Dispersion Model) 완전 정리</title>
+
+
+<link rel="canonical" href="https://lucaspark-10.github.io/atmospheric-environment/gaussian-dispersion-model/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
+
+
+<link rel="stylesheet" href="/scss/style.min.e62e09c60ba428a627e03568fa3df938f6a8224f815b5846f00816c17d4a0be4.css"><meta property='og:title' content="가우시안 확산 모델 (Gaussian Dispersion Model) 완전 정리">
+<meta property='og:description' content="가우시안 확산 모델 (Gaussian Dispersion Model) 개요 가우시안 확산 모델은 대기 중으로 배출된 오염물질이 바람에 의해 이동하고, 난류(Turbulence)에 의해 확산되는 과정을 수학적으로 모사하는 가장 대표적인 대기질 모델링 기법입니다. 이 모델은 오염물질의 농도 분포가 가우시안(정규) 분포를 따른다는 가정을 바탕으로 합니다.\n핵심 개념 정상 상태 (Steady-state): 배출원에서의 배출량과 풍향/풍속이 일정하다고 가정합니다. 질량 보존: 오염물질은 소멸되거나 생성되지 않고 이동과 확산만 합니다. 가우시안 분포: 연기(Plume)의 중심축을 기준으로 가로(y) 방향과 세로(z) 방향의 농도 분포가 정규 분포 곡선을 그립니다. 수학적 공식 지상 배출원 혹은 굴뚝에서 배출된 오염물질의 지상 농도 $C(x, y, z)$를 계산하는 기본 식은 다음과 같습니다.\n">
+<meta property='og:url' content='https://lucaspark-10.github.io/atmospheric-environment/gaussian-dispersion-model/'>
+<meta property='og:site_name' content='LucasPark Blog'>
+<meta property='og:type' content='article'><meta property='article:section' content='Atmospheric-Environment' /><meta property='article:published_time' content='2026-07-06T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2026-07-06T00:00:00&#43;00:00'/>
+<meta name="twitter:title" content="가우시안 확산 모델 (Gaussian Dispersion Model) 완전 정리">
+<meta name="twitter:description" content="가우시안 확산 모델 (Gaussian Dispersion Model) 개요 가우시안 확산 모델은 대기 중으로 배출된 오염물질이 바람에 의해 이동하고, 난류(Turbulence)에 의해 확산되는 과정을 수학적으로 모사하는 가장 대표적인 대기질 모델링 기법입니다. 이 모델은 오염물질의 농도 분포가 가우시안(정규) 분포를 따른다는 가정을 바탕으로 합니다.\n핵심 개념 정상 상태 (Steady-state): 배출원에서의 배출량과 풍향/풍속이 일정하다고 가정합니다. 질량 보존: 오염물질은 소멸되거나 생성되지 않고 이동과 확산만 합니다. 가우시안 분포: 연기(Plume)의 중심축을 기준으로 가로(y) 방향과 세로(z) 방향의 농도 분포가 정규 분포 곡선을 그립니다. 수학적 공식 지상 배출원 혹은 굴뚝에서 배출된 오염물질의 지상 농도 $C(x, y, z)$를 계산하는 기본 식은 다음과 같습니다.\n">
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-EVK5B22CB3"></script>
+      <script>
+        var doNotTrack = false;
+        if ( true ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-EVK5B22CB3');
+        }
+      </script>
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column compact"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">LucasPark Blog</a></h1>
+            <h2 class="site-description">Lucas Park의 개인 블로그</h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                <span>Home</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/posts/' >
+                
+                <span>Posts</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/data-analysis/' >
+                
+                <span>Data Analysis</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/gold-news-and-analysis/' >
+                
+                <span>Gold Price Check &amp; Analysis</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/atmospheric-environment/' >
+                
+                <span>Atmospheric Environment</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>Dark Mode</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/atmospheric-environment/gaussian-dispersion-model/">가우시안 확산 모델 (Gaussian Dispersion Model) 완전 정리</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    
+    
+    
+    
+    
+    
+    <footer class="article-meta">
+        
+            <div class="inline-meta">
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                    <time class="article-time--published" datetime='2026-07-06T00:00:00Z'>2026년 7월 6일 월요일</time>
+                
+
+                
+            </div>
+        
+
+        
+
+        
+    </footer>
+    
+</div>
+
+</header>
+
+    
+
+    <section class="article-content">
+    
+    
+    <h1 id="가우시안-확산-모델-gaussian-dispersion-model-개요">가우시안 확산 모델 (Gaussian Dispersion Model) 개요
+</h1><p>가우시안 확산 모델은 대기 중으로 배출된 오염물질이 바람에 의해 이동하고, 난류(Turbulence)에 의해 확산되는 과정을 수학적으로 모사하는 <strong>가장 대표적인 대기질 모델링 기법</strong>입니다. 이 모델은 오염물질의 농도 분포가 <strong>가우시안(정규) 분포</strong>를 따른다는 가정을 바탕으로 합니다.</p>
+<hr>
+<h2 id="핵심-개념">핵심 개념
+</h2><ul>
+<li><strong>정상 상태 (Steady-state)</strong>: 배출원에서의 배출량과 풍향/풍속이 일정하다고 가정합니다.</li>
+<li><strong>질량 보존</strong>: 오염물질은 소멸되거나 생성되지 않고 이동과 확산만 합니다.</li>
+<li><strong>가우시안 분포</strong>: 연기(Plume)의 중심축을 기준으로 가로(y) 방향과 세로(z) 방향의 농도 분포가 정규 분포 곡선을 그립니다.</li>
+</ul>
+<hr>
+<h2 id="수학적-공식">수학적 공식
+</h2><p>지상 배출원 혹은 굴뚝에서 배출된 오염물질의 지상 농도 $C(x, y, z)$를 계산하는 기본 식은 다음과 같습니다.</p>
+<p>$$
 C(x, y, z) = \frac{Q}{2\pi u \sigma_y \sigma_z} \exp\left(-\frac{y^2}{2\sigma_y^2}\right) \left[ \exp\left(-\frac{(z-H)^2}{2\sigma_z^2}\right) + \exp\left(-\frac{(z+H)^2}{2\sigma_z^2}\right) \right]
-$$</p><h3 id=변수-설명>변수 설명</h3><div class=table-wrapper><table><thead><tr><th>기호</th><th>의미</th><th>단위</th></tr></thead><tbody><tr><td>$C$</td><td>오염물질 농도</td><td>$g/m^3$</td></tr><tr><td>$Q$</td><td>배출원 강도</td><td>$g/s$</td></tr><tr><td>$u$</td><td>평균 풍속</td><td>$m/s$</td></tr><tr><td>$\sigma_y, \sigma_z$</td><td>수평 및 수직 확산 계수 (거리 $x$의 함수)</td><td>$m$</td></tr><tr><td>$H$</td><td>유효 굴뚝 높이</td><td>$m$</td></tr><tr><td>$y, z$</td><td>배출원으로부터의 수평 및 수직 거리</td><td>$m$</td></tr></tbody></table></div><blockquote><p>💡 두 번째 지수항 $\exp\left(-\dfrac{(z+H)^2}{2\sigma_z^2}\right)$는 지면을 완전 반사 경계로 가정할 때 추가되는 **반사항(reflection term)**입니다. 오염물질이 지면에 부딪혀 다시 위로 반사된다고 보고, 실제 배출원과 대칭인 위치($-H$)에 가상의 배출원이 있는 것처럼 계산합니다.</p></blockquote><h3 id=지표면-농도-z--0>지표면 농도 ($z = 0$)</h3><p>사람이 실제로 노출되는 지표면 농도를 구하려면 $z = 0$을 대입합니다.</p><p>$$
+$$</p>
+<h3 id="변수-설명">변수 설명
+</h3><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>기호</th>
+          <th>의미</th>
+          <th>단위</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>$C$</td>
+          <td>오염물질 농도</td>
+          <td>$g/m^3$</td>
+      </tr>
+      <tr>
+          <td>$Q$</td>
+          <td>배출원 강도</td>
+          <td>$g/s$</td>
+      </tr>
+      <tr>
+          <td>$u$</td>
+          <td>평균 풍속</td>
+          <td>$m/s$</td>
+      </tr>
+      <tr>
+          <td>$\sigma_y, \sigma_z$</td>
+          <td>수평 및 수직 확산 계수 (거리 $x$의 함수)</td>
+          <td>$m$</td>
+      </tr>
+      <tr>
+          <td>$H$</td>
+          <td>유효 굴뚝 높이</td>
+          <td>$m$</td>
+      </tr>
+      <tr>
+          <td>$y, z$</td>
+          <td>배출원으로부터의 수평 및 수직 거리</td>
+          <td>$m$</td>
+      </tr>
+  </tbody>
+</table></div>
+
+    <blockquote>
+        <p>💡 두 번째 지수항 $\exp\left(-\dfrac{(z+H)^2}{2\sigma_z^2}\right)$는 지면을 완전 반사 경계로 가정할 때 추가되는 **반사항(reflection term)**입니다. 오염물질이 지면에 부딪혀 다시 위로 반사된다고 보고, 실제 배출원과 대칭인 위치($-H$)에 가상의 배출원이 있는 것처럼 계산합니다.</p>
+
+    </blockquote>
+<h3 id="지표면-농도-z--0">지표면 농도 ($z = 0$)
+</h3><p>사람이 실제로 노출되는 지표면 농도를 구하려면 $z = 0$을 대입합니다.</p>
+<p>$$
 C(x, y, 0) = \frac{Q}{\pi u \sigma_y \sigma_z} \exp\left(-\frac{y^2}{2\sigma_y^2}\right) \exp\left(-\frac{H^2}{2\sigma_z^2}\right)
-$$</p><h3 id=중심선-지표면-농도-y--0-z--0>중심선 지표면 농도 ($y = 0, z = 0$)</h3><p>플룸의 중심축 상, 지표면에서의 최대 농도는 다음과 같이 단순화됩니다.</p><p>$$
+$$</p>
+<h3 id="중심선-지표면-농도-y--0-z--0">중심선 지표면 농도 ($y = 0, z = 0$)
+</h3><p>플룸의 중심축 상, 지표면에서의 최대 농도는 다음과 같이 단순화됩니다.</p>
+<p>$$
 C(x, 0, 0) = \frac{Q}{\pi u \sigma_y \sigma_z} \exp\left(-\frac{H^2}{2\sigma_z^2}\right)
-$$</p><hr><h2 id=모델의-전제-조건-가정>모델의 전제 조건 (가정)</h2><p>가우시안 확산 모델을 실제로 적용할 때는 다음과 같은 가정이 성립해야 정확도가 높아집니다.</p><ol><li>배출은 <strong>연속적이고 일정</strong>하며, 대기 조건(풍속, 풍향, 대기 안정도)이 시간에 따라 변하지 않는다.</li><li>오염물질은 <strong>화학적으로 비활성</strong>이며, 침적(deposition)이나 반응에 의한 손실이 없다.</li><li>풍속 $u$는 <strong>0이 아니어야</strong> 하며 (정온 상태에서는 모델 적용 불가), 배출원 방향으로 일정하다고 가정한다.</li><li>지형은 <strong>평탄</strong>하며 장애물이 없다고 가정한다.</li><li>확산은 <strong>수평 방향(y)</strong> 과 <strong>수직 방향(z)</strong> 에서 각각 독립적인 정규 분포를 따른다.</li></ol><hr><h2 id=확산-계수-sigma_y-sigma_z는-어떻게-구할까>확산 계수 $\sigma_y, \sigma_z$는 어떻게 구할까?</h2><p>$\sigma_y$와 $\sigma_z$는 대기 안정도 등급(Pasquill-Gifford Stability Class, A~F)과 배출원으로부터의 거리 $x$에 따라 결정됩니다.</p><ul><li><strong>Pasquill-Gifford 안정도 분류</strong>: A(매우 불안정) ~ F(매우 안정)의 6단계로 구분</li><li>실무에서는 <strong>Pasquill-Gifford 곡선(그래프)</strong> 또는 이를 회귀식으로 근사한 <strong>Briggs 공식</strong>을 많이 사용합니다.</li></ul><p>$$
+$$</p>
+<hr>
+<h2 id="모델의-전제-조건-가정">모델의 전제 조건 (가정)
+</h2><p>가우시안 확산 모델을 실제로 적용할 때는 다음과 같은 가정이 성립해야 정확도가 높아집니다.</p>
+<ol>
+<li>배출은 <strong>연속적이고 일정</strong>하며, 대기 조건(풍속, 풍향, 대기 안정도)이 시간에 따라 변하지 않는다.</li>
+<li>오염물질은 <strong>화학적으로 비활성</strong>이며, 침적(deposition)이나 반응에 의한 손실이 없다.</li>
+<li>풍속 $u$는 <strong>0이 아니어야</strong> 하며 (정온 상태에서는 모델 적용 불가), 배출원 방향으로 일정하다고 가정한다.</li>
+<li>지형은 <strong>평탄</strong>하며 장애물이 없다고 가정한다.</li>
+<li>확산은 <strong>수평 방향(y)</strong> 과 <strong>수직 방향(z)</strong> 에서 각각 독립적인 정규 분포를 따른다.</li>
+</ol>
+<hr>
+<h2 id="확산-계수-sigma_y-sigma_z는-어떻게-구할까">확산 계수 $\sigma_y, \sigma_z$는 어떻게 구할까?
+</h2><p>$\sigma_y$와 $\sigma_z$는 대기 안정도 등급(Pasquill-Gifford Stability Class, A~F)과 배출원으로부터의 거리 $x$에 따라 결정됩니다.</p>
+<ul>
+<li><strong>Pasquill-Gifford 안정도 분류</strong>: A(매우 불안정) ~ F(매우 안정)의 6단계로 구분</li>
+<li>실무에서는 <strong>Pasquill-Gifford 곡선(그래프)</strong> 또는 이를 회귀식으로 근사한 <strong>Briggs 공식</strong>을 많이 사용합니다.</li>
+</ul>
+<p>$$
 \sigma_y = a x^{0.894}, \qquad \sigma_z = c x^{d} + f
-$$</p><p>(계수 $a, c, d, f$는 안정도 등급과 지형 조건에 따라 표에서 결정됩니다.)</p><hr><h2 id=한계점>한계점</h2><p>가우시안 플룸 모델은 계산이 간단하고 직관적이지만, 다음과 같은 상황에서는 정확도가 떨어질 수 있습니다.</p><ul><li>정온(무풍) 상태나 풍속이 매우 낮을 때</li><li>복잡한 지형(산악, 협곡, 도심 건물군)이 있는 경우</li><li>배출 조건이 시간에 따라 크게 변하는 경우 (예: 순간 배출, 사고 누출)</li><li>장거리(수십 km 이상) 확산에는 화학반응, 습식/건식 침적 등을 고려한 <strong>라그랑지안(Lagrangian) 모델</strong>이나 <strong>CTM(Chemical Transport Model)</strong> 이 더 적합</li></ul><hr><h2 id=활용-분야>활용 분야</h2><ul><li>공장·발전소 굴뚝의 대기오염물질 확산 예측</li><li>환경영향평가(EIA)에서의 대기질 영향 분석</li><li>사고 시 유해가스 누출 확산 시뮬레이션</li><li>도로변 대기오염 노출 평가</li></ul><hr><h2 id=마무리>마무리</h2><p>가우시안 확산 모델은 실무와 학계에서 가장 널리 쓰이는 대기질 예측 기법으로, US EPA의 <strong>AERMOD</strong>, <strong>ISC3</strong> 등 여러 공식 대기질 모델링 프로그램의 이론적 토대가 됩니다. 기본 원리를 이해하면 복잡한 모델링 소프트웨어의 결과도 훨씬 잘 해석할 수 있습니다.</p></section><footer class="article-meta article-footer"></footer><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css integrity=sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV crossorigin=anonymous><script src=https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js integrity=sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG+vnGctmUb0ZY0l8 crossorigin=anonymous defer></script><script src=https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js integrity=sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05 crossorigin=anonymous defer></script><script>window.addEventListener("DOMContentLoaded",()=>{const e=[".main-article",".widget--toc"];e.forEach(e=>{const t=document.querySelector(e);t&&renderMathInElement(t,{delimiters:[{left:"$$",right:"$$",display:!0},{left:"$",right:"$",display:!1},{left:"\\(",right:"\\)",display:!1},{left:"\\[",right:"\\]",display:!0}],ignoredClasses:["gist"]})})})</script></article><div class=disqus-container></div><style>.disqus-container{background-color:var(--card-background);border-radius:var(--card-border-radius);box-shadow:var(--shadow-l1);padding:var(--card-padding)}</style><script>window.addEventListener("onColorSchemeChange",e=>{typeof DISQUS=="object"&&DISQUS.reset({reload:!0})})</script><footer class=site-footer><section class=copyright>&copy;
-2026 LucasPark Blog</section><section class=powerby>Built with <a href=https://gohugo.io/ target=_blank rel=noopener>Hugo</a><br>Theme <b><a href=https://github.com/CaiJimmy/hugo-theme-stack target=_blank rel=noopener data-version=4.0.3>Stack</a></b> designed by <a href=https://jimmycai.com target=_blank rel=noopener>Jimmy</a></section></footer><script type=module>
+$$</p>
+<p>(계수 $a, c, d, f$는 안정도 등급과 지형 조건에 따라 표에서 결정됩니다.)</p>
+<hr>
+<h2 id="한계점">한계점
+</h2><p>가우시안 플룸 모델은 계산이 간단하고 직관적이지만, 다음과 같은 상황에서는 정확도가 떨어질 수 있습니다.</p>
+<ul>
+<li>정온(무풍) 상태나 풍속이 매우 낮을 때</li>
+<li>복잡한 지형(산악, 협곡, 도심 건물군)이 있는 경우</li>
+<li>배출 조건이 시간에 따라 크게 변하는 경우 (예: 순간 배출, 사고 누출)</li>
+<li>장거리(수십 km 이상) 확산에는 화학반응, 습식/건식 침적 등을 고려한 <strong>라그랑지안(Lagrangian) 모델</strong>이나 <strong>CTM(Chemical Transport Model)</strong> 이 더 적합</li>
+</ul>
+<hr>
+<h2 id="활용-분야">활용 분야
+</h2><ul>
+<li>공장·발전소 굴뚝의 대기오염물질 확산 예측</li>
+<li>환경영향평가(EIA)에서의 대기질 영향 분석</li>
+<li>사고 시 유해가스 누출 확산 시뮬레이션</li>
+<li>도로변 대기오염 노출 평가</li>
+</ul>
+<hr>
+<h2 id="마무리">마무리
+</h2><p>가우시안 확산 모델은 실무와 학계에서 가장 널리 쓰이는 대기질 예측 기법으로, US EPA의 <strong>AERMOD</strong>, <strong>ISC3</strong> 등 여러 공식 대기질 모델링 프로그램의 이론적 토대가 됩니다. 기본 원리를 이해하면 복잡한 모델링 소프트웨어의 결과도 훨씬 잘 해석할 수 있습니다.</p>
+
+</section>
+
+
+    <footer class="article-meta article-footer">
+    
+
+    </footer>
+
+
+    
+        <link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI&#43;WdtXRGWt2kTvGFasHpSy3SV"crossorigin="anonymous"
+            ><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG&#43;vnGctmUb0ZY0l8"crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"integrity="sha384-&#43;VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4&#43;/RRE05"crossorigin="anonymous"
+                defer
+                >
+            </script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        const elementsToRender = [".main-article", ".widget--toc"];
+
+        elementsToRender.forEach(selector => {
+            const element = document.querySelector(selector);
+            if (element) {
+                renderMathInElement(element, {
+                    delimiters: [
+                        { left: "$$", right: "$$", display: true },
+                        { left: "$", right: "$", display: false },
+                        { left: "\\(", right: "\\)", display: false },
+                        { left: "\\[", right: "\\]", display: true }
+                    ],
+                    ignoredClasses: ["gist"]
+                });
+            }
+        });
+    });
+</script>
+    
+</article>
+
+    
+
+    
+
+     
+    
+        
+
+        <div class="disqus-container">
+    
+</div>
+
+<style>
+    .disqus-container {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+</style>
+
+<script>
+    window.addEventListener('onColorSchemeChange', (e) => {
+        if (typeof DISQUS == 'object') {
+            DISQUS.reset({
+                reload: true
+            });
+        }
+    })
+</script>
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2026 LucasPark Blog
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="4.0.3">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+
+
+
+<script type="module">
     import gallery from '\/ts\/gallery.js';
 
     const articleContent = document.querySelector('.article-content');
@@ -35,4 +436,15 @@ $$</p><p>(계수 $a, c, d, f$는 안정도 등급과 지형 조건에 따라 표
         });
         lightbox.init();
     }
-</script></main></div><script type=text/javascript src=/ts/main.1ff1e5fdc4e178ed422e50aa407526dc552f26342d729343fded19416194382c.js defer></script></body></html>
+</script>
+
+    
+
+            </main>
+        </div>
+        
+<script type="text/javascript" src="/ts/main.1ff1e5fdc4e178ed422e50aa407526dc552f26342d729343fded19416194382c.js" defer></script>
+
+
+    </body>
+</html>
