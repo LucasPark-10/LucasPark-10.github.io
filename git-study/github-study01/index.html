@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="ko-kr" dir="ltr">
     <head><meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="코드 컨벤션과 패키지 관리 PEP 8 — 파이썬 코드 컨벤션 파이썬 코드의 가독성과 일관성을 위한 공식 가이드라인입니다.\nAI 실무에서 팀원과 협업할 때 가장 기본이 되는 규칙들입니다.\n인덴테이션 (들여쓰기) ::: warning 4칸 스페이스를 사용합니다. 탭을 사용하지 마세요. :::\n`python\n✅ 좋은 예시 def mean(values): total = sum(values) return total / len(values)\n❌ 나쁜 예시 def mean(values): return total / len(values) `\n줄 길이 ::: tip 한 줄의 길이는 79자 이하로 유지하세요. 긴 코드는 괄호를 활용해 여러 줄에 나눠서 작성합니다. :::\n">
-<title>AI 실무 강의 정리 - 코드 컨벤션과 패키지 관리</title>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="코드 컨벤션과 패키지 관리 PEP 8 — 파이썬 코드 컨벤션 파이썬 코드의 가독성과 일관성을 위한 공식 가이드라인입니다.\n인덴테이션 (들여쓰기) 4칸 스페이스를 사용합니다. 탭을 사용하지 마세요.\n# ✅ 좋은 예시 def mean(values): total = sum(values) return total / len(values) 한 줄 길이 한 줄은 79자 이하로 유지합니다.\n# ✅ 좋은 예시 from typing import Optional, List import os import numpy as np 함수와 변수명 규칙 구분 규칙 예시 함수/변수 snake_case load_data, model_config 클래스 PascalCase TextClassifier 상수 ALL_CAPS MAX_LEN, LEARNING_RATE import 규칙 표준 라이브러리 (os, sys) 서드파티 패키지 (numpy, torch) 로컬 모듈 import os from typing import Optional, List import numpy as np import pandas as pd from my_module import load_data, train_model def predict(texts: list[str]) -&gt; list[str]: ... 타입 힌트 (Type Hinting) 함수에 타입을 명시하면 가독성과 IDE 자동 완성의 도움이 됩니다.\n">
+<title>[Git] - 코드 컨벤션과 패키지 관리</title>
 
 
 <link rel="canonical" href="https://lucaspark-10.github.io/git-study/github-study01/">
@@ -12,13 +12,13 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
 
 
-<link rel="stylesheet" href="/scss/style.min.76acf2383080ba10c912e8b3a96705a966c7f2c22ed560381e24e5a7c0f4ffa1.css"><meta property='og:title' content="AI 실무 강의 정리 - 코드 컨벤션과 패키지 관리">
-<meta property='og:description' content="코드 컨벤션과 패키지 관리 PEP 8 — 파이썬 코드 컨벤션 파이썬 코드의 가독성과 일관성을 위한 공식 가이드라인입니다.\nAI 실무에서 팀원과 협업할 때 가장 기본이 되는 규칙들입니다.\n인덴테이션 (들여쓰기) ::: warning 4칸 스페이스를 사용합니다. 탭을 사용하지 마세요. :::\n`python\n✅ 좋은 예시 def mean(values): total = sum(values) return total / len(values)\n❌ 나쁜 예시 def mean(values): return total / len(values) `\n줄 길이 ::: tip 한 줄의 길이는 79자 이하로 유지하세요. 긴 코드는 괄호를 활용해 여러 줄에 나눠서 작성합니다. :::\n">
+<link rel="stylesheet" href="/scss/style.min.76acf2383080ba10c912e8b3a96705a966c7f2c22ed560381e24e5a7c0f4ffa1.css"><meta property='og:title' content="[Git] - 코드 컨벤션과 패키지 관리">
+<meta property='og:description' content="코드 컨벤션과 패키지 관리 PEP 8 — 파이썬 코드 컨벤션 파이썬 코드의 가독성과 일관성을 위한 공식 가이드라인입니다.\n인덴테이션 (들여쓰기) 4칸 스페이스를 사용합니다. 탭을 사용하지 마세요.\n# ✅ 좋은 예시 def mean(values): total = sum(values) return total / len(values) 한 줄 길이 한 줄은 79자 이하로 유지합니다.\n# ✅ 좋은 예시 from typing import Optional, List import os import numpy as np 함수와 변수명 규칙 구분 규칙 예시 함수/변수 snake_case load_data, model_config 클래스 PascalCase TextClassifier 상수 ALL_CAPS MAX_LEN, LEARNING_RATE import 규칙 표준 라이브러리 (os, sys) 서드파티 패키지 (numpy, torch) 로컬 모듈 import os from typing import Optional, List import numpy as np import pandas as pd from my_module import load_data, train_model def predict(texts: list[str]) -&gt; list[str]: ... 타입 힌트 (Type Hinting) 함수에 타입을 명시하면 가독성과 IDE 자동 완성의 도움이 됩니다.\n">
 <meta property='og:url' content='https://lucaspark-10.github.io/git-study/github-study01/'>
 <meta property='og:site_name' content='LucasPark Blog'>
 <meta property='og:type' content='article'><meta property='article:section' content='Git-Study' /><meta property='article:published_time' content='2026-07-28T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2026-07-28T00:00:00&#43;00:00'/>
-<meta name="twitter:title" content="AI 실무 강의 정리 - 코드 컨벤션과 패키지 관리">
-<meta name="twitter:description" content="코드 컨벤션과 패키지 관리 PEP 8 — 파이썬 코드 컨벤션 파이썬 코드의 가독성과 일관성을 위한 공식 가이드라인입니다.\nAI 실무에서 팀원과 협업할 때 가장 기본이 되는 규칙들입니다.\n인덴테이션 (들여쓰기) ::: warning 4칸 스페이스를 사용합니다. 탭을 사용하지 마세요. :::\n`python\n✅ 좋은 예시 def mean(values): total = sum(values) return total / len(values)\n❌ 나쁜 예시 def mean(values): return total / len(values) `\n줄 길이 ::: tip 한 줄의 길이는 79자 이하로 유지하세요. 긴 코드는 괄호를 활용해 여러 줄에 나눠서 작성합니다. :::\n">
+<meta name="twitter:title" content="[Git] - 코드 컨벤션과 패키지 관리">
+<meta name="twitter:description" content="코드 컨벤션과 패키지 관리 PEP 8 — 파이썬 코드 컨벤션 파이썬 코드의 가독성과 일관성을 위한 공식 가이드라인입니다.\n인덴테이션 (들여쓰기) 4칸 스페이스를 사용합니다. 탭을 사용하지 마세요.\n# ✅ 좋은 예시 def mean(values): total = sum(values) return total / len(values) 한 줄 길이 한 줄은 79자 이하로 유지합니다.\n# ✅ 좋은 예시 from typing import Optional, List import os import numpy as np 함수와 변수명 규칙 구분 규칙 예시 함수/변수 snake_case load_data, model_config 클래스 PascalCase TextClassifier 상수 ALL_CAPS MAX_LEN, LEARNING_RATE import 규칙 표준 라이브러리 (os, sys) 서드파티 패키지 (numpy, torch) 로컬 모듈 import os from typing import Optional, List import numpy as np import pandas as pd from my_module import load_data, train_model def predict(texts: list[str]) -&gt; list[str]: ... 타입 힌트 (Type Hinting) 함수에 타입을 명시하면 가독성과 IDE 자동 완성의 도움이 됩니다.\n">
       <script async src="https://www.googletagmanager.com/gtag/js?id=G-EVK5B22CB3"></script>
       <script>
         var doNotTrack = false;
@@ -164,7 +164,7 @@
 
     <div class="article-title-wrapper">
         <h2 class="article-title">
-            <a href="/git-study/github-study01/">AI 실무 강의 정리 - 코드 컨벤션과 패키지 관리</a>
+            <a href="/git-study/github-study01/">[Git] - 코드 컨벤션과 패키지 관리</a>
         </h2>
     
         
@@ -214,38 +214,20 @@
     <h1 id="코드-컨벤션과-패키지-관리">코드 컨벤션과 패키지 관리
 </h1><h2 id="pep-8--파이썬-코드-컨벤션">PEP 8 — 파이썬 코드 컨벤션
 </h2><p>파이썬 코드의 가독성과 일관성을 위한 공식 가이드라인입니다.</p>
-<p>AI 실무에서 팀원과 협업할 때 가장 기본이 되는 규칙들입니다.</p>
 <h3 id="인덴테이션-들여쓰기">인덴테이션 (들여쓰기)
-</h3><p>::: warning
-4칸 스페이스를 사용합니다.
-탭을 사용하지 마세요.
-:::</p>
-<p>`python</p>
-<h1 id="-좋은-예시">✅ 좋은 예시
-</h1><p>def mean(values):
-total = sum(values)
-return total / len(values)</p>
-<h1 id="-나쁜-예시">❌ 나쁜 예시
-</h1><p>def mean(values):
-return total / len(values)
-`</p>
-<h3 id="줄-길이">줄 길이
-</h3><p>::: tip
-한 줄의 길이는 <strong>79자 이하</strong>로 유지하세요.
-긴 코드는 괄호를 활용해 여러 줄에 나눠서 작성합니다.
-:::</p>
-<p>`python</p>
-<h1 id="-좋은-예시--괄호를-사용한-줄-나누기">✅ 좋은 예시 — 괄호를 사용한 줄 나누기
-</h1><p>from typing import (
-Optional,
-List,
-)</p>
-<p>import os
-import numpy as np</p>
-<h1 id="-나쁜-예시--한-줄이-너무-김">❌ 나쁜 예시 — 한 줄이 너무 김
-</h1><p>import extremely_long_package_name_for_something_that_exists
-`</p>
-<h3 id="함수와-변수명-규칙">함수와 변수명 규칙
+</h3><p>4칸 스페이스를 사용합니다. 탭을 사용하지 마세요.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># ✅ 좋은 예시</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">mean</span>(values):
+</span></span><span style="display:flex;"><span>    total <span style="color:#f92672">=</span> sum(values)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> total <span style="color:#f92672">/</span> len(values)
+</span></span></code></pre></div><h3 id="한-줄-길이">한 줄 길이
+</h3><p>한 줄은 79자 이하로 유지합니다.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># ✅ 좋은 예시</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> typing <span style="color:#f92672">import</span> Optional, List
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> os
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> numpy <span style="color:#66d9ef">as</span> np
+</span></span></code></pre></div><h3 id="함수와-변수명-규칙">함수와 변수명 규칙
 </h3><div class="table-wrapper"><table>
   <thead>
       <tr>
@@ -257,128 +239,79 @@ import numpy as np</p>
   <tbody>
       <tr>
           <td>함수/변수</td>
-          <td>snake_case (소문자 + 언더스코어)</td>
+          <td>snake_case</td>
           <td>load_data, model_config</td>
       </tr>
       <tr>
           <td>클래스</td>
-          <td>PascalCase (대문자로 시작)</td>
-          <td>TextClassifier, DataModule</td>
+          <td>PascalCase</td>
+          <td>TextClassifier</td>
       </tr>
       <tr>
           <td>상수</td>
-          <td>ALL_CAPS (전부 대문자)</td>
+          <td>ALL_CAPS</td>
           <td>MAX_LEN, LEARNING_RATE</td>
       </tr>
   </tbody>
 </table></div>
 <h3 id="import-규칙">import 규칙
-</h3><p>::: tip
-import는 다음 순서로 구분해서 작성하세요.</p>
-<ol>
+</h3><ol>
 <li>표준 라이브러리 (os, sys)</li>
-<li>서드파티 패키지 (numpy, 	orch)</li>
-<li>로컬 모듈 (현재 프로젝트의 파일들)
-:::</li>
+<li>서드파티 패키지 (numpy, torch)</li>
+<li>로컬 모듈</li>
 </ol>
-<p>`python</p>
-<h1 id="-좋은-예시-1">✅ 좋은 예시
-</h1><p>import os
-from typing import Optional, List</p>
-<p>import numpy as np
-import pandas as pd</p>
-<p>from my_module import load_data, train_model</p>
-<p>def predict(texts: list[str]) -&gt; list[str]:
-&hellip;</p>
-<p>class TextClassifier:
-&ldquo;&ldquo;&ldquo;텍스트 분류 모델&rdquo;&rdquo;&rdquo;
-pass
-`</p>
-<h2 id="타입-힌트-type-hinting">타입 힌트 (Type Hinting)
-</h2><p>타입 힌트는 코드 가독성과 IDE 자동 완성을 위해 필수입니다.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> os
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> typing <span style="color:#f92672">import</span> Optional, List
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> numpy <span style="color:#66d9ef">as</span> np
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> pandas <span style="color:#66d9ef">as</span> pd
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> my_module <span style="color:#f92672">import</span> load_data, train_model
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">predict</span>(texts: list[str]) <span style="color:#f92672">-&gt;</span> list[str]:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">...</span>
+</span></span></code></pre></div><h2 id="타입-힌트-type-hinting">타입 힌트 (Type Hinting)
+</h2><p>함수에 타입을 명시하면 가독성과 IDE 자동 완성의 도움이 됩니다.</p>
 <h3 id="기본-타입">기본 타입
-</h3><p>`python</p>
-<h1 id="-좋은-예시--함수-시그니처에-타입-명시">✅ 좋은 예시 — 함수 시그니처에 타입 명시
-</h1><p>def tokenize(text: str) -&gt; list[str]:
-&ldquo;&ldquo;&ldquo;텍스트를 토큰으로 분리한다.</p>
-<pre><code>Args:
-    text: 입력 텍스트
-
-Returns:
-    분리한 토큰 리스트
-&quot;&quot;&quot;
-...
-</code></pre>
-<p>def get_threshold() -&gt; Optional[float]:
-return None</p>
-<p>def is_valid(score: float) -&gt; bool:
-return score &gt; 0.5
-`</p>
-<h3 id="optional-사용법">Optional 사용법
-</h3><p>Optional[T]는 T | None을 의미합니다. 기본값이 없을 때 사용합니다.</p>
-<p>`python
-from typing import Optional</p>
-<h1 id="-좋은-예시-2">✅ 좋은 예시
-</h1><p>def get_user(id: int) -&gt; Optional[dict]:
-&ldquo;&ldquo;&ldquo;사용자를 찾으면 dict, 없으면 None&rdquo;&rdquo;&rdquo;
-&hellip;</p>
-<h1 id="-나쁜-예시--타입-없이-반환-유형-모호">❌ 나쁜 예시 — 타입 없이 반환 유형 모호
-</h1><p>def get_user(id: int):
-&hellip;
-`</p>
-<h2 id="pyprojecttoml--현대적-프로젝트-설정">pyproject.toml — 현대적 프로젝트 설정
-</h2><h3 id="pyprojecttoml-vs-requirementstxt">pyproject.toml vs requirements.txt
-</h3><div class="table-wrapper"><table>
-  <thead>
-      <tr>
-          <th>구분</th>
-          <th>pyproject.toml</th>
-          <th>requirements.txt</th>
-      </tr>
-  </thead>
-  <tbody>
-      <tr>
-          <td>포맷</td>
-          <td>TOML (설치 가능 버전 포함)</td>
-          <td>plain text (버전 고정)</td>
-      </tr>
-      <tr>
-          <td>메타데이터</td>
-          <td>프로젝트 이름, 설명, 버전 저장</td>
-          <td>없음</td>
-      </tr>
-      <tr>
-          <td>의존성 관리</td>
-          <td>uv add로 자동 관리</td>
-          <td>수동 작성</td>
-      </tr>
-      <tr>
-          <td>빌드 시스템</td>
-          <td>pyproject.toml에 직접 명시 필요</td>
-          <td>별도 설정 필요</td>
-      </tr>
-  </tbody>
-</table></div>
-<h3 id="pyprojecttoml-예시">pyproject.toml 예시
-</h3><p>`	oml
-[project]
-name = &ldquo;my-ml-project&rdquo;
-version = &ldquo;0.1.0&rdquo;
-description = &ldquo;AI 분석을 위한 머신러닝 프로젝트&rdquo;
-requires-python = &ldquo;&gt;=3.12&rdquo;
-dependencies = [
-&ldquo;pandas&gt;=2.2.0&rdquo;,
-&ldquo;numpy&gt;=1.26.0&rdquo;,
-&ldquo;torch&gt;=2.1.0&rdquo;,
-]</p>
-<p>[project.optional-dependencies]
-dev = [
-&ldquo;pytest&gt;=8.0.0&rdquo;,
-&ldquo;ruff&gt;=0.4.0&rdquo;,
-]
-`</p>
-<h3 id="pyprojecttoml-사용법">pyproject.toml 사용법
-</h3><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># 의존성 추가 — 버전 충돌 자동 해결</span>
+</h3><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">tokenize</span>(text: str) <span style="color:#f92672">-&gt;</span> list[str]:
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;&#34;&#34;텍스트를 토큰으로 분리한다.&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">...</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">get_threshold</span>() <span style="color:#f92672">-&gt;</span> Optional[float]:
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">None</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">is_valid</span>(score: float) <span style="color:#f92672">-&gt;</span> bool:
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> score <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0.5</span>
+</span></span></code></pre></div><h3 id="optional-사용법">Optional 사용법
+</h3><p>Optional[T]는 <code>T | None</code>을 의미합니다. 기본값이 없을 때 사용합니다.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> typing <span style="color:#f92672">import</span> Optional
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># ✅ 좋은 예시</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">get_user</span>(id: int) <span style="color:#f92672">-&gt;</span> Optional[dict]:
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;&#34;&#34;사용자를 찾으면 dict, 없으면 None&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">...</span>
+</span></span></code></pre></div><h2 id="pyprojecttoml--현대적-프로젝트-설정">pyproject.toml — 현대적 프로젝트 설정
+</h2><h3 id="pyprojecttoml-예시">pyproject.toml 예시
+</h3><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-toml" data-lang="toml"><span style="display:flex;"><span>[<span style="color:#a6e22e">project</span>]
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">name</span> = <span style="color:#e6db74">&#34;my-ml-project&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">version</span> = <span style="color:#e6db74">&#34;0.1.0&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">description</span> = <span style="color:#e6db74">&#34;AI 분석을 위한 머신러닝 프로젝트&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">requires-python</span> = <span style="color:#e6db74">&#34;&gt;=3.12&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">dependencies</span> = [
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;pandas&gt;=2.2.0&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;numpy&gt;=1.26.0&#34;</span>,
+</span></span><span style="display:flex;"><span>]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>[<span style="color:#a6e22e">project</span>.<span style="color:#a6e22e">optional-dependencies</span>]
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">dev</span> = [
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;pytest&gt;=8.0.0&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;ruff&gt;=0.4.0&#34;</span>,
+</span></span><span style="display:flex;"><span>]
+</span></span></code></pre></div><h3 id="pyprojecttoml-사용법">pyproject.toml 사용법
+</h3><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># 의존성 추가</span>
 </span></span><span style="display:flex;"><span>uv add pandas
 </span></span><span style="display:flex;"><span>uv add <span style="color:#e6db74">&#34;pandas==2.2.0&#34;</span>  <span style="color:#75715e"># 특정 버전</span>
 </span></span><span style="display:flex;"><span>
@@ -391,83 +324,43 @@ dev = [
 </span></span><span style="display:flex;"><span><span style="color:#75715e"># 프로젝트 트리 확인</span>
 </span></span><span style="display:flex;"><span>uv tree
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># lock 파일 생성 (모든 의존성 고정)</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># lock 파일 생성</span>
 </span></span><span style="display:flex;"><span>uv lock
 </span></span></code></pre></div><h2 id="uv--빠른-패키지-관리자">uv — 빠른 패키지 관리자
-</h2><h3 id="uv-vs-pip-비교">uv vs pip 비교
-</h3><div class="table-wrapper"><table>
-  <thead>
-      <tr>
-          <th>기능</th>
-          <th>pip (기본)</th>
-          <th>uv</th>
-      </tr>
-  </thead>
-  <tbody>
-      <tr>
-          <td>설치 속도</td>
-          <td>느림 (Python으로 작성)</td>
-          <td>매우 빠름 (Rust 기반, 10~100배 빠름)</td>
-      </tr>
-      <tr>
-          <td>가상환경</td>
-          <td>venv 별도 실행 필요</td>
-          <td>내장 (uv venv)</td>
-      </tr>
-      <tr>
-          <td>의존성 관리</td>
-          <td>수동 버전 충돌 해결</td>
-          <td>자동 버전 충돌 해결 (uv.lock)</td>
-      </tr>
-      <tr>
-          <td>패키지 검색</td>
-          <td>PyPI 직접 조회</td>
-          <td>내장 패키지 검색 (uv search)</td>
-      </tr>
-  </tbody>
-</table></div>
-<h3 id="uv-주요-명령어">uv 주요 명령어
-</h3><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># 1. 가상환경 생성</span>
-</span></span><span style="display:flex;"><span>uv venv                          <span style="color:#75715e"># 기본 Python 사용 (.venv 생성)</span>
-</span></span><span style="display:flex;"><span>uv venv myenv                    <span style="color:#75715e"># 이름 지정</span>
-</span></span><span style="display:flex;"><span>uv venv --python 3.12            <span style="color:#75715e"># 특정 Python 버전</span>
-</span></span><span style="display:flex;"><span>uv venv --seed                   <span style="color:#75715e"># pip 패키지도 초기화</span>
+</h2><p>pip보다 uv가 훨씬 빠릅니다 (Rust 기반).</p>
+<h3 id="주요-명령어">주요 명령어
+</h3><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># 가상환경 생성</span>
+</span></span><span style="display:flex;"><span>uv venv
+</span></span><span style="display:flex;"><span>uv venv myenv
+</span></span><span style="display:flex;"><span>uv venv --python 3.12
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># 2. 패키지 설치 (가상환경 자동 활성화)</span>
-</span></span><span style="display:flex;"><span>uv pip install pandas numpy      <span style="color:#75715e"># 여러 패키지</span>
-</span></span><span style="display:flex;"><span>uv pip install -r requirements.txt
-</span></span><span style="display:flex;"><span>uv pip install <span style="color:#e6db74">&#34;pandas==2.2.0&#34;</span>   <span style="color:#75715e"># 특정 버전</span>
-</span></span><span style="display:flex;"><span>uv pip uninstall pandas          <span style="color:#75715e"># 제거</span>
-</span></span><span style="display:flex;"><span>uv pip list                      <span style="color:#75715e"># 설치된 패키지 목록</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 패키지 설치</span>
+</span></span><span style="display:flex;"><span>uv pip install pandas numpy
+</span></span><span style="display:flex;"><span>uv pip list
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># 3. uv run — 가상환경 없이 바로 실행</span>
-</span></span><span style="display:flex;"><span>uv run python main.py            <span style="color:#75715e"># .venv 자동 관리</span>
-</span></span><span style="display:flex;"><span>uv run --with pandas python -c <span style="color:#e6db74">&#34;import pandas; print(pandas.__version__)&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 가상환경 없이 바로 실행</span>
+</span></span><span style="display:flex;"><span>uv run python main.py
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># 4. 프로젝트 초기화</span>
-</span></span><span style="display:flex;"><span>uv init                          <span style="color:#75715e"># 기본 프로젝트 생성 (main.py, pyproject.toml 등)</span>
-</span></span><span style="display:flex;"><span>uv init my-project               <span style="color:#75715e"># 이름 지정</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 프로젝트 초기화</span>
+</span></span><span style="display:flex;"><span>uv init
+</span></span><span style="display:flex;"><span>uv init my-project
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># 5. 동기화</span>
-</span></span><span style="display:flex;"><span>uv sync                          <span style="color:#75715e"># uv.lock 기준 모든 의존성 설치/동기화</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 의존성 동기화</span>
+</span></span><span style="display:flex;"><span>uv sync
 </span></span></code></pre></div><h2 id="코드-컨벤션-체크리스트">코드 컨벤션 체크리스트
 </h2><ul>
-<li><input disabled="" type="checkbox"> 인덴테이션은 4칸 스페이스 사용</li>
+<li><input disabled="" type="checkbox"> 인덴테이션은 4칸 스페이스</li>
 <li><input disabled="" type="checkbox"> 한 줄 길이는 79자 이하</li>
 <li><input disabled="" type="checkbox"> 함수는 snake_case, 클래스는 PascalCase</li>
-<li><input disabled="" type="checkbox"> 상수는 ALL_CAPS (모듈 레벨에서만)</li>
-<li><input disabled="" type="checkbox"> import 순서는 표준라이브러리 → 서드파티 → 로컬</li>
+<li><input disabled="" type="checkbox"> 상수는 ALL_CAPS</li>
+<li><input disabled="" type="checkbox"> import 순서: 표준 → 서드파티 → 로컬</li>
 <li><input disabled="" type="checkbox"> 타입 힌트는 모든 함수에 명시</li>
-<li><input disabled="" type="checkbox"> docstring은 Args/Returns 섹션 포함</li>
-<li><input disabled="" type="checkbox"> is/has/can 등 boolean 반환 함수는 접두사 사용</li>
-<li><input disabled="" type="checkbox"> Bare except 대신 구체적인 예외 처리 (except ValueError)</li>
 </ul>
 <h2 id="왜-코드-컨벤션이-중요한가">왜 코드 컨벤션이 중요한가?
 </h2><ol>
-<li><strong>가독성</strong>: 코드 리뷰를 빠르게 할 수 있고, 새 멤버도 쉽게 이해할 수 있음</li>
-<li><strong>자동화 도구 통합</strong>: Black, Ruff, isort 등 자동 포맷터와 완벽 호환</li>
-<li><strong>에러 방지</strong>: 명명 규칙이 일관되면 IDE 자동 완성 정확도 상승</li>
-<li><strong>팀 협업</strong>: 코드가 모두 같은 스타일이면 diff가 깔끔해지고 리뷰 효율이 올라감</li>
+<li><strong>가독성</strong>: 새 멤버도 쉽게 이해할 수 있음</li>
+<li><strong>자동화 도구 통합</strong>: Black, Ruff와 완벽 호환</li>
+<li><strong>팀 협업</strong>: 코드가 같은 스타일이면 리뷰 효율이 올라감</li>
 </ol>
 
 </section>
