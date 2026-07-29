@@ -1,85 +1,697 @@
-<!doctype html><html lang=ko-kr dir=ltr><head><meta charset=utf-8><meta name=viewport content='width=device-width,initial-scale=1'><meta name=description content="들어가며 머신러닝의 핵심 분야인 &lsquo;분류(Classification)&lsquo;는 정답이 있는 데이터를 학습해 새로운 입력이 어느 클래스에 속할지 예측하는 지도학습의 대표적 과제입니다.\n이번 글에서는 이진 분류를 다루는 주요 알고리즘과 모델 평가 방법을 살펴봅니다.\n1. 분류 개념과 로지스틱 회귀 머신러닝 분야 머신러닝은 크게 지도학습, 비지도학습, 강화학습으로 나뉩니다.\n지도학습: 회귀분석(Regression), 분류(Classification) 비지도학습: 클러스터링(Clustering), 차원 축소(Dimensionality Reduction) 강화학습 지도학습이란 컴퓨터에 정답이 있는 데이터를 학습시키는 방법으로, 주어진 입력으로부터 출력 값을 예측하고자 할 때 사용합니다.\n회귀분석(Regression): 연속적인 값을 예측 분류(Classification): 주어진 입력 값이 어떤 클래스에 속할지에 대한 결과 값을 도출하는 알고리즘 문제 상황 가정해보기 해외 여행을 준비하면서 항공 지연을 피하고 싶다고 가정해봅니다.\n"><title>[머신러닝 II] 분류(Classification)</title><link rel=canonical href=https://lucaspark-10.github.io/data-analysis/python_data_analysis_25/><link rel=preconnect href=https://fonts.googleapis.com><link rel=preconnect href=https://fonts.gstatic.com crossorigin><link rel=preload as=style href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap"><link rel=stylesheet href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap"><link rel=stylesheet href=/scss/style.min.de7e6698ac54e40edf7f3d56f131b6bbacde7bdf742f829e1185371a8af17315.css><meta property='og:title' content="[머신러닝 II] 분류(Classification)"><meta property='og:description' content="들어가며 머신러닝의 핵심 분야인 &lsquo;분류(Classification)&lsquo;는 정답이 있는 데이터를 학습해 새로운 입력이 어느 클래스에 속할지 예측하는 지도학습의 대표적 과제입니다.\n이번 글에서는 이진 분류를 다루는 주요 알고리즘과 모델 평가 방법을 살펴봅니다.\n1. 분류 개념과 로지스틱 회귀 머신러닝 분야 머신러닝은 크게 지도학습, 비지도학습, 강화학습으로 나뉩니다.\n지도학습: 회귀분석(Regression), 분류(Classification) 비지도학습: 클러스터링(Clustering), 차원 축소(Dimensionality Reduction) 강화학습 지도학습이란 컴퓨터에 정답이 있는 데이터를 학습시키는 방법으로, 주어진 입력으로부터 출력 값을 예측하고자 할 때 사용합니다.\n회귀분석(Regression): 연속적인 값을 예측 분류(Classification): 주어진 입력 값이 어떤 클래스에 속할지에 대한 결과 값을 도출하는 알고리즘 문제 상황 가정해보기 해외 여행을 준비하면서 항공 지연을 피하고 싶다고 가정해봅니다.\n"><meta property='og:url' content='https://lucaspark-10.github.io/data-analysis/python_data_analysis_25/'><meta property='og:site_name' content='LucasPark Blog'><meta property='og:type' content='article'><meta property='article:section' content='Data-Analysis'><meta property='article:published_time' content='2026-07-28T00:00:00+00:00'><meta property='article:modified_time' content='2026-07-28T00:00:00+00:00'><meta name=twitter:title content="[머신러닝 II] 분류(Classification)"><meta name=twitter:description content="들어가며 머신러닝의 핵심 분야인 &lsquo;분류(Classification)&lsquo;는 정답이 있는 데이터를 학습해 새로운 입력이 어느 클래스에 속할지 예측하는 지도학습의 대표적 과제입니다.\n이번 글에서는 이진 분류를 다루는 주요 알고리즘과 모델 평가 방법을 살펴봅니다.\n1. 분류 개념과 로지스틱 회귀 머신러닝 분야 머신러닝은 크게 지도학습, 비지도학습, 강화학습으로 나뉩니다.\n지도학습: 회귀분석(Regression), 분류(Classification) 비지도학습: 클러스터링(Clustering), 차원 축소(Dimensionality Reduction) 강화학습 지도학습이란 컴퓨터에 정답이 있는 데이터를 학습시키는 방법으로, 주어진 입력으로부터 출력 값을 예측하고자 할 때 사용합니다.\n회귀분석(Regression): 연속적인 값을 예측 분류(Classification): 주어진 입력 값이 어떤 클래스에 속할지에 대한 결과 값을 도출하는 알고리즘 문제 상황 가정해보기 해외 여행을 준비하면서 항공 지연을 피하고 싶다고 가정해봅니다.\n"><script async src="https://www.googletagmanager.com/gtag/js?id=G-EVK5B22CB3"></script><script>var doNotTrack=!1,dnt=navigator.doNotTrack||window.doNotTrack||navigator.msDoNotTrack,doNotTrack=dnt=="1"||dnt=="yes";if(!doNotTrack){window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag("js",new Date),gtag("config","G-EVK5B22CB3")}</script></head><body class=article-page><script>(function(){const e="StackColorScheme";localStorage.getItem(e)||localStorage.setItem(e,"auto")})()</script><script>(function(){const t="StackColorScheme",e=localStorage.getItem(t),n=window.matchMedia("(prefers-color-scheme: dark)").matches===!0;e=="dark"||e==="auto"&&n?document.documentElement.dataset.scheme="dark":document.documentElement.dataset.scheme="light"})()</script><div class="container main-container flex on-phone--column compact"><aside class="sidebar left-sidebar sticky"><button class="hamburger hamburger--spin" type=button id=toggle-menu aria-label="Toggle Menu">
-<span class=hamburger-box><span class=hamburger-inner></span></span></button><header><div class=site-meta><h1 class=site-name><a href=/>LucasPark Blog</a></h1><h2 class=site-description>Lucas Park의 개인 블로그</h2></div></header><ol class=menu id=main-menu><li><a href=/><span>Home</span></a></li><li><a href=/posts/><span>Posts</span></a></li><li><a href=/git-study/><span>Git-study</span></a></li><li><a href=/data-analysis/><span>Data Analysis</span></a></li><li><a href=/gold-news-and-analysis/><span>Gold Price Check & Analysis</span></a></li><li><a href=/atmospheric-environment/><span>Atmospheric Environment</span></a></li><li class=menu-bottom-section><ol class=menu><li id=dark-mode-toggle><svg class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="8" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
-<svg class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="16" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
-<span>Dark Mode</span></li></ol></li></ol></aside><main class="main full-width"><article class=main-article><header class=article-header><div class=article-details><div class=article-title-wrapper><h2 class=article-title><a href=/data-analysis/python_data_analysis_25/>[머신러닝 II] 분류(Classification)</a></h2></div><footer class=article-meta><div class=inline-meta><svg class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M11.795 21H5a2 2 0 01-2-2V7a2 2 0 012-2h12a2 2 0 012 2v4"/><circle cx="18" cy="18" r="4"/><path d="M15 3v4"/><path d="M7 3v4"/><path d="M3 11h16"/><path d="M18 16.496V18l1 1"/></svg>
-<time class=article-time--published datetime=2026-07-28T00:00:00Z>2026년 7월 28일 화요일</time></div></footer></div></header><section class=article-content><h1 id=들어가며>들어가며</h1><p>머신러닝의 핵심 분야인 &lsquo;분류(Classification)&lsquo;는 정답이 있는 데이터를 학습해 새로운 입력이 어느 클래스에 속할지 예측하는 지도학습의 대표적 과제입니다.</p><p>이번 글에서는 이진 분류를 다루는 주요 알고리즘과 모델 평가 방법을 살펴봅니다.</p><hr><h2 id=1-분류-개념과-로지스틱-회귀>1. 분류 개념과 로지스틱 회귀</h2><h3 id=머신러닝-분야>머신러닝 분야</h3><p>머신러닝은 크게 지도학습, 비지도학습, 강화학습으로 나뉩니다.</p><ul><li><strong>지도학습</strong>: 회귀분석(Regression), 분류(Classification)</li><li><strong>비지도학습</strong>: 클러스터링(Clustering), 차원 축소(Dimensionality Reduction)</li><li><strong>강화학습</strong></li></ul><h3 id=지도학습이란>지도학습이란</h3><p>컴퓨터에 정답이 있는 데이터를 학습시키는 방법으로, 주어진 입력으로부터 출력 값을 예측하고자 할 때 사용합니다.</p><ul><li><strong>회귀분석(Regression)</strong>: 연속적인 값을 예측</li><li><strong>분류(Classification)</strong>: 주어진 입력 값이 어떤 클래스에 속할지에 대한 결과 값을 도출하는 알고리즘</li></ul><h3 id=문제-상황-가정해보기>문제 상황 가정해보기</h3><p>해외 여행을 준비하면서 항공 지연을 피하고 싶다고 가정해봅니다.</p><p>이때 기상 정보(구름 양, 풍속 등)를 활용해 항공 지연 여부를 예측할 수 있다면 어떨까요?</p><ul><li><strong>데이터</strong>: X = 과거 기상 정보(풍속), Y = 항공 지연 여부</li><li><strong>목표</strong>: 기상 정보에 따른 항공 지연 여부 예측</li><li><strong>해결 방안</strong>: 분류 알고리즘</li></ul><div class=table-wrapper><table><thead><tr><th style=text-align:center>풍속(m/s)</th><th style=text-align:center>지연 여부</th></tr></thead><tbody><tr><td style=text-align:center>2</td><td style=text-align:center>NO</td></tr><tr><td style=text-align:center>4</td><td style=text-align:center>YES</td></tr><tr><td style=text-align:center>3</td><td style=text-align:center>NO</td></tr><tr><td style=text-align:center>1</td><td style=text-align:center>NO</td></tr></tbody></table></div><h3 id=분류-문제에-회귀-알고리즘을-그대로-적용할-수-없는-이유>분류 문제에 회귀 알고리즘을 그대로 적용할 수 없는 이유</h3><p>일반적인 회귀 알고리즘(예: 선형 회귀)은 분류 문제에 그대로 사용할 수 없습니다.</p><p>선형 회귀는 -∞ ~ +∞ 사이의 값을 가질 수 있기 때문입니다.</p><p>우리의 목표는 지연 여부(0 또는 1)를 판별하는 것인데, 결과 값이 1000처럼 나온다면 해석이 어렵습니다.</p><p>$$ Y \approx \beta_0 + \beta_1 X $$</p><p>이를 해결하기 위해, 해당 클래스에 속할 확률인 0과 1 사이의 값만 출력하도록 회귀 알고리즘의 출력 범위를 수정한 모델이 바로 <strong>로지스틱 회귀</strong>(Logistic Regression) 입니다.</p><p>$$ 0 \leq Y \leq 1 $$</p><h3 id=로지스틱-회귀>로지스틱 회귀</h3><p>이진 분류(Binary Classification) 문제를 해결하기 위한 모델로, 결과 값을 최소값 0, 최대값 1로 수렴시키기 위해 <strong>시그모이드 함수</strong>(Sigmoid, logistic)를 사용합니다.</p><p>$$ \sigma = \frac{1}{1 + e^{-x}} $$</p><h4 id=시그모이드-함수로지스틱-함수>시그모이드 함수(로지스틱 함수)</h4><p>$$ g(x) = \frac{1}{1 + e^{-x}} = \frac{e^x}{1 + e^x} $$</p><ul><li>s자형 곡선을 갖는 함수</li><li>x값이 커질 경우, g(x)값은 점점 1에 수렴</li><li>x값이 작아질 경우, g(x)값은 점점 0에 수렴</li></ul><h4 id=확률-결과값-판별-방법-결정-경계>확률 결과값 판별 방법, 결정 경계</h4><p>데이터를 분류하는 기준 값을 <strong>결정 경계</strong>라고 하며, 일반적으로 출력 값(확률) 0.5를 기준으로 판별합니다.</p><h4 id=로지스틱-회귀-특징>로지스틱 회귀 특징</h4><ul><li>주로 2개 값 분류(이진 분류)를 위해 사용</li><li>선형 회귀를 응용한 알고리즘이기 때문에 회귀의 특징을 가짐</li></ul><h3 id=분류-모델-구현---데이터-분리>분류 모델 구현 - 데이터 분리</h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#f92672>import</span> pandas <span style=color:#66d9ef>as</span> pd
-</span></span><span style=display:flex><span><span style=color:#f92672>from</span> sklearn.model_selection <span style=color:#f92672>import</span> train_test_split
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># 데이터셋 불러오기</span>
-</span></span><span style=display:flex><span>df <span style=color:#f92672>=</span> pd<span style=color:#f92672>.</span>read_csv(<span style=color:#e6db74>&#39;data.csv&#39;</span>)
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>train, test <span style=color:#f92672>=</span> train_test_split(df, test_size<span style=color:#f92672>=</span><span style=color:#ae81ff>0.2</span>, random_state<span style=color:#f92672>=</span><span style=color:#ae81ff>21</span>)
-</span></span></code></pre></div><ul><li><code>train_test_split()</code>: 데이터 세트를 분리해주는 함수<ul><li><code>*arrays</code>: 데이터세트</li><li><code>test_size</code>: 테스트세트의 비율 (0~1)</li><li><code>random_state</code>: 분할 과정에서의 무작위성 제어</li></ul></li></ul><h3 id=로지스틱-회귀-구현>로지스틱 회귀 구현</h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#f92672>from</span> sklearn.linear_model <span style=color:#f92672>import</span> LogisticRegression
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># 데이터 분리</span>
-</span></span><span style=display:flex><span>train_X, test_X, train_y, test_y <span style=color:#f92672>=</span> train_test_split(X, y, test_size<span style=color:#f92672>=</span><span style=color:#ae81ff>0.2</span>, random_state<span style=color:#f92672>=</span><span style=color:#ae81ff>0</span>)
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># 모델 생성</span>
-</span></span><span style=display:flex><span>logistic_model <span style=color:#f92672>=</span> LogisticRegression()
-</span></span><span style=display:flex><span><span style=color:#75715e># 모델 학습</span>
-</span></span><span style=display:flex><span>logistic_model<span style=color:#f92672>.</span>fit(train_X, train_y)
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># 테스트 데이터에 대한 예측</span>
-</span></span><span style=display:flex><span>predicted <span style=color:#f92672>=</span> logistic_model<span style=color:#f92672>.</span>predict(test_X)
-</span></span></code></pre></div><p>회귀와 마찬가지로 데이터 분리 과정이 선행되어야 하며, 모델 생성과 학습, 예측하는 과정은 모두 회귀와 동일합니다.</p><hr><h2 id=2-support-vector-machine-svm>2. Support Vector Machine (SVM)</h2><h3 id=문제-정의와-해결-방안>문제 정의와 해결 방안</h3><ul><li><strong>문제 정의</strong>: 양성(1)과 음성(0) 두 개의 결과값으로 분류되는 이진 분류 문제 (예: 지연 여부 판별, 이상 거래 판별)</li><li><strong>해결 방안</strong>: SVM(Support Vector Machine) 분류 알고리즘</li></ul><h3 id=svm이란>SVM이란</h3><p>데이터 포인트들 사이 <strong>최적의 결정 경계</strong>를 정의하는 모델로, 딥러닝 기술 등장 이전까지 가장 인기 있었던 분류 알고리즘입니다.</p><h3 id=최적의-결정-경계>최적의 결정 경계</h3><p>데이터 군으로부터 최대한 멀리 떨어진 경계를 의미합니다.</p><p>두 개의 후보 경계선이 있다면, 데이터로부터 더 멀리 떨어진 경계가 더 최적입니다.</p><h3 id=서포트-벡터support-vector>서포트 벡터(Support Vector)</h3><p>결정 경계와 가장 가까이 있는 데이터 포인트들을 서포트 벡터라고 합니다.</p><h3 id=결정-경계-여유-마진>결정 경계 여유 (마진)</h3><p>결정 경계와 서포트 벡터 사이의 거리를 <strong>마진(Margin)</strong> 이라고 하며, SVM은 이 마진을 최대화하는 결정 경계를 찾습니다.</p><h3 id=hard-margin-vs-soft-margin>Hard Margin vs. Soft Margin</h3><p>이상치(Outlier) 허용 범위에 따라 두 가지로 구분됩니다.</p><ul><li><strong>Hard Margin</strong>: 엄격하게 두 개의 클래스를 분리하는 결정 경계를 구함</li><li><strong>Soft Margin</strong>: 서포트 벡터가 위치한 경계선에 약간의 여유 변수를 둘 수 있음</li></ul><h3 id=svm-특징>SVM 특징</h3><ul><li>선형 분류와 비선형 분류 모두 가능</li><li>고차원 데이터에서도 높은 성능의 결과를 도출</li><li>회귀에도 적용 가능</li></ul><h3 id=svm-구현>SVM 구현</h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#f92672>from</span> sklearn.svm <span style=color:#f92672>import</span> SVC
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># 데이터 분리</span>
-</span></span><span style=display:flex><span>train_X, test_X, train_y, test_y <span style=color:#f92672>=</span> train_test_split(X, y, test_size<span style=color:#f92672>=</span><span style=color:#ae81ff>0.2</span>, random_state<span style=color:#f92672>=</span><span style=color:#ae81ff>0</span>)
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># 모델 생성</span>
-</span></span><span style=display:flex><span>svm <span style=color:#f92672>=</span> SVC()
-</span></span><span style=display:flex><span><span style=color:#75715e># 모델 학습</span>
-</span></span><span style=display:flex><span>svm<span style=color:#f92672>.</span>fit(train_X, train_y)
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># 테스트 데이터에 대한 예측</span>
-</span></span><span style=display:flex><span>predicted <span style=color:#f92672>=</span> svm<span style=color:#f92672>.</span>predict(test_X)
-</span></span></code></pre></div><p>SVM 중 분류 모델을 사용하고 싶을 땐 <code>SVC</code>를 import합니다.</p><hr><h2 id=3-나이브-베이즈-분류>3. 나이브 베이즈 분류</h2><h3 id=문제-정의와-해결-방안-1>문제 정의와 해결 방안</h3><p>10만 개의 메일 중 스팸 메일과 정상 메일을 분류하고 싶은 경우, <strong>나이브 베이즈 분류 알고리즘</strong>을 활용할 수 있습니다.</p><h3 id=나이브-베이즈-분류란>나이브 베이즈 분류란</h3><p>각 특징들이 독립적이며 서로 영향을 미치지 않을 것이라는 가정을 두고, <strong>베이즈 정리</strong>를 활용한 확률 통계학적 분류 알고리즘입니다.</p><p>$$ P(A|B) = \frac{P(A \cap B)}{P(B)} = \frac{P(B|A)P(A)}{P(B)} $$</p><h3 id=베이즈-정리-예시>베이즈 정리 예시</h3><p>맑은 날 비가 오지 않을 확률은 다음과 같이 계산할 수 있습니다.</p><p>$$ P(\text{비가 안옴} \mid \text{맑은 날}) = \frac{P(\text{맑은 날} \mid \text{비가 안옴}) \times P(\text{비가 안옴})}{P(\text{맑은 날})} $$</p><div class=table-wrapper><table><thead><tr><th></th><th style=text-align:center>비가 옴</th><th style=text-align:center>비가 안옴</th><th style=text-align:center></th></tr></thead><tbody><tr><td>맑은 날</td><td style=text-align:center>2</td><td style=text-align:center>8</td><td style=text-align:center>10</td></tr><tr><td>흐린 날</td><td style=text-align:center>5</td><td style=text-align:center>5</td><td style=text-align:center>10</td></tr><tr><td></td><td style=text-align:center>7</td><td style=text-align:center>13</td><td style=text-align:center>20</td></tr></tbody></table></div><h3 id=문제-적용-스팸-메일-분류>문제 적용 (스팸 메일 분류)</h3><ol><li>스팸 메일과 정상 메일의 단어를 체크</li><li>새로운 메일의 단어들에 대한 확률로 스팸 메일을 구분</li><li>P(스팸 | 단어1, 단어2, &mldr;) > P(정상 | 단어1, 단어2, &mldr;) 이면 스팸으로 판단</li></ol><h3 id=나이브-베이즈-분류-특징>나이브 베이즈 분류 특징</h3><ul><li>각 특징들이 독립이라면 다른 분류 방식에 비해 결과가 좋고, 학습 데이터도 적게 필요</li><li>각 특징들이 독립이 아니라면(특징들이 서로 영향을 미치면) 분류 결과의 신뢰성 하락</li><li>학습 데이터에 없는 범주의 데이터일 경우 정상적 예측 불가능</li></ul><h3 id=나이브-베이즈-구현>나이브 베이즈 구현</h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#f92672>from</span> sklearn.naive_bayes <span style=color:#f92672>import</span> GaussianNB
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># 데이터 분리</span>
-</span></span><span style=display:flex><span>train_X, test_X, train_y, test_y <span style=color:#f92672>=</span> train_test_split(X, y, test_size<span style=color:#f92672>=</span><span style=color:#ae81ff>0.2</span>, random_state<span style=color:#f92672>=</span><span style=color:#ae81ff>0</span>)
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># 모델 생성</span>
-</span></span><span style=display:flex><span>naive_model <span style=color:#f92672>=</span> GaussianNB()
-</span></span><span style=display:flex><span><span style=color:#75715e># 모델 학습</span>
-</span></span><span style=display:flex><span>naive_model<span style=color:#f92672>.</span>fit(train_X, train_y)
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># 테스트 데이터에 대한 예측</span>
-</span></span><span style=display:flex><span>predicted <span style=color:#f92672>=</span> naive_model<span style=color:#f92672>.</span>predict(test_X)
-</span></span></code></pre></div><p><code>GaussianNB()</code>는 각 특징이 정규분포(가우시안 분포)를 따른다고 가정하는 분류기입니다.</p><hr><h2 id=4-knn-k-nearest-neighbor>4. KNN (K-Nearest Neighbor)</h2><h3 id=문제-정의와-해결-방안-2>문제 정의와 해결 방안</h3><p>고객이 평가한 영화 평점 데이터를 기준으로 기존 보유 고객을 분류한 후, 새로 유입된 고객을 기준에 따라 분류하고자 하는 경우 <strong>KNN 알고리즘</strong>(K-Nearest Neighbor)을 활용할 수 있습니다.</p><h3 id=knn이란>KNN이란</h3><p>기존 데이터 가운데 가장 가까운 k개의 이웃의 정보로 새로운 데이터를 예측하는 방법론입니다.</p><p>유사한 특성을 가진 데이터는 유사한 범주에 속하는 경향이 있다는 가정 하에 분류합니다.</p><ul><li>K는 모델의 하이퍼파라미터로, 최적의 모델 성능을 찾기 위해 한 학습 사이클 종료 후 결과를 바탕으로 조정할 수 있습니다.</li><li>K값은 주로 홀수로 설정합니다. (동점 방지 목적)</li></ul><p>예를 들어 새로운 고객 데이터가 들어왔을 때, k=1이면 가장 가까운 하나의 이웃 클래스로, k=3이면 가장 가까운 세 개의 이웃 중 다수인 클래스로 분류됩니다.</p><h3 id=knn-특징>KNN 특징</h3><ul><li>직관적이며 복잡하지 않은 알고리즘</li><li>결과 해석이 쉬움</li><li>K값 결정에 따라 성능이 크게 좌우됨<ul><li>가능한 K 값을 모두 실험한다면 학습 시간이 길어질 수 있음</li></ul></li></ul><h3 id=knn-구현>KNN 구현</h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#f92672>from</span> sklearn.neighbors <span style=color:#f92672>import</span> KNeighborsClassifier
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># 데이터 분리</span>
-</span></span><span style=display:flex><span>train_X, test_X, train_y, test_y <span style=color:#f92672>=</span> train_test_split(X, y, test_size<span style=color:#f92672>=</span><span style=color:#ae81ff>0.2</span>, random_state<span style=color:#f92672>=</span><span style=color:#ae81ff>0</span>)
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># 모델 생성 (n_neighbors: k값 설정, 되도록 홀수로 설정, default=5)</span>
-</span></span><span style=display:flex><span>knn_model <span style=color:#f92672>=</span> KNeighborsClassifier(n_neighbors<span style=color:#f92672>=</span><span style=color:#ae81ff>5</span>)
-</span></span><span style=display:flex><span><span style=color:#75715e># 모델 학습</span>
-</span></span><span style=display:flex><span>knn_model<span style=color:#f92672>.</span>fit(train_X, train_y)
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># 테스트 데이터에 대한 예측</span>
-</span></span><span style=display:flex><span>predicted <span style=color:#f92672>=</span> knn_model<span style=color:#f92672>.</span>predict(test_X)
-</span></span></code></pre></div><hr><h2 id=5-분류-알고리즘-평가-지표>5. 분류 알고리즘 평가 지표</h2><h3 id=혼동-행렬confusion-matrix>혼동 행렬(Confusion Matrix)</h3><p>분류 모델의 성능을 평가하기 위해 사용되는 행렬입니다.</p><div class=table-wrapper><table><thead><tr><th></th><th style=text-align:center>예측: Positive</th><th style=text-align:center>예측: Negative</th></tr></thead><tbody><tr><td>실제: Positive</td><td style=text-align:center>True Positive</td><td style=text-align:center>False Negative (Type-2 error)</td></tr><tr><td>실제: Negative</td><td style=text-align:center>False Positive (Type-1 error)</td><td style=text-align:center>True Negative</td></tr></tbody></table></div><ul><li><strong>Positive(긍정 클래스, 양성)</strong>: 모델이 관심 있는 클래스</li><li><strong>Negative(부정 클래스, 음성)</strong>: 모델이 관심 없는 클래스</li><li>예시: 스팸 메일 분류기의 경우, 스팸 메일은 Positive, 비 스팸 메일은 Negative</li></ul><h3 id=정확도accuracy>정확도(Accuracy)</h3><p>전체 데이터 중에서 제대로 분류된 데이터의 비율입니다.</p><p>$$ Accuracy = \frac{TP + TN}{TP + TN + FP + FN} $$</p><ul><li>모델이 얼마나 정확하게 분류하는지를 나타냄</li><li>일반적으로 분류 모델의 주요 평가 방법으로 사용</li><li>클래스 비율이 불균형할 경우, 평가 지표의 신뢰성을 잃음</li></ul><h4 id=불균형한-클래스에서의-정확도-문제>불균형한 클래스에서의 정확도 문제</h4><p>전체 100만 개 항공 데이터 중 90만 개가 정상 운행, 10만 개만 지연 운행인 데이터가 있다고 가정해봅시다.</p><p>$$ \text{정확도} = \frac{0\text{개} + 90\text{만개}}{100\text{만개}} = 90% $$</p><p>전체 결과가 모두 &ldquo;지연되지 않았다"고 예측될 경우에도 정확도가 90%로 나오므로, 이 수치만으로 모델 성능을 단정하기에는 위험합니다. 다양한 평가지표를 함께 고려할 필요가 있습니다.</p><h3 id=정밀도precision>정밀도(Precision)</h3><p>모델이 Positive라고 분류한 데이터 중 실제로 Positive인 데이터의 비율입니다.</p><p>$$ Precision = \frac{TP}{TP + FP} $$</p><ul><li>모델이 예측한 긍정 사례가 실제로 맞는 비율(=예측의 정확도)</li><li>일반적으로 정밀도는 <strong>Type-1 Error</strong>를 줄이는 것이 중요한 상황에서 주로 사용<ul><li>Type-1 Error: 실제로는 Negative인데 Positive로 예측한 사례</li></ul></li></ul><p>예: 스팸 메일 판정 문제에서 정상 메일(Negative)이 스팸(Positive)으로 잘못 분류(False Positive)될 경우, 중요한 메일을 전달받지 못하는 상황이 발생합니다.</p><h3 id=재현율recall>재현율(Recall)</h3><p>실제로 Positive인 데이터 중 모델이 Positive로 분류한 데이터의 비율입니다.</p><p>$$ Recall = \frac{TP}{TP + FN} $$</p><ul><li>모델이 실제 긍정 사례를 놓치지 않는 비율(=관심 사례 포착 정도)</li><li>일반적으로 재현율은 <strong>Type-2 Error</strong>를 줄이는 것이 중요한 상황에서 주로 사용<ul><li>Type-2 Error: 실제로는 Positive인데 Negative로 예측한 사례</li></ul></li></ul><p>예: 질병 진단에서 암 환자(Positive)를 놓치는 경우(False Negative)는 큰 위험을 초래하므로, Recall을 높여 실제 환자를 놓치지 않도록 해야 합니다.</p><h3 id=f1-score>F1 Score</h3><p>정밀도와 재현율의 조화 평균입니다.</p><p>$$ F1 = \frac{2 \times Precision \times Recall}{Precision + Recall} $$</p><ul><li>모델의 정확성과 완전성을 동시에 고려하여 모델의 성능을 평가</li><li>데이터 불균형이 심각할 때 사용</li></ul><h3 id=fpr-false-positive-rate>FPR (False Positive Rate)</h3><p>실제로 Negative인 데이터 중 모델이 Positive로 분류한 데이터의 비율입니다.</p><p>$$ FPR = \frac{FP}{FP + TN} $$</p><p>예: 게임에서 비정상 사용자 검출 시 FPR이 높으면 정상 사용자를 비정상 사용자로 검출하는 경우가 많아지고, 이때 페널티를 부여하면 선의의 사용자가 피해를 입을 수 있습니다.</p><h3 id=roc-curve와-auc>ROC Curve와 AUC</h3><ul><li>x축을 False Positive Rate, y축을 Recall(True Positive Rate) 값으로 시각화한 그래프</li><li>커브가 왼쪽 위로 당겨질수록 Classifier의 성능이 향상됨을 의미</li><li>AUC(Area Under Curve) = ROC Curve 아래 면적 (AUC = 0.5인 경우 Classifier의 최하 성능)</li></ul><h3 id=평가-지표-구현-혼동행렬-기반>평가 지표 구현 (혼동행렬 기반)</h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#f92672>from</span> sklearn.metrics <span style=color:#f92672>import</span> accuracy_score, precision_score, recall_score, f1_score
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># 검증 데이터에 대한 예측</span>
-</span></span><span style=display:flex><span>y_pred <span style=color:#f92672>=</span> model<span style=color:#f92672>.</span>predict(X_valid)
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># 정확도 계산</span>
-</span></span><span style=display:flex><span>accuracy <span style=color:#f92672>=</span> accuracy_score(y_valid, y_pred)
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># 정밀도 계산</span>
-</span></span><span style=display:flex><span>precision <span style=color:#f92672>=</span> precision_score(y_valid, y_pred)
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># 재현율 계산</span>
-</span></span><span style=display:flex><span>recall <span style=color:#f92672>=</span> recall_score(y_valid, y_pred)
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># F1 Score 계산</span>
-</span></span><span style=display:flex><span>f1 <span style=color:#f92672>=</span> f1_score(y_valid, y_pred)
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>print(<span style=color:#e6db74>&#34;Accuracy:&#34;</span>, accuracy)
-</span></span><span style=display:flex><span>print(<span style=color:#e6db74>&#34;Precision:&#34;</span>, precision)
-</span></span><span style=display:flex><span>print(<span style=color:#e6db74>&#34;Recall:&#34;</span>, recall)
-</span></span><span style=display:flex><span>print(<span style=color:#e6db74>&#34;F1 Score:&#34;</span>, f1)
-</span></span></code></pre></div><hr><h2 id=마무리-정리>마무리 정리</h2><p>분류(Classification) 알고리즘의 핵심 원리와 평가 방법을 정리했습니다.</p><p>각 모델은 서로 다른 접근 방식으로 결정 경계를 찾으며, 상황에 맞는 알고리즘 선택이 중요합니다.</p><div class=table-wrapper><table><thead><tr><th>구분</th><th>핵심 내용</th></tr></thead><tbody><tr><td><strong>로지스틱 회귀</strong></td><td>시그모이드 함수로 확률(0~1) 출력, 이진 분류에 사용</td></tr><tr><td><strong>SVM</strong></td><td>마진 최대화하는 최적 결정 경계 탐색</td></tr><tr><td><strong>KNN</strong></td><td>가까운 K개 이웃의 다수결로 분류</td></tr><tr><td><strong>평가 지표</strong></td><td>Accuracy, Precision, Recall, F1 Score, ROC-AUC</td></tr></tbody></table></div><p>정확도(Accuracy)만으로는 불균형 데이터를 평가하기 어렵습니다.</p><p>상황에 맞는 평가 지표를 선택하고 알고리즘을 비교해 보는 것이 분류 모델 실전의 핵심입니다.</p><p>다음은 비지도학습에 대해서 정리하겠습니다.</p></section><footer class="article-meta article-footer"></footer><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css integrity=sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV crossorigin=anonymous><script src=https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js integrity=sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG+vnGctmUb0ZY0l8 crossorigin=anonymous defer></script><script src=https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js integrity=sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05 crossorigin=anonymous defer></script><script>window.addEventListener("DOMContentLoaded",()=>{const e=[".main-article",".widget--toc"];e.forEach(e=>{const t=document.querySelector(e);t&&renderMathInElement(t,{delimiters:[{left:"$$",right:"$$",display:!0},{left:"$",right:"$",display:!1},{left:"\\(",right:"\\)",display:!1},{left:"\\[",right:"\\]",display:!0}],ignoredClasses:["gist"]})})})</script></article><nav class=article-prev-next><a class="prev-next-card prev" href=/data-analysis/python_data_analysis_24/><div class=direction>← 이전 글</div><div class=title>[머신러닝 II] 회귀(Regression) 02</div></a><div class="prev-next-card empty"></div></nav><footer class=site-footer><section class=copyright>&copy;
-2026 LucasPark Blog</section><section class=powerby>Built with <a href=https://gohugo.io/ target=_blank rel=noopener>Hugo</a><br>Theme <b><a href=https://github.com/CaiJimmy/hugo-theme-stack target=_blank rel=noopener data-version=4.0.3>Stack</a></b> designed by <a href=https://jimmycai.com target=_blank rel=noopener>Jimmy</a></section></footer><script type=module>
+<!DOCTYPE html>
+<html lang="ko-kr" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="들어가며 머신러닝의 핵심 분야인 &lsquo;분류(Classification)&lsquo;는 정답이 있는 데이터를 학습해 새로운 입력이 어느 클래스에 속할지 예측하는 지도학습의 대표적 과제입니다.\n이번 글에서는 이진 분류를 다루는 주요 알고리즘과 모델 평가 방법을 살펴봅니다.\n1. 분류 개념과 로지스틱 회귀 머신러닝 분야 머신러닝은 크게 지도학습, 비지도학습, 강화학습으로 나뉩니다.\n지도학습: 회귀분석(Regression), 분류(Classification) 비지도학습: 클러스터링(Clustering), 차원 축소(Dimensionality Reduction) 강화학습 지도학습이란 컴퓨터에 정답이 있는 데이터를 학습시키는 방법으로, 주어진 입력으로부터 출력 값을 예측하고자 할 때 사용합니다.\n회귀분석(Regression): 연속적인 값을 예측 분류(Classification): 주어진 입력 값이 어떤 클래스에 속할지에 대한 결과 값을 도출하는 알고리즘 문제 상황 가정해보기 해외 여행을 준비하면서 항공 지연을 피하고 싶다고 가정해봅니다.\n">
+<title>[머신러닝 II] 분류(Classification)</title>
+
+
+<link rel="canonical" href="https://lucaspark-10.github.io/data-analysis/python_data_analysis_25/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
+
+
+<link rel="stylesheet" href="/scss/style.min.de7e6698ac54e40edf7f3d56f131b6bbacde7bdf742f829e1185371a8af17315.css"><meta property='og:title' content="[머신러닝 II] 분류(Classification)">
+<meta property='og:description' content="들어가며 머신러닝의 핵심 분야인 &lsquo;분류(Classification)&lsquo;는 정답이 있는 데이터를 학습해 새로운 입력이 어느 클래스에 속할지 예측하는 지도학습의 대표적 과제입니다.\n이번 글에서는 이진 분류를 다루는 주요 알고리즘과 모델 평가 방법을 살펴봅니다.\n1. 분류 개념과 로지스틱 회귀 머신러닝 분야 머신러닝은 크게 지도학습, 비지도학습, 강화학습으로 나뉩니다.\n지도학습: 회귀분석(Regression), 분류(Classification) 비지도학습: 클러스터링(Clustering), 차원 축소(Dimensionality Reduction) 강화학습 지도학습이란 컴퓨터에 정답이 있는 데이터를 학습시키는 방법으로, 주어진 입력으로부터 출력 값을 예측하고자 할 때 사용합니다.\n회귀분석(Regression): 연속적인 값을 예측 분류(Classification): 주어진 입력 값이 어떤 클래스에 속할지에 대한 결과 값을 도출하는 알고리즘 문제 상황 가정해보기 해외 여행을 준비하면서 항공 지연을 피하고 싶다고 가정해봅니다.\n">
+<meta property='og:url' content='https://lucaspark-10.github.io/data-analysis/python_data_analysis_25/'>
+<meta property='og:site_name' content='LucasPark Blog'>
+<meta property='og:type' content='article'><meta property='article:section' content='Data-Analysis' /><meta property='article:published_time' content='2026-07-28T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2026-07-28T00:00:00&#43;00:00'/>
+<meta name="twitter:title" content="[머신러닝 II] 분류(Classification)">
+<meta name="twitter:description" content="들어가며 머신러닝의 핵심 분야인 &lsquo;분류(Classification)&lsquo;는 정답이 있는 데이터를 학습해 새로운 입력이 어느 클래스에 속할지 예측하는 지도학습의 대표적 과제입니다.\n이번 글에서는 이진 분류를 다루는 주요 알고리즘과 모델 평가 방법을 살펴봅니다.\n1. 분류 개념과 로지스틱 회귀 머신러닝 분야 머신러닝은 크게 지도학습, 비지도학습, 강화학습으로 나뉩니다.\n지도학습: 회귀분석(Regression), 분류(Classification) 비지도학습: 클러스터링(Clustering), 차원 축소(Dimensionality Reduction) 강화학습 지도학습이란 컴퓨터에 정답이 있는 데이터를 학습시키는 방법으로, 주어진 입력으로부터 출력 값을 예측하고자 할 때 사용합니다.\n회귀분석(Regression): 연속적인 값을 예측 분류(Classification): 주어진 입력 값이 어떤 클래스에 속할지에 대한 결과 값을 도출하는 알고리즘 문제 상황 가정해보기 해외 여행을 준비하면서 항공 지연을 피하고 싶다고 가정해봅니다.\n">
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-EVK5B22CB3"></script>
+      <script>
+        var doNotTrack = false;
+        if ( true ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-EVK5B22CB3');
+        }
+      </script>
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column compact"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">LucasPark Blog</a></h1>
+            <h2 class="site-description">Lucas Park의 개인 블로그</h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                <span>Home</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/posts/' >
+                
+                <span>Posts</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/git-study/' >
+                
+                <span>Git-study</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/data-analysis/' >
+                
+                <span>Data Analysis</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/gold-news-and-analysis/' >
+                
+                <span>Gold Price Check &amp; Analysis</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/atmospheric-environment/' >
+                
+                <span>Atmospheric Environment</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>Dark Mode</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/data-analysis/python_data_analysis_25/">[머신러닝 II] 분류(Classification)</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    
+    
+    
+    
+    
+    
+    <footer class="article-meta">
+        
+            <div class="inline-meta">
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                    <time class="article-time--published" datetime='2026-07-28T00:00:00Z'>2026년 7월 28일 화요일</time>
+                
+
+                
+            </div>
+        
+
+        
+
+        
+    </footer>
+    
+</div>
+
+</header>
+
+    
+
+    <section class="article-content">
+    
+    
+    <h1 id="들어가며">들어가며
+</h1><p>머신러닝의 핵심 분야인 &lsquo;분류(Classification)&lsquo;는 정답이 있는 데이터를 학습해 새로운 입력이 어느 클래스에 속할지 예측하는 지도학습의 대표적 과제입니다.</p>
+<p>이번 글에서는 이진 분류를 다루는 주요 알고리즘과 모델 평가 방법을 살펴봅니다.</p>
+<hr>
+<h2 id="1-분류-개념과-로지스틱-회귀">1. 분류 개념과 로지스틱 회귀
+</h2><h3 id="머신러닝-분야">머신러닝 분야
+</h3><p>머신러닝은 크게 지도학습, 비지도학습, 강화학습으로 나뉩니다.</p>
+<ul>
+<li><strong>지도학습</strong>: 회귀분석(Regression), 분류(Classification)</li>
+<li><strong>비지도학습</strong>: 클러스터링(Clustering), 차원 축소(Dimensionality Reduction)</li>
+<li><strong>강화학습</strong></li>
+</ul>
+<h3 id="지도학습이란">지도학습이란
+</h3><p>컴퓨터에 정답이 있는 데이터를 학습시키는 방법으로, 주어진 입력으로부터 출력 값을 예측하고자 할 때 사용합니다.</p>
+<ul>
+<li><strong>회귀분석(Regression)</strong>: 연속적인 값을 예측</li>
+<li><strong>분류(Classification)</strong>: 주어진 입력 값이 어떤 클래스에 속할지에 대한 결과 값을 도출하는 알고리즘</li>
+</ul>
+<h3 id="문제-상황-가정해보기">문제 상황 가정해보기
+</h3><p>해외 여행을 준비하면서 항공 지연을 피하고 싶다고 가정해봅니다.</p>
+<p>이때 기상 정보(구름 양, 풍속 등)를 활용해 항공 지연 여부를 예측할 수 있다면 어떨까요?</p>
+<ul>
+<li><strong>데이터</strong>: X = 과거 기상 정보(풍속), Y = 항공 지연 여부</li>
+<li><strong>목표</strong>: 기상 정보에 따른 항공 지연 여부 예측</li>
+<li><strong>해결 방안</strong>: 분류 알고리즘</li>
+</ul>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th style="text-align: center">풍속(m/s)</th>
+          <th style="text-align: center">지연 여부</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: center">2</td>
+          <td style="text-align: center">NO</td>
+      </tr>
+      <tr>
+          <td style="text-align: center">4</td>
+          <td style="text-align: center">YES</td>
+      </tr>
+      <tr>
+          <td style="text-align: center">3</td>
+          <td style="text-align: center">NO</td>
+      </tr>
+      <tr>
+          <td style="text-align: center">1</td>
+          <td style="text-align: center">NO</td>
+      </tr>
+  </tbody>
+</table></div>
+<h3 id="분류-문제에-회귀-알고리즘을-그대로-적용할-수-없는-이유">분류 문제에 회귀 알고리즘을 그대로 적용할 수 없는 이유
+</h3><p>일반적인 회귀 알고리즘(예: 선형 회귀)은 분류 문제에 그대로 사용할 수 없습니다.</p>
+<p>선형 회귀는 -∞ ~ +∞ 사이의 값을 가질 수 있기 때문입니다.</p>
+<p>우리의 목표는 지연 여부(0 또는 1)를 판별하는 것인데, 결과 값이 1000처럼 나온다면 해석이 어렵습니다.</p>
+<p>$$ Y \approx \beta_0 + \beta_1 X $$</p>
+<p>이를 해결하기 위해, 해당 클래스에 속할 확률인 0과 1 사이의 값만 출력하도록 회귀 알고리즘의 출력 범위를 수정한 모델이 바로 <strong>로지스틱 회귀</strong>(Logistic Regression) 입니다.</p>
+<p>$$ 0 \leq Y \leq 1 $$</p>
+<h3 id="로지스틱-회귀">로지스틱 회귀
+</h3><p>이진 분류(Binary Classification) 문제를 해결하기 위한 모델로, 결과 값을 최소값 0, 최대값 1로 수렴시키기 위해 <strong>시그모이드 함수</strong>(Sigmoid, logistic)를 사용합니다.</p>
+<p>$$ \sigma = \frac{1}{1 + e^{-x}} $$</p>
+<h4 id="시그모이드-함수로지스틱-함수">시그모이드 함수(로지스틱 함수)
+</h4><p>$$ g(x) = \frac{1}{1 + e^{-x}} = \frac{e^x}{1 + e^x} $$</p>
+<ul>
+<li>s자형 곡선을 갖는 함수</li>
+<li>x값이 커질 경우, g(x)값은 점점 1에 수렴</li>
+<li>x값이 작아질 경우, g(x)값은 점점 0에 수렴</li>
+</ul>
+<h4 id="확률-결과값-판별-방법-결정-경계">확률 결과값 판별 방법, 결정 경계
+</h4><p>데이터를 분류하는 기준 값을 <strong>결정 경계</strong>라고 하며, 일반적으로 출력 값(확률) 0.5를 기준으로 판별합니다.</p>
+<h4 id="로지스틱-회귀-특징">로지스틱 회귀 특징
+</h4><ul>
+<li>주로 2개 값 분류(이진 분류)를 위해 사용</li>
+<li>선형 회귀를 응용한 알고리즘이기 때문에 회귀의 특징을 가짐</li>
+</ul>
+<h3 id="분류-모델-구현---데이터-분리">분류 모델 구현 - 데이터 분리
+</h3><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> pandas <span style="color:#66d9ef">as</span> pd
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> sklearn.model_selection <span style="color:#f92672">import</span> train_test_split
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 데이터셋 불러오기</span>
+</span></span><span style="display:flex;"><span>df <span style="color:#f92672">=</span> pd<span style="color:#f92672">.</span>read_csv(<span style="color:#e6db74">&#39;data.csv&#39;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>train, test <span style="color:#f92672">=</span> train_test_split(df, test_size<span style="color:#f92672">=</span><span style="color:#ae81ff">0.2</span>, random_state<span style="color:#f92672">=</span><span style="color:#ae81ff">21</span>)
+</span></span></code></pre></div><ul>
+<li><code>train_test_split()</code>: 데이터 세트를 분리해주는 함수
+<ul>
+<li><code>*arrays</code>: 데이터세트</li>
+<li><code>test_size</code>: 테스트세트의 비율 (0~1)</li>
+<li><code>random_state</code>: 분할 과정에서의 무작위성 제어</li>
+</ul>
+</li>
+</ul>
+<h3 id="로지스틱-회귀-구현">로지스틱 회귀 구현
+</h3><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> sklearn.linear_model <span style="color:#f92672">import</span> LogisticRegression
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 데이터 분리</span>
+</span></span><span style="display:flex;"><span>train_X, test_X, train_y, test_y <span style="color:#f92672">=</span> train_test_split(X, y, test_size<span style="color:#f92672">=</span><span style="color:#ae81ff">0.2</span>, random_state<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 모델 생성</span>
+</span></span><span style="display:flex;"><span>logistic_model <span style="color:#f92672">=</span> LogisticRegression()
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 모델 학습</span>
+</span></span><span style="display:flex;"><span>logistic_model<span style="color:#f92672">.</span>fit(train_X, train_y)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 테스트 데이터에 대한 예측</span>
+</span></span><span style="display:flex;"><span>predicted <span style="color:#f92672">=</span> logistic_model<span style="color:#f92672">.</span>predict(test_X)
+</span></span></code></pre></div><p>회귀와 마찬가지로 데이터 분리 과정이 선행되어야 하며, 모델 생성과 학습, 예측하는 과정은 모두 회귀와 동일합니다.</p>
+<hr>
+<h2 id="2-support-vector-machine-svm">2. Support Vector Machine (SVM)
+</h2><h3 id="문제-정의와-해결-방안">문제 정의와 해결 방안
+</h3><ul>
+<li><strong>문제 정의</strong>: 양성(1)과 음성(0) 두 개의 결과값으로 분류되는 이진 분류 문제 (예: 지연 여부 판별, 이상 거래 판별)</li>
+<li><strong>해결 방안</strong>: SVM(Support Vector Machine) 분류 알고리즘</li>
+</ul>
+<h3 id="svm이란">SVM이란
+</h3><p>데이터 포인트들 사이 <strong>최적의 결정 경계</strong>를 정의하는 모델로, 딥러닝 기술 등장 이전까지 가장 인기 있었던 분류 알고리즘입니다.</p>
+<h3 id="최적의-결정-경계">최적의 결정 경계
+</h3><p>데이터 군으로부터 최대한 멀리 떨어진 경계를 의미합니다.</p>
+<p>두 개의 후보 경계선이 있다면, 데이터로부터 더 멀리 떨어진 경계가 더 최적입니다.</p>
+<h3 id="서포트-벡터support-vector">서포트 벡터(Support Vector)
+</h3><p>결정 경계와 가장 가까이 있는 데이터 포인트들을 서포트 벡터라고 합니다.</p>
+<h3 id="결정-경계-여유-마진">결정 경계 여유 (마진)
+</h3><p>결정 경계와 서포트 벡터 사이의 거리를 <strong>마진(Margin)</strong> 이라고 하며, SVM은 이 마진을 최대화하는 결정 경계를 찾습니다.</p>
+<h3 id="hard-margin-vs-soft-margin">Hard Margin vs. Soft Margin
+</h3><p>이상치(Outlier) 허용 범위에 따라 두 가지로 구분됩니다.</p>
+<ul>
+<li><strong>Hard Margin</strong>: 엄격하게 두 개의 클래스를 분리하는 결정 경계를 구함</li>
+<li><strong>Soft Margin</strong>: 서포트 벡터가 위치한 경계선에 약간의 여유 변수를 둘 수 있음</li>
+</ul>
+<h3 id="svm-특징">SVM 특징
+</h3><ul>
+<li>선형 분류와 비선형 분류 모두 가능</li>
+<li>고차원 데이터에서도 높은 성능의 결과를 도출</li>
+<li>회귀에도 적용 가능</li>
+</ul>
+<h3 id="svm-구현">SVM 구현
+</h3><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> sklearn.svm <span style="color:#f92672">import</span> SVC
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 데이터 분리</span>
+</span></span><span style="display:flex;"><span>train_X, test_X, train_y, test_y <span style="color:#f92672">=</span> train_test_split(X, y, test_size<span style="color:#f92672">=</span><span style="color:#ae81ff">0.2</span>, random_state<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 모델 생성</span>
+</span></span><span style="display:flex;"><span>svm <span style="color:#f92672">=</span> SVC()
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 모델 학습</span>
+</span></span><span style="display:flex;"><span>svm<span style="color:#f92672">.</span>fit(train_X, train_y)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 테스트 데이터에 대한 예측</span>
+</span></span><span style="display:flex;"><span>predicted <span style="color:#f92672">=</span> svm<span style="color:#f92672">.</span>predict(test_X)
+</span></span></code></pre></div><p>SVM 중 분류 모델을 사용하고 싶을 땐 <code>SVC</code>를 import합니다.</p>
+<hr>
+<h2 id="3-나이브-베이즈-분류">3. 나이브 베이즈 분류
+</h2><h3 id="문제-정의와-해결-방안-1">문제 정의와 해결 방안
+</h3><p>10만 개의 메일 중 스팸 메일과 정상 메일을 분류하고 싶은 경우, <strong>나이브 베이즈 분류 알고리즘</strong>을 활용할 수 있습니다.</p>
+<h3 id="나이브-베이즈-분류란">나이브 베이즈 분류란
+</h3><p>각 특징들이 독립적이며 서로 영향을 미치지 않을 것이라는 가정을 두고, <strong>베이즈 정리</strong>를 활용한 확률 통계학적 분류 알고리즘입니다.</p>
+<p>$$ P(A|B) = \frac{P(A \cap B)}{P(B)} = \frac{P(B|A)P(A)}{P(B)} $$</p>
+<h3 id="베이즈-정리-예시">베이즈 정리 예시
+</h3><p>맑은 날 비가 오지 않을 확률은 다음과 같이 계산할 수 있습니다.</p>
+<p>$$ P(\text{비가 안옴} \mid \text{맑은 날}) = \frac{P(\text{맑은 날} \mid \text{비가 안옴}) \times P(\text{비가 안옴})}{P(\text{맑은 날})} $$</p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th></th>
+          <th style="text-align: center">비가 옴</th>
+          <th style="text-align: center">비가 안옴</th>
+          <th style="text-align: center"></th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>맑은 날</td>
+          <td style="text-align: center">2</td>
+          <td style="text-align: center">8</td>
+          <td style="text-align: center">10</td>
+      </tr>
+      <tr>
+          <td>흐린 날</td>
+          <td style="text-align: center">5</td>
+          <td style="text-align: center">5</td>
+          <td style="text-align: center">10</td>
+      </tr>
+      <tr>
+          <td></td>
+          <td style="text-align: center">7</td>
+          <td style="text-align: center">13</td>
+          <td style="text-align: center">20</td>
+      </tr>
+  </tbody>
+</table></div>
+<h3 id="문제-적용-스팸-메일-분류">문제 적용 (스팸 메일 분류)
+</h3><ol>
+<li>스팸 메일과 정상 메일의 단어를 체크</li>
+<li>새로운 메일의 단어들에 대한 확률로 스팸 메일을 구분</li>
+<li>P(스팸 | 단어1, 단어2, &hellip;) &gt; P(정상 | 단어1, 단어2, &hellip;) 이면 스팸으로 판단</li>
+</ol>
+<h3 id="나이브-베이즈-분류-특징">나이브 베이즈 분류 특징
+</h3><ul>
+<li>각 특징들이 독립이라면 다른 분류 방식에 비해 결과가 좋고, 학습 데이터도 적게 필요</li>
+<li>각 특징들이 독립이 아니라면(특징들이 서로 영향을 미치면) 분류 결과의 신뢰성 하락</li>
+<li>학습 데이터에 없는 범주의 데이터일 경우 정상적 예측 불가능</li>
+</ul>
+<h3 id="나이브-베이즈-구현">나이브 베이즈 구현
+</h3><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> sklearn.naive_bayes <span style="color:#f92672">import</span> GaussianNB
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 데이터 분리</span>
+</span></span><span style="display:flex;"><span>train_X, test_X, train_y, test_y <span style="color:#f92672">=</span> train_test_split(X, y, test_size<span style="color:#f92672">=</span><span style="color:#ae81ff">0.2</span>, random_state<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 모델 생성</span>
+</span></span><span style="display:flex;"><span>naive_model <span style="color:#f92672">=</span> GaussianNB()
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 모델 학습</span>
+</span></span><span style="display:flex;"><span>naive_model<span style="color:#f92672">.</span>fit(train_X, train_y)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 테스트 데이터에 대한 예측</span>
+</span></span><span style="display:flex;"><span>predicted <span style="color:#f92672">=</span> naive_model<span style="color:#f92672">.</span>predict(test_X)
+</span></span></code></pre></div><p><code>GaussianNB()</code>는 각 특징이 정규분포(가우시안 분포)를 따른다고 가정하는 분류기입니다.</p>
+<hr>
+<h2 id="4-knn-k-nearest-neighbor">4. KNN (K-Nearest Neighbor)
+</h2><h3 id="문제-정의와-해결-방안-2">문제 정의와 해결 방안
+</h3><p>고객이 평가한 영화 평점 데이터를 기준으로 기존 보유 고객을 분류한 후, 새로 유입된 고객을 기준에 따라 분류하고자 하는 경우 <strong>KNN 알고리즘</strong>(K-Nearest Neighbor)을 활용할 수 있습니다.</p>
+<h3 id="knn이란">KNN이란
+</h3><p>기존 데이터 가운데 가장 가까운 k개의 이웃의 정보로 새로운 데이터를 예측하는 방법론입니다.</p>
+<p>유사한 특성을 가진 데이터는 유사한 범주에 속하는 경향이 있다는 가정 하에 분류합니다.</p>
+<ul>
+<li>K는 모델의 하이퍼파라미터로, 최적의 모델 성능을 찾기 위해 한 학습 사이클 종료 후 결과를 바탕으로 조정할 수 있습니다.</li>
+<li>K값은 주로 홀수로 설정합니다. (동점 방지 목적)</li>
+</ul>
+<p>예를 들어 새로운 고객 데이터가 들어왔을 때, k=1이면 가장 가까운 하나의 이웃 클래스로, k=3이면 가장 가까운 세 개의 이웃 중 다수인 클래스로 분류됩니다.</p>
+<h3 id="knn-특징">KNN 특징
+</h3><ul>
+<li>직관적이며 복잡하지 않은 알고리즘</li>
+<li>결과 해석이 쉬움</li>
+<li>K값 결정에 따라 성능이 크게 좌우됨
+<ul>
+<li>가능한 K 값을 모두 실험한다면 학습 시간이 길어질 수 있음</li>
+</ul>
+</li>
+</ul>
+<h3 id="knn-구현">KNN 구현
+</h3><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> sklearn.neighbors <span style="color:#f92672">import</span> KNeighborsClassifier
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 데이터 분리</span>
+</span></span><span style="display:flex;"><span>train_X, test_X, train_y, test_y <span style="color:#f92672">=</span> train_test_split(X, y, test_size<span style="color:#f92672">=</span><span style="color:#ae81ff">0.2</span>, random_state<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 모델 생성 (n_neighbors: k값 설정, 되도록 홀수로 설정, default=5)</span>
+</span></span><span style="display:flex;"><span>knn_model <span style="color:#f92672">=</span> KNeighborsClassifier(n_neighbors<span style="color:#f92672">=</span><span style="color:#ae81ff">5</span>)
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 모델 학습</span>
+</span></span><span style="display:flex;"><span>knn_model<span style="color:#f92672">.</span>fit(train_X, train_y)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 테스트 데이터에 대한 예측</span>
+</span></span><span style="display:flex;"><span>predicted <span style="color:#f92672">=</span> knn_model<span style="color:#f92672">.</span>predict(test_X)
+</span></span></code></pre></div><hr>
+<h2 id="5-분류-알고리즘-평가-지표">5. 분류 알고리즘 평가 지표
+</h2><h3 id="혼동-행렬confusion-matrix">혼동 행렬(Confusion Matrix)
+</h3><p>분류 모델의 성능을 평가하기 위해 사용되는 행렬입니다.</p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th></th>
+          <th style="text-align: center">예측: Positive</th>
+          <th style="text-align: center">예측: Negative</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>실제: Positive</td>
+          <td style="text-align: center">True Positive</td>
+          <td style="text-align: center">False Negative (Type-2 error)</td>
+      </tr>
+      <tr>
+          <td>실제: Negative</td>
+          <td style="text-align: center">False Positive (Type-1 error)</td>
+          <td style="text-align: center">True Negative</td>
+      </tr>
+  </tbody>
+</table></div>
+<ul>
+<li><strong>Positive(긍정 클래스, 양성)</strong>: 모델이 관심 있는 클래스</li>
+<li><strong>Negative(부정 클래스, 음성)</strong>: 모델이 관심 없는 클래스</li>
+<li>예시: 스팸 메일 분류기의 경우, 스팸 메일은 Positive, 비 스팸 메일은 Negative</li>
+</ul>
+<h3 id="정확도accuracy">정확도(Accuracy)
+</h3><p>전체 데이터 중에서 제대로 분류된 데이터의 비율입니다.</p>
+<p>$$ Accuracy = \frac{TP + TN}{TP + TN + FP + FN} $$</p>
+<ul>
+<li>모델이 얼마나 정확하게 분류하는지를 나타냄</li>
+<li>일반적으로 분류 모델의 주요 평가 방법으로 사용</li>
+<li>클래스 비율이 불균형할 경우, 평가 지표의 신뢰성을 잃음</li>
+</ul>
+<h4 id="불균형한-클래스에서의-정확도-문제">불균형한 클래스에서의 정확도 문제
+</h4><p>전체 100만 개 항공 데이터 중 90만 개가 정상 운행, 10만 개만 지연 운행인 데이터가 있다고 가정해봅시다.</p>
+<p>$$ \text{정확도} = \frac{0\text{개} + 90\text{만개}}{100\text{만개}} = 90% $$</p>
+<p>전체 결과가 모두 &ldquo;지연되지 않았다&quot;고 예측될 경우에도 정확도가 90%로 나오므로, 이 수치만으로 모델 성능을 단정하기에는 위험합니다. 다양한 평가지표를 함께 고려할 필요가 있습니다.</p>
+<h3 id="정밀도precision">정밀도(Precision)
+</h3><p>모델이 Positive라고 분류한 데이터 중 실제로 Positive인 데이터의 비율입니다.</p>
+<p>$$ Precision = \frac{TP}{TP + FP} $$</p>
+<ul>
+<li>모델이 예측한 긍정 사례가 실제로 맞는 비율(=예측의 정확도)</li>
+<li>일반적으로 정밀도는 <strong>Type-1 Error</strong>를 줄이는 것이 중요한 상황에서 주로 사용
+<ul>
+<li>Type-1 Error: 실제로는 Negative인데 Positive로 예측한 사례</li>
+</ul>
+</li>
+</ul>
+<p>예: 스팸 메일 판정 문제에서 정상 메일(Negative)이 스팸(Positive)으로 잘못 분류(False Positive)될 경우, 중요한 메일을 전달받지 못하는 상황이 발생합니다.</p>
+<h3 id="재현율recall">재현율(Recall)
+</h3><p>실제로 Positive인 데이터 중 모델이 Positive로 분류한 데이터의 비율입니다.</p>
+<p>$$ Recall = \frac{TP}{TP + FN} $$</p>
+<ul>
+<li>모델이 실제 긍정 사례를 놓치지 않는 비율(=관심 사례 포착 정도)</li>
+<li>일반적으로 재현율은 <strong>Type-2 Error</strong>를 줄이는 것이 중요한 상황에서 주로 사용
+<ul>
+<li>Type-2 Error: 실제로는 Positive인데 Negative로 예측한 사례</li>
+</ul>
+</li>
+</ul>
+<p>예: 질병 진단에서 암 환자(Positive)를 놓치는 경우(False Negative)는 큰 위험을 초래하므로, Recall을 높여 실제 환자를 놓치지 않도록 해야 합니다.</p>
+<h3 id="f1-score">F1 Score
+</h3><p>정밀도와 재현율의 조화 평균입니다.</p>
+<p>$$ F1 = \frac{2 \times Precision \times Recall}{Precision + Recall} $$</p>
+<ul>
+<li>모델의 정확성과 완전성을 동시에 고려하여 모델의 성능을 평가</li>
+<li>데이터 불균형이 심각할 때 사용</li>
+</ul>
+<h3 id="fpr-false-positive-rate">FPR (False Positive Rate)
+</h3><p>실제로 Negative인 데이터 중 모델이 Positive로 분류한 데이터의 비율입니다.</p>
+<p>$$ FPR = \frac{FP}{FP + TN} $$</p>
+<p>예: 게임에서 비정상 사용자 검출 시 FPR이 높으면 정상 사용자를 비정상 사용자로 검출하는 경우가 많아지고, 이때 페널티를 부여하면 선의의 사용자가 피해를 입을 수 있습니다.</p>
+<h3 id="roc-curve와-auc">ROC Curve와 AUC
+</h3><ul>
+<li>x축을 False Positive Rate, y축을 Recall(True Positive Rate) 값으로 시각화한 그래프</li>
+<li>커브가 왼쪽 위로 당겨질수록 Classifier의 성능이 향상됨을 의미</li>
+<li>AUC(Area Under Curve) = ROC Curve 아래 면적 (AUC = 0.5인 경우 Classifier의 최하 성능)</li>
+</ul>
+<h3 id="평가-지표-구현-혼동행렬-기반">평가 지표 구현 (혼동행렬 기반)
+</h3><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> sklearn.metrics <span style="color:#f92672">import</span> accuracy_score, precision_score, recall_score, f1_score
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 검증 데이터에 대한 예측</span>
+</span></span><span style="display:flex;"><span>y_pred <span style="color:#f92672">=</span> model<span style="color:#f92672">.</span>predict(X_valid)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 정확도 계산</span>
+</span></span><span style="display:flex;"><span>accuracy <span style="color:#f92672">=</span> accuracy_score(y_valid, y_pred)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 정밀도 계산</span>
+</span></span><span style="display:flex;"><span>precision <span style="color:#f92672">=</span> precision_score(y_valid, y_pred)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 재현율 계산</span>
+</span></span><span style="display:flex;"><span>recall <span style="color:#f92672">=</span> recall_score(y_valid, y_pred)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># F1 Score 계산</span>
+</span></span><span style="display:flex;"><span>f1 <span style="color:#f92672">=</span> f1_score(y_valid, y_pred)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">&#34;Accuracy:&#34;</span>, accuracy)
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">&#34;Precision:&#34;</span>, precision)
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">&#34;Recall:&#34;</span>, recall)
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">&#34;F1 Score:&#34;</span>, f1)
+</span></span></code></pre></div><hr>
+<h2 id="마무리-정리">마무리 정리
+</h2><p>분류(Classification) 알고리즘의 핵심 원리와 평가 방법을 정리했습니다.</p>
+<p>각 모델은 서로 다른 접근 방식으로 결정 경계를 찾으며, 상황에 맞는 알고리즘 선택이 중요합니다.</p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>구분</th>
+          <th>핵심 내용</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>로지스틱 회귀</strong></td>
+          <td>시그모이드 함수로 확률(0~1) 출력, 이진 분류에 사용</td>
+      </tr>
+      <tr>
+          <td><strong>SVM</strong></td>
+          <td>마진 최대화하는 최적 결정 경계 탐색</td>
+      </tr>
+      <tr>
+          <td><strong>KNN</strong></td>
+          <td>가까운 K개 이웃의 다수결로 분류</td>
+      </tr>
+      <tr>
+          <td><strong>평가 지표</strong></td>
+          <td>Accuracy, Precision, Recall, F1 Score, ROC-AUC</td>
+      </tr>
+  </tbody>
+</table></div>
+<p>정확도(Accuracy)만으로는 불균형 데이터를 평가하기 어렵습니다.</p>
+<p>상황에 맞는 평가 지표를 선택하고 알고리즘을 비교해 보는 것이 분류 모델 실전의 핵심입니다.</p>
+<p>다음은 비지도학습에 대해서 정리하겠습니다.</p>
+
+</section>
+
+
+    <footer class="article-meta article-footer">
+    
+
+    </footer>
+
+
+    
+        <link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI&#43;WdtXRGWt2kTvGFasHpSy3SV"crossorigin="anonymous"
+            ><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG&#43;vnGctmUb0ZY0l8"crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"integrity="sha384-&#43;VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4&#43;/RRE05"crossorigin="anonymous"
+                defer
+                >
+            </script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        const elementsToRender = [".main-article", ".widget--toc"];
+
+        elementsToRender.forEach(selector => {
+            const element = document.querySelector(selector);
+            if (element) {
+                renderMathInElement(element, {
+                    delimiters: [
+                        { left: "$$", right: "$$", display: true },
+                        { left: "$", right: "$", display: false },
+                        { left: "\\(", right: "\\)", display: false },
+                        { left: "\\[", right: "\\]", display: true }
+                    ],
+                    ignoredClasses: ["gist"]
+                });
+            }
+        });
+    });
+</script>
+    
+</article>
+
+    
+
+    
+<nav class="article-prev-next">
+  
+  <a class="prev-next-card prev" href="/data-analysis/python_data_analysis_24/">
+    <div class="direction">← 이전 글</div>
+    <div class="title">[머신러닝 II] 회귀(Regression) 02</div>
+  </a>
+  
+
+  
+  <a class="prev-next-card next" href="/data-analysis/python_data_analysis_26/">
+    <div class="direction">다음 글 →</div>
+    <div class="title">[머신러닝 II] 비지도학습</div>
+  </a>
+  
+</nav>
+
+
+    
+
+     
+    
+        
+
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2026 LucasPark Blog
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="4.0.3">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+
+
+
+<script type="module">
     import gallery from '\/ts\/gallery.js';
 
     const articleContent = document.querySelector('.article-content');
@@ -103,4 +715,15 @@
         });
         lightbox.init();
     }
-</script></main></div><script type=text/javascript src=/ts/main.1ff1e5fdc4e178ed422e50aa407526dc552f26342d729343fded19416194382c.js defer></script></body></html>
+</script>
+
+    
+
+            </main>
+        </div>
+        
+<script type="text/javascript" src="/ts/main.1ff1e5fdc4e178ed422e50aa407526dc552f26342d729343fded19416194382c.js" defer></script>
+
+
+    </body>
+</html>
