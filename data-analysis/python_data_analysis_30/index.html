@@ -246,9 +246,9 @@
 <hr>
 <h2 id="2-학습-속도-문제와-최적화-알고리즘">2. 학습 속도 문제와 최적화 알고리즘
 </h2><h3 id="학습-속도-문제의-발생-원인">학습 속도 문제의 발생 원인
-</h3><p>기존의 경사하강법(Gradient Descent, GD)은 **전체 학습 데이터 셋(Full-batch)**을 사용하여 손실 함수를 계산하기 때문에 계산량이 너무 많아지는 문제가 있습니다.</p>
+</h3><p>기존의 경사하강법(Gradient Descent, GD)은 <strong>전체 학습 데이터 셋</strong>(Full-batch)을 사용하여 손실 함수를 계산하기 때문에 계산량이 너무 많아지는 문제가 있습니다.</p>
 <h3 id="해결-방법-sgdstochastic-gradient-descent">해결 방법: SGD(Stochastic Gradient Descent)
-</h3><p>전체 데이터가 아닌 **부분 데이터(mini-batch)**만 활용하여 손실 함수를 계산하는 방식입니다.</p>
+</h3><p>전체 데이터가 아닌 <strong>부분 데이터</strong>(mini-batch)만 활용하여 손실 함수를 계산하는 방식입니다.</p>
 <p><strong>GD vs SGD</strong></p>
 <div class="table-wrapper"><table>
   <thead>

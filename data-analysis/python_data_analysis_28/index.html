@@ -322,13 +322,11 @@
 </table></div>
 <p>입력 값들에 각각의 가중치를 곱하여 모두 더한 뒤(Σ), 활성화 함수(Activation function)를 거쳐 최종 출력 값을 얻는 구조입니다.</p>
 <h3 id="활성화-함수activation-function">활성화 함수(Activation Function)
-</h3><p>퍼셉트론에서 사용되는 대표적인 활성화 함수는 **계단 함수(Step function)**입니다.</p>
+</h3><p>퍼셉트론에서 사용되는 대표적인 활성화 함수는 <strong>계단 함수</strong>(Step function)입니다.</p>
 <p>$$
 activation(x) =
-\begin{cases}
 1 &amp; x \geq 0 \
 0 &amp; x &lt; 0
-\end{cases}
 $$</p>
 <h3 id="퍼셉트론-동작-예시">퍼셉트론 동작 예시
 </h3><p>입력값 $x_1 = 1$(가중치 2), $x_2 = 0$(가중치 1), bias $= -0.5$일 때:</p>
@@ -348,7 +346,7 @@ $$</p>
 <li>사람의 신경계: 뉴런 → 신경망 → 지능</li>
 <li>딥러닝: 퍼셉트론 → 인공 신경망 → 인공지능</li>
 </ul>
-<p>퍼셉트론은 **논리 회로(Logic Gate)**의 역할을 수행할 수 있습니다.</p>
+<p>퍼셉트론은 <strong>논리 회로</strong>(Logic Gate)의 역할을 수행할 수 있습니다.</p>
 <p>논리 회로란 일정한 논리 연산에 의해 출력을 얻는 회로를 의미합니다.</p>
 <h3 id="and-gate">AND gate
 </h3><div class="table-wrapper"><table>
@@ -464,7 +462,7 @@ $$</p>
 </table></div>
 <p>$$C = activation((-1) \cdot A + (-1) \cdot B + 0.5)$$</p>
 <h3 id="단층-퍼셉트론single-layer-perceptron의-구조">단층 퍼셉트론(Single Layer Perceptron)의 구조
-</h3><p>단층 퍼셉트론은 **입력층(Input Layer)**과 **출력층(Output Layer)**만으로 이루어져 있습니다.</p>
+</h3><p>단층 퍼셉트론은 <strong>입력층</strong>(Input Layer)과 <strong>출력층</strong>(Output Layer)만으로 이루어져 있습니다.</p>
 <ul>
 <li><strong>입력층</strong>: 외부로부터 데이터를 입력받는 신경망 입구의 Layer</li>
 <li><strong>출력층</strong>: 모델의 최종 연산 결과를 내보내는 신경망 출구의 Layer</li>
@@ -508,7 +506,7 @@ $$</p>
 <p>좌표평면에 XOR의 출력값을 표시해보면, 하나의 직선만으로는 $C=1$인 점들과 $C=0$인 점들을 완벽히 구분할 수 없습니다.</p>
 <h3 id="단층-퍼셉트론으로는-해결-불가능한-xor-gate">단층 퍼셉트론으로는 해결 불가능한 XOR gate
 </h3><p>이처럼 단층 퍼셉트론은 선형 분류만 가능하기 때문에 XOR 문제를 해결할 수 없습니다.</p>
-<p>이 한계는 실제로 **1969년 첫 번째 AI 겨울(First AI Winter)**을 초래한 주요 원인 중 하나였습니다.</p>
+<p>이 한계는 실제로 1969년 첫 번째 AI 겨울(First AI Winter)을 초래한 주요 원인 중 하나였습니다.</p>
 <h3 id="비선형적-접근-방법의-필요성">비선형적 접근 방법의 필요성
 </h3><p>XOR 문제를 해결하기 위해서는 직선이 아닌 곡선, 혹은 여러 개의 직선을 조합한 비선형적인 접근 방법이 필요합니다.</p>
 <hr>
@@ -517,13 +515,13 @@ $$</p>
 </h3><p>XOR 문제로 촉발된 AI 겨울은 1986년 <strong>다층 퍼셉트론</strong>의 등장과 함께 극복되기 시작했습니다.</p>
 <h3 id="비선형적인-문제-해결의-아이디어">비선형적인 문제 해결의 아이디어
 </h3><p>단층 퍼셉트론은 입력층과 출력층만 존재하기 때문에 XOR과 같은 비선형 문제를 풀 수 없었습니다.</p>
-<p>이를 해결하기 위해 입력층과 출력층 사이에 **은닉층(Hidden Layer)**을 추가하는 아이디어가 제시되었습니다.</p>
+<p>이를 해결하기 위해 입력층과 출력층 사이에 <strong>은닉층</strong>(Hidden Layer)을 추가하는 아이디어가 제시되었습니다.</p>
 <h3 id="xor-gate-예시로-보는-다층-구조">XOR gate 예시로 보는 다층 구조
 </h3><p>XOR 연산은 하나의 레이어만으로는 표현이 불가능하지만, <strong>NAND 연산과 OR 연산을 함께 사용</strong>하면 표현이 가능합니다.</p>
 <ul>
 <li>입력층 → 은닉층(NAND Gate, OR Gate) → 출력층(XOR Gate)</li>
 </ul>
-<p>이렇게 단층 퍼셉트론을 여러 개 쌓은 구조를 **다층 퍼셉트론(Multi Layer Perceptron, MLP)**이라고 부릅니다.</p>
+<p>이렇게 단층 퍼셉트론을 여러 개 쌓은 구조를 <strong>다층 퍼셉트론</strong>(Multi Layer Perceptron, MLP)이라고 부릅니다.</p>
 <h3 id="은닉층hidden-layer">은닉층(Hidden Layer)
 </h3><p>은닉층이란 <strong>입력층과 출력층 사이의 모든 Layer</strong>를 의미합니다.</p>
 <h3 id="은닉층의-개수와-딥러닝">은닉층의 개수와 딥러닝
@@ -539,7 +537,7 @@ $$</p>
 <hr>
 <h2 id="마무리-정리">마무리 정리
 </h2><p>이번 장에서는 딥러닝의 출발점인 <strong>퍼셉트론</strong>의 개념과 구조, 그리고 이를 활용한 논리 회로 구현과 선형 분류의 원리를 살펴보았습니다.</p>
-<p>또한 단층 퍼셉트론이 가진 <strong>비선형 문제(XOR)의 한계</strong>와, 이를 극복하기 위해 등장한 **다층 퍼셉트론(MLP)**의 개념까지 정리해보았습니다.</p>
+<p>또한 단층 퍼셉트론이 가진 <strong>비선형 문제(XOR)의 한계</strong>와, 이를 극복하기 위해 등장한 <strong>다층 퍼셉트론</strong>(MLP)의 개념까지 정리해보았습니다.</p>
 <p>다음은 텐서플로우와 딥러닝 학습에 대해 정리하겠습니다.</p>
 
 </section>
