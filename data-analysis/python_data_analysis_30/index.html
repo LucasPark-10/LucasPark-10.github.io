@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="ko-kr" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="들어가며 이 글에서는 딥러닝 학습의 문제점을 정리한 내용입니다.\n딥러닝 모델을 학습시키는 과정에서 발생하는 대표적인 문제점들과 그 해결 기법들을 살펴보겠습니다.\n1. 딥러닝 모델 학습의 문제점 데이터의 증가와 딥러닝 모델의 한계점 실생활 문제에서 다루는 데이터의 차원이 증가하고 구조가 복잡해지면서, 다양한 문제가 발생하게 되었습니다.\n이로 인해 기술력의 부족으로 딥러닝 기술이 실질적인 한계를 마주하게 되었습니다.\n딥러닝 학습에서 발생하는 대표적인 문제점 4가지 학습 속도 문제 기울기 소실 문제 초기값 설정 문제 과적합 문제 1. 학습 속도 문제 데이터의 개수가 폭발적으로 증가함에 따라, 딥러닝 모델 학습에 소요되는 시간도 함께 증가하게 되었습니다.\n">
+<title>[딥러닝 기초] 딥러닝 학습의 문제점</title>
+
+
+<link rel="canonical" href="https://lucaspark-10.github.io/data-analysis/python_data_analysis_30/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
+
+
+<link rel="stylesheet" href="/scss/style.min.de7e6698ac54e40edf7f3d56f131b6bbacde7bdf742f829e1185371a8af17315.css"><meta property='og:title' content="[딥러닝 기초] 딥러닝 학습의 문제점">
+<meta property='og:description' content="들어가며 이 글에서는 딥러닝 학습의 문제점을 정리한 내용입니다.\n딥러닝 모델을 학습시키는 과정에서 발생하는 대표적인 문제점들과 그 해결 기법들을 살펴보겠습니다.\n1. 딥러닝 모델 학습의 문제점 데이터의 증가와 딥러닝 모델의 한계점 실생활 문제에서 다루는 데이터의 차원이 증가하고 구조가 복잡해지면서, 다양한 문제가 발생하게 되었습니다.\n이로 인해 기술력의 부족으로 딥러닝 기술이 실질적인 한계를 마주하게 되었습니다.\n딥러닝 학습에서 발생하는 대표적인 문제점 4가지 학습 속도 문제 기울기 소실 문제 초기값 설정 문제 과적합 문제 1. 학습 속도 문제 데이터의 개수가 폭발적으로 증가함에 따라, 딥러닝 모델 학습에 소요되는 시간도 함께 증가하게 되었습니다.\n">
+<meta property='og:url' content='https://lucaspark-10.github.io/data-analysis/python_data_analysis_30/'>
+<meta property='og:site_name' content='LucasPark Blog'>
+<meta property='og:type' content='article'><meta property='article:section' content='Data-Analysis' /><meta property='article:published_time' content='2026-08-02T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2026-08-02T00:00:00&#43;00:00'/>
+<meta name="twitter:title" content="[딥러닝 기초] 딥러닝 학습의 문제점">
+<meta name="twitter:description" content="들어가며 이 글에서는 딥러닝 학습의 문제점을 정리한 내용입니다.\n딥러닝 모델을 학습시키는 과정에서 발생하는 대표적인 문제점들과 그 해결 기법들을 살펴보겠습니다.\n1. 딥러닝 모델 학습의 문제점 데이터의 증가와 딥러닝 모델의 한계점 실생활 문제에서 다루는 데이터의 차원이 증가하고 구조가 복잡해지면서, 다양한 문제가 발생하게 되었습니다.\n이로 인해 기술력의 부족으로 딥러닝 기술이 실질적인 한계를 마주하게 되었습니다.\n딥러닝 학습에서 발생하는 대표적인 문제점 4가지 학습 속도 문제 기울기 소실 문제 초기값 설정 문제 과적합 문제 1. 학습 속도 문제 데이터의 개수가 폭발적으로 증가함에 따라, 딥러닝 모델 학습에 소요되는 시간도 함께 증가하게 되었습니다.\n">
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-EVK5B22CB3"></script>
+      <script>
+        var doNotTrack = false;
+        if ( true ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-EVK5B22CB3');
+        }
+      </script>
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column compact"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">LucasPark Blog</a></h1>
+            <h2 class="site-description">Lucas Park의 개인 블로그</h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                <span>Home</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/posts/' >
+                
+                <span>Posts</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/git-study/' >
+                
+                <span>Git-study</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/data-analysis/' >
+                
+                <span>Data Analysis</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/gold-news-and-analysis/' >
+                
+                <span>Gold Price Check &amp; Analysis</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/atmospheric-environment/' >
+                
+                <span>Atmospheric Environment</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>Dark Mode</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/data-analysis/python_data_analysis_30/">[딥러닝 기초] 딥러닝 학습의 문제점</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    
+    
+    
+    
+    
+    
+    <footer class="article-meta">
+        
+            <div class="inline-meta">
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                    <time class="article-time--published" datetime='2026-08-02T00:00:00Z'>2026년 8월 2일 일요일</time>
+                
+
+                
+            </div>
+        
+
+        
+
+        
+    </footer>
+    
+</div>
+
+</header>
+
+    
+
+    <section class="article-content">
+    
+    
+    <h1 id="들어가며">들어가며
+</h1><p>이 글에서는 딥러닝 학습의 문제점을 정리한 내용입니다.</p>
+<p>딥러닝 모델을 학습시키는 과정에서 발생하는 대표적인 문제점들과 그 해결 기법들을 살펴보겠습니다.</p>
+<hr>
+<h2 id="1-딥러닝-모델-학습의-문제점">1. 딥러닝 모델 학습의 문제점
+</h2><h3 id="데이터의-증가와-딥러닝-모델의-한계점">데이터의 증가와 딥러닝 모델의 한계점
+</h3><p>실생활 문제에서 다루는 데이터의 차원이 증가하고 구조가 복잡해지면서, 다양한 문제가 발생하게 되었습니다.</p>
+<p>이로 인해 기술력의 부족으로 딥러닝 기술이 실질적인 한계를 마주하게 되었습니다.</p>
+<h3 id="딥러닝-학습에서-발생하는-대표적인-문제점-4가지">딥러닝 학습에서 발생하는 대표적인 문제점 4가지
+</h3><ol>
+<li><strong>학습 속도 문제</strong></li>
+<li><strong>기울기 소실 문제</strong></li>
+<li><strong>초기값 설정 문제</strong></li>
+<li><strong>과적합 문제</strong></li>
+</ol>
+<h3 id="1-학습-속도-문제">1. 학습 속도 문제
+</h3><p>데이터의 개수가 폭발적으로 증가함에 따라, 딥러닝 모델 학습에 소요되는 시간도 함께 증가하게 되었습니다.</p>
+<h3 id="2-기울기-소실-문제">2. 기울기 소실 문제
+</h3><p>더 깊고 더 넓은 신경망을 학습시키는 과정에서, 출력값에서 멀어질수록(즉 입력층에 가까워질수록) 학습이 잘 이루어지지 않는 현상이 발생합니다.</p>
+<h3 id="3-초기값-설정-문제">3. 초기값 설정 문제
+</h3><p>가중치의 초기값을 어떻게 설정하느냐에 따라 모델의 성능 차이가 매우 크게 발생합니다.</p>
+<h3 id="4-과적합-문제">4. 과적합 문제
+</h3><p>학습 데이터(training data)에 모델이 지나치게 최적화되어, 테스트 데이터(test data)에 대한 모델의 성능이 오히려 저하되는 현상입니다.</p>
+<h3 id="참고-1990년대-두-번째-ai-겨울">참고: 1990년대 두 번째 AI 겨울
+</h3><ul>
+<li><strong>1958년</strong>: 퍼셉트론(Perceptron) 등장</li>
+<li><strong>1969년</strong>: 첫 번째 AI 겨울(First AI winter) 시작</li>
+<li><strong>1986년 ~ 1990년</strong>: 두 번째 AI 겨울(Second AI winter)</li>
+<li><strong>2012년</strong>: 딥러닝 혁명(Deep learning revolution)</li>
+<li><strong>2020년</strong>: 현재에 이르는 발전</li>
+</ul>
+<p>위에서 언급한 학습 속도, 기울기 소실, 초기값 설정, 과적합 문제들은 딥러닝이 두 번째 겨울을 겪게 된 주요 원인이기도 합니다.</p>
+<hr>
+<h2 id="2-학습-속도-문제와-최적화-알고리즘">2. 학습 속도 문제와 최적화 알고리즘
+</h2><h3 id="학습-속도-문제의-발생-원인">학습 속도 문제의 발생 원인
+</h3><p>기존의 경사하강법(Gradient Descent, GD)은 **전체 학습 데이터 셋(Full-batch)**을 사용하여 손실 함수를 계산하기 때문에 계산량이 너무 많아지는 문제가 있습니다.</p>
+<h3 id="해결-방법-sgdstochastic-gradient-descent">해결 방법: SGD(Stochastic Gradient Descent)
+</h3><p>전체 데이터가 아닌 **부분 데이터(mini-batch)**만 활용하여 손실 함수를 계산하는 방식입니다.</p>
+<p><strong>GD vs SGD</strong></p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>구분</th>
+          <th>방식</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Gradient Descent</td>
+          <td>전체 Training Data(Full-batch)를 한 번에 사용</td>
+      </tr>
+      <tr>
+          <td>Stochastic Gradient Descent</td>
+          <td>Training Data를 여러 개의 Mini-batch로 나누어 사용</td>
+      </tr>
+  </tbody>
+</table></div>
+<p>SGD는 다소 부정확할 수 있지만, 계산 속도가 훨씬 빠르기 때문에 같은 시간에 더 많은 step을 진행할 수 있다는 장점이 있습니다.</p>
+<h3 id="sgd의-한계">SGD의 한계
+</h3><h4 id="1-gradient-방향성-문제">1. Gradient 방향성 문제
+</h4><p>SGD는 gradient 값을 계산할 때 mini-batch에 따라 gradient의 방향 변화가 크다는 한계가 있습니다.</p>
+<h4 id="2-learning-rate-설정-문제">2. Learning Rate 설정 문제
+</h4><ul>
+<li>Learning rate가 <strong>너무 높으면(Too high)</strong>: 손실 함수의 최솟값 주변을 크게 벗어나며 진동하게 됩니다.</li>
+<li>Learning rate가 <strong>너무 낮으면(Too low)</strong>: 지역 최솟값(local minima)에 갇히거나 수렴 속도가 매우 느려집니다.</li>
+</ul>
+<h3 id="다양한-최적화-알고리즘의-등장">다양한 최적화 알고리즘의 등장
+</h3><p>SGD의 한계를 극복하기 위해 다음과 같은 최적화 알고리즘들이 발전해왔습니다.</p>
+<pre tabindex="0"><code>GD → SGD → (Gradient 방향) → Momentum ─┐
+              ↓                        ├─→ Adam
+         (Learning rate) → Adagrad → RMSProp
+</code></pre><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>알고리즘</th>
+          <th>핵심 아이디어</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>GD</strong></td>
+          <td>모든 데이터를 검토한 뒤 방향을 찾음</td>
+      </tr>
+      <tr>
+          <td><strong>SGD</strong></td>
+          <td>Mini-batch를 사용하여 검토한 뒤 자주 방향을 찾음</td>
+      </tr>
+      <tr>
+          <td><strong>Momentum</strong></td>
+          <td>관성의 개념을 도입하여, 과거에 이동했던 방향을 기억하면서 그 방향으로 일정 정도 추가 이동</td>
+      </tr>
+      <tr>
+          <td><strong>Adagrad</strong></td>
+          <td>가중치의 변화량에 따라 learning rate를 조절 (많이 변화한 변수는 learning rate를 작게, 적게 변화한 변수는 크게)</td>
+      </tr>
+      <tr>
+          <td><strong>RMSProp</strong></td>
+          <td>Adagrad가 학습을 진행할수록 learning rate가 지나치게 줄어드는 문제를 해결. 과거의 기울기는 잊고 새로운 기울기 정보를 더 크게 반영</td>
+      </tr>
+      <tr>
+          <td><strong>Adam</strong></td>
+          <td>Momentum과 RMSProp의 장점을 결합한, 가장 발전된 최적화 알고리즘</td>
+      </tr>
+  </tbody>
+</table></div>
+<p><strong>Momentum 예시</strong>: without momentum(관성 없이 지그재그로 이동)에 비해 with momentum(관성을 반영하여 더 부드럽고 빠르게 수렴)이 더 효율적으로 최솟값에 도달합니다.</p>
+<p><strong>Adagrad의 한계</strong>: 과거의 기울기를 제곱하여 계속 누적하기 때문에, 학습이 진행될수록 갱신 강도가 약해져 결국 학습이 거의 이루어지지 않는 단점이 있습니다.</p>
+<hr>
+<h2 id="3-기울기-소실-문제와-방지-기법">3. 기울기 소실 문제와 방지 기법
+</h2><h3 id="딥러닝-모델-학습-방법-되짚어보기">딥러닝 모델 학습 방법 되짚어보기
+</h3><p>딥러닝은 목표(target) 값과 실제 모델이 예측한 출력(output) 값이 얼마나 차이나는지를 구한 후, 그 오차값을 다시 뒤로 전파해가며(backpropagation) 가중치와 같은 변수들을 갱신하는 알고리즘입니다.</p>
+<p>이때 특정 가중치의 gradient를 구하기 위해서는 그 전단(다음 층)의 계산 값이 필요합니다.</p>
+<h3 id="기울기-소실-문제vanishing-gradient의-발생-원인">기울기 소실 문제(Vanishing Gradient)의 발생 원인
+</h3><p>Sigmoid 함수와 같이 양 끝단의 기울기가 0에 가까운 활성화 함수를 사용하면, 역전파 과정에서 기울기가 0에 가까운 값으로 계속 전달되면서 중간 전달값이 점점 사라지는 문제가 발생합니다.</p>
+<p>신경망이 깊어질수록(층이 많아질수록) 이러한 기울기 소실이 반복적으로 누적되며, 입력층에 가까운 층일수록 학습이 잘 이루어지지 않게 됩니다.</p>
+<h3 id="해결-방법-1-relu-함수">해결 방법 1: ReLU 함수
+</h3><p>$$ReLU(x) = \max(0, x)$$</p>
+<p>기존에 사용하던 sigmoid 함수 대신 ReLU 함수를 활성화 함수로 사용하여 기울기 소실 문제를 해결할 수 있습니다.</p>
+<p>ReLU는 입력값이 양수인 구간에서는 기울기가 항상 1이기 때문에, 깊은 신경망에서도 기울기가 소실되지 않고 잘 전달됩니다.</p>
+<h3 id="해결-방법-2-tanh-함수">해결 방법 2: Tanh 함수
+</h3><p>$$Tanh(x) = \frac{e^{2x}+1}{e^{2x}-1}$$</p>
+<p>일반적으로는 내부 Hidden Layer에는 ReLU를 적용하고, Output Layer에서만 Tanh를 적용하는 방식이 활용됩니다.</p>
+<hr>
+<h2 id="4-초기값-설정-문제와-방지-기법">4. 초기값 설정 문제와 방지 기법
+</h2><h3 id="잘못된-초기값-설정---초기화의-중요성">잘못된 초기값 설정 - 초기화의 중요성
+</h3><p>가중치의 초기값을 잘못 설정하면 학습 초기부터 문제가 발생할 수 있습니다.</p>
+<p>예를 들어 가중치를 100으로, 편향(bias)을 50으로 초기화한 경우 활성화 함수(sigmoid)에 입력되는 값이 지나치게 커져(예: 51), sigmoid 함수의 기울기가 0에 매우 가까워지는 구간에 위치하게 됩니다.</p>
+<p>이 경우 gradient 값이 0.00&hellip;01 수준으로 매우 작아져 학습이 제대로 이루어지지 않습니다.</p>
+<h3 id="가중치-초기화weight-initialization의-핵심">가중치 초기화(Weight Initialization)의 핵심
+</h3><p>가중치 초기화의 핵심은 활성화 함수의 입력 값이 너무 커지거나 작아지지 않도록 만들어주는 것입니다.</p>
+<h3 id="초기화-설정-문제-해결을-위한-naïve한-방법">초기화 설정 문제 해결을 위한 Naïve한 방법
+</h3><ul>
+<li><strong>표준 정규분포를 이용한 초기화</strong>: 레이어를 거칠수록 출력값이 0과 1 양 극단으로 쏠리는 경향이 나타납니다.</li>
+<li><strong>표준편차 0.01의 정규분포를 이용한 초기화</strong>: 레이어를 거칠수록 출력값이 특정 값(예: 0.5) 부근으로 지나치게 쏠리는 경향이 나타납니다.</li>
+</ul>
+<p>두 방법 모두 층이 깊어질수록 값의 분포가 한쪽으로 치우치는 문제가 있어, 효과적인 초기화 방법이라 보기 어렵습니다.</p>
+<h3 id="xavier-초기화-방법">Xavier 초기화 방법
+</h3><p>표준 정규 분포를 <strong>입력 개수의 제곱근</strong>으로 나누어주는 방식입니다.</p>
+<p>Sigmoid와 같은 S자 형태의 활성화 함수를 사용할 경우, 각 층의 출력 값들이 정규 분포 형태를 유지해야 안정적인 학습이 가능합니다.</p>
+<p><strong>주의할 점</strong>: Xavier 초기화는 ReLU 함수에는 적합하지 않습니다. ReLU와 함께 사용할 경우 레이어를 거쳐갈수록 값이 0으로 수렴해버리는 문제가 발생합니다.</p>
+<h3 id="he-초기화-방법">He 초기화 방법
+</h3><p>표준 정규 분포를 <strong>입력 개수 절반의 제곱근</strong>으로 나누어주는 방식입니다.</p>
+<p>ReLU 함수와 He 초기화를 함께 사용하면, 10개 층을 거치더라도 평균과 표준편차가 0으로 수렴하지 않고 안정적으로 유지됩니다.</p>
+<h3 id="적절한-가중치-초기화-방법-정리">적절한 가중치 초기화 방법 정리
+</h3><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>활성화 함수</th>
+          <th>권장 초기화 방법</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Sigmoid, Tanh</td>
+          <td>Xavier 초기화</td>
+      </tr>
+      <tr>
+          <td>ReLU 계열</td>
+          <td>He 초기화</td>
+      </tr>
+  </tbody>
+</table></div>
+
+    <blockquote>
+        <p>최근 대부분의 딥러닝 모델에서는 <strong>He 초기화</strong>를 주로 선택하고 있습니다.</p>
+
+    </blockquote>
+<hr>
+<h2 id="5-과적합-문제와-방지-기법">5. 과적합 문제와 방지 기법
+</h2><p>과적합(Overfitting)이란, 학습 데이터에 모델이 지나치게 최적화되어 오히려 테스트 데이터에 대한 성능이 저하되는 현상을 말합니다.</p>
+<p>학습이 진행됨에 따라 Training error는 계속 감소하지만, 일정 시점 이후로 Testing error는 다시 증가하는 형태로 나타납니다.</p>
+<p>이를 방지하기 위해 다음과 같은 기법들이 사용됩니다.</p>
+<ul>
+<li>정규화(Regularization)</li>
+<li>드롭아웃(Dropout)</li>
+<li>배치 정규화(Batch Normalization)</li>
+</ul>
+<h3 id="정규화regularization">정규화(Regularization)
+</h3><p>모델이 복잡해질수록 파라미터(parameter)의 수가 많아지고, 그 절댓값도 커지는 경향이 발생합니다.</p>
+<p>이때 기존 손실함수에 <strong>규제항</strong>을 더해줌으로써 과적합을 억제하고 더 일반화된 최적값을 찾을 수 있습니다.</p>
+<p><strong>L1 정규화 (Lasso Regularization)</strong></p>
+<ul>
+<li>가중치의 <strong>절댓값의 합</strong>을 규제 항으로 정의합니다.</li>
+<li>작은 가중치들이 거의 0으로 수렴하여, 몇 개의 중요한 가중치들만 남게 됩니다.</li>
+</ul>
+<p><strong>L2 정규화 (Ridge Regularization)</strong></p>
+<ul>
+<li>가중치의 <strong>제곱의 합</strong>을 규제 항으로 정의합니다.</li>
+<li>L1 정규화에 비해 0으로 수렴하는 가중치가 적으며, 큰 값을 가진 가중치를 더욱 강하게 제약하는 효과가 있습니다.</li>
+</ul>
+<h3 id="드롭아웃dropout">드롭아웃(Dropout)
+</h3><p>각 layer마다 일정 비율의 뉴런을 임의로 drop(비활성화)시켜, 나머지 뉴런들만으로 학습을 진행하는 방법입니다.</p>
+<p>드롭아웃을 적용하면 학습될 때마다 활성화되는 노드와 가중치들이 매번 달라지게 됩니다.</p>
+<p><strong>적용 방법</strong></p>
+<ul>
+<li>다른 정규화 기법들과 상호 보완적으로 함께 사용할 수 있습니다.</li>
+<li>Drop된 뉴런은 backpropagation 시 신호를 전달하지 않습니다(신호 차단).</li>
+<li>다만 Test(추론) 단계에서는 모든 뉴런에 신호를 전달합니다.</li>
+</ul>
+<h3 id="배치-정규화batch-normalization">배치 정규화(Batch Normalization)
+</h3><p>정규화(Normalization)를 처음 입력 데이터(Input data)에만 적용하는 것이 아니라, 신경망 내부 Hidden Layer의 입력값에도 적용하는 기법입니다.</p>
+<p>일반적으로 Fully connected 층과 활성화 함수(Activation function) 사이에 위치합니다.</p>
+<p><strong>배치 정규화의 장점</strong></p>
+<ul>
+<li>매 층(Layer)마다 정규화를 진행하므로, 가중치 초기값에 크게 의존하지 않아도 됩니다. (초기화의 중요도 감소)</li>
+<li>과적합을 억제하는 효과가 있어 Dropout, L1/L2 정규화의 필요성이 감소합니다.</li>
+<li>핵심적인 효과는 <strong>학습 속도의 향상</strong>입니다.</li>
+</ul>
+<hr>
+<h2 id="마무리-정리">마무리 정리
+</h2><p>딥러닝 모델 학습 과정에서 발생하는 네 가지 대표적인 문제(학습 속도, 기울기 소실, 초기값 설정, 과적합)와 이를 해결하기 위한 다양한 기법들을 살펴보았습니다.</p>
+<ul>
+<li><strong>학습 속도 문제</strong> → SGD 및 Momentum, Adagrad, RMSProp, Adam 등의 최적화 알고리즘</li>
+<li><strong>기울기 소실 문제</strong> → ReLU, Tanh 등 활성화 함수 개선</li>
+<li><strong>초기값 설정 문제</strong> → Xavier 초기화, He 초기화</li>
+<li><strong>과적합 문제</strong> → L1/L2 정규화, 드롭아웃, 배치 정규화</li>
+</ul>
+<p>이러한 기법들은 서로 독립적이지 않고 상호 보완적으로 함께 사용되는 경우가 많으며, 실제 모델 설계 시 활성화 함수, 초기화 방법, 정규화 기법을 종합적으로 고려하는 것이 중요합니다.</p>
+<p>다음은 PyTorch 기본문법에 대해서 정리하겠습니다.</p>
+
+</section>
+
+
+    <footer class="article-meta article-footer">
+    
+
+    </footer>
+
+
+    
+        <link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI&#43;WdtXRGWt2kTvGFasHpSy3SV"crossorigin="anonymous"
+            ><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG&#43;vnGctmUb0ZY0l8"crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"integrity="sha384-&#43;VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4&#43;/RRE05"crossorigin="anonymous"
+                defer
+                >
+            </script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        const elementsToRender = [".main-article", ".widget--toc"];
+
+        elementsToRender.forEach(selector => {
+            const element = document.querySelector(selector);
+            if (element) {
+                renderMathInElement(element, {
+                    delimiters: [
+                        { left: "$$", right: "$$", display: true },
+                        { left: "$", right: "$", display: false },
+                        { left: "\\(", right: "\\)", display: false },
+                        { left: "\\[", right: "\\]", display: true }
+                    ],
+                    ignoredClasses: ["gist"]
+                });
+            }
+        });
+    });
+</script>
+    
+</article>
+
+    
+
+    
+<nav class="article-prev-next">
+  
+  <a class="prev-next-card prev" href="/data-analysis/python_data_analysis_29/">
+    <div class="direction">← 이전 글</div>
+    <div class="title">[딥러닝 기초] 텐서플로우와 딥러닝 학습</div>
+  </a>
+  
+
+  
+  <div class="prev-next-card empty"></div>
+  
+</nav>
+
+
+    
+
+     
+    
+        
+
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2026 LucasPark Blog
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="4.0.3">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+
+
+
+<script type="module">
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script>
+
+    
+
+            </main>
+        </div>
+        
+<script type="text/javascript" src="/ts/main.1ff1e5fdc4e178ed422e50aa407526dc552f26342d729343fded19416194382c.js" defer></script>
+
+
+    </body>
+</html>

@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="ko-kr" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="들어가며 이번 글에서는 딥러닝의 가장 기초가 되는 개념인 퍼셉트론에 대해 정리해보겠습니다.\n딥러닝이 무엇인지부터 시작해서, 퍼셉트론의 구조와 원리, 그리고 단층 퍼셉트론의 한계와 이를 극복한 다층 퍼셉트론까지 순서대로 살펴보겠습니다.\n1. 딥러닝 개론 인공지능, 머신러닝, 딥러닝의 관계 세 개념은 포함 관계로 이해할 수 있습니다.\n인공지능(Artificial Intelligence): 가장 큰 범주 머신러닝(Machine Learning): 인공지능을 구현하는 방법론 중 하나 딥러닝(Deep Learning): 머신러닝의 여러 방법론 중 하나 딥러닝의 정의 딥러닝은 인공신경망에 기반하여 컴퓨터에게 사람의 사고방식을 가르치는 방법입니다.\n">
+<title>[딥러닝 기초] 퍼셉트론(Perceptron)</title>
+
+
+<link rel="canonical" href="https://lucaspark-10.github.io/data-analysis/python_data_analysis_28/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
+
+
+<link rel="stylesheet" href="/scss/style.min.de7e6698ac54e40edf7f3d56f131b6bbacde7bdf742f829e1185371a8af17315.css"><meta property='og:title' content="[딥러닝 기초] 퍼셉트론(Perceptron)">
+<meta property='og:description' content="들어가며 이번 글에서는 딥러닝의 가장 기초가 되는 개념인 퍼셉트론에 대해 정리해보겠습니다.\n딥러닝이 무엇인지부터 시작해서, 퍼셉트론의 구조와 원리, 그리고 단층 퍼셉트론의 한계와 이를 극복한 다층 퍼셉트론까지 순서대로 살펴보겠습니다.\n1. 딥러닝 개론 인공지능, 머신러닝, 딥러닝의 관계 세 개념은 포함 관계로 이해할 수 있습니다.\n인공지능(Artificial Intelligence): 가장 큰 범주 머신러닝(Machine Learning): 인공지능을 구현하는 방법론 중 하나 딥러닝(Deep Learning): 머신러닝의 여러 방법론 중 하나 딥러닝의 정의 딥러닝은 인공신경망에 기반하여 컴퓨터에게 사람의 사고방식을 가르치는 방법입니다.\n">
+<meta property='og:url' content='https://lucaspark-10.github.io/data-analysis/python_data_analysis_28/'>
+<meta property='og:site_name' content='LucasPark Blog'>
+<meta property='og:type' content='article'><meta property='article:section' content='Data-Analysis' /><meta property='article:published_time' content='2026-07-31T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2026-07-31T00:00:00&#43;00:00'/>
+<meta name="twitter:title" content="[딥러닝 기초] 퍼셉트론(Perceptron)">
+<meta name="twitter:description" content="들어가며 이번 글에서는 딥러닝의 가장 기초가 되는 개념인 퍼셉트론에 대해 정리해보겠습니다.\n딥러닝이 무엇인지부터 시작해서, 퍼셉트론의 구조와 원리, 그리고 단층 퍼셉트론의 한계와 이를 극복한 다층 퍼셉트론까지 순서대로 살펴보겠습니다.\n1. 딥러닝 개론 인공지능, 머신러닝, 딥러닝의 관계 세 개념은 포함 관계로 이해할 수 있습니다.\n인공지능(Artificial Intelligence): 가장 큰 범주 머신러닝(Machine Learning): 인공지능을 구현하는 방법론 중 하나 딥러닝(Deep Learning): 머신러닝의 여러 방법론 중 하나 딥러닝의 정의 딥러닝은 인공신경망에 기반하여 컴퓨터에게 사람의 사고방식을 가르치는 방법입니다.\n">
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-EVK5B22CB3"></script>
+      <script>
+        var doNotTrack = false;
+        if ( true ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-EVK5B22CB3');
+        }
+      </script>
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column compact"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">LucasPark Blog</a></h1>
+            <h2 class="site-description">Lucas Park의 개인 블로그</h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                <span>Home</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/posts/' >
+                
+                <span>Posts</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/git-study/' >
+                
+                <span>Git-study</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/data-analysis/' >
+                
+                <span>Data Analysis</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/gold-news-and-analysis/' >
+                
+                <span>Gold Price Check &amp; Analysis</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/atmospheric-environment/' >
+                
+                <span>Atmospheric Environment</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>Dark Mode</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/data-analysis/python_data_analysis_28/">[딥러닝 기초] 퍼셉트론(Perceptron)</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    
+    
+    
+    
+    
+    
+    <footer class="article-meta">
+        
+            <div class="inline-meta">
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                    <time class="article-time--published" datetime='2026-07-31T00:00:00Z'>2026년 7월 31일 금요일</time>
+                
+
+                
+            </div>
+        
+
+        
+
+        
+    </footer>
+    
+</div>
+
+</header>
+
+    
+
+    <section class="article-content">
+    
+    
+    <h1 id="들어가며">들어가며
+</h1><p>이번 글에서는 딥러닝의 가장 기초가 되는 개념인 <strong>퍼셉트론</strong>에 대해 정리해보겠습니다.</p>
+<p>딥러닝이 무엇인지부터 시작해서, 퍼셉트론의 구조와 원리, 그리고 단층 퍼셉트론의 한계와 이를 극복한 다층 퍼셉트론까지 순서대로 살펴보겠습니다.</p>
+<hr>
+<h2 id="1-딥러닝-개론">1. 딥러닝 개론
+</h2><h3 id="인공지능-머신러닝-딥러닝의-관계">인공지능, 머신러닝, 딥러닝의 관계
+</h3><p>세 개념은 포함 관계로 이해할 수 있습니다.</p>
+<ul>
+<li><strong>인공지능(Artificial Intelligence)</strong>: 가장 큰 범주
+<ul>
+<li><strong>머신러닝(Machine Learning)</strong>: 인공지능을 구현하는 방법론 중 하나
+<ul>
+<li><strong>딥러닝(Deep Learning)</strong>: 머신러닝의 여러 방법론 중 하나</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="딥러닝의-정의">딥러닝의 정의
+</h3><p>딥러닝은 <strong>인공신경망</strong>에 기반하여 컴퓨터에게 사람의 사고방식을 가르치는 방법입니다.</p>
+<h3 id="인공-신경망의-정의">인공 신경망의 정의
+</h3><p>인공 신경망은 생물학의 신경망에서 영감을 얻은 학습 알고리즘으로, <strong>사람의 신경 시스템</strong>을 모방합니다.</p>
+<p>사람의 신경 시스템(Neuron System)은 두뇌의 가장 작은 정보처리 단위인 뉴런(Neuron)으로 구성되어 있으며, 수상돌기(Dendrites), 세포체(Cell Body), 축삭(Axon) 등의 구조를 가지고 있습니다.</p>
+<h3 id="인공-신경망의-특징">인공 신경망의 특징
+</h3><p>인공 신경망은 입력층(Input Layer), 은닉층(Hidden Layer), 출력층(Output Layer)으로 구성되며, 모델 스스로 데이터의 특성을 학습합니다.</p>
+<p>이러한 특성 덕분에 <strong>지도 학습</strong>과 <strong>비지도 학습</strong> 모두에 적용할 수 있으며, 회귀 분석, 분류, 패턴 파악 등 다양한 문제에 활용됩니다.</p>
+<h3 id="딥러닝의-역사">딥러닝의 역사
+</h3><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>연도</th>
+          <th>사건</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>1958</td>
+          <td>Perceptron 등장</td>
+      </tr>
+      <tr>
+          <td>1969</td>
+          <td>1차 AI 겨울(First AI winter) 시작</td>
+      </tr>
+      <tr>
+          <td>1986</td>
+          <td>2차 붐(Boom times)</td>
+      </tr>
+      <tr>
+          <td>1990</td>
+          <td>2차 AI 겨울(Second AI winter)</td>
+      </tr>
+      <tr>
+          <td>2012</td>
+          <td>딥러닝 혁명(Deep learning revolution)</td>
+      </tr>
+      <tr>
+          <td>2020</td>
+          <td>~현재</td>
+      </tr>
+  </tbody>
+</table></div>
+<h3 id="현대의-딥러닝-기술-적용-사례">현대의 딥러닝 기술 적용 사례
+</h3><ul>
+<li>얼굴 인식 카메라</li>
+<li>기계 번역 모델 (Google 번역 등)</li>
+<li>알파고 제로(AlphaGo Zero)</li>
+</ul>
+<hr>
+<h2 id="2-퍼셉트론perceptron">2. 퍼셉트론(Perceptron)
+</h2><h3 id="신경망-이전의-연구">신경망 이전의 연구
+</h3><p>신경망이 등장하기 전에는 얼굴 인식, 숫자 및 문자 인식 등의 문제를 다루려는 연구들이 있었습니다.</p>
+<h3 id="명시적-프로그래밍explicit-programming의-한계">명시적 프로그래밍(Explicit Programming)의 한계
+</h3><p>과거에는 아래와 같이 <code>if-else</code> 조건문을 통해 규칙을 일일이 명시하는 <strong>명시적 프로그래밍</strong> 방식이 사용되었습니다.</p>
+<pre tabindex="0"><code>if () then {
+} else if () then {
+} else if () then {
+} else if () then {} else if () then {}
+……
+</code></pre><p>하지만 자율 주행 자동차와 같이 복잡한 문제의 경우, 사람이 일일이 모든 경우의 수를 입력하고 가르치는 것은 불가능에 가깝습니다.</p>
+<p>여기서 <strong>기계가 스스로 사람처럼 학습할 수 있는 기술의 필요성</strong>이 대두되었고, 이러한 필요에서 등장한 것이 1958년의 <strong>퍼셉트론</strong>입니다.</p>
+<h3 id="퍼셉트론의-기본-구조">퍼셉트론의 기본 구조
+</h3><p>퍼셉트론은 사람의 신경 세포(뉴런)의 구조를 본떠 만든 초기 형태의 인공 신경망입니다.</p>
+<p>$$y = activation(w_0 + w_1x_1 + w_2x_2)$$</p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>변수</th>
+          <th>의미</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>$x_1, x_2$</td>
+          <td>입력 값</td>
+      </tr>
+      <tr>
+          <td>$w_1, w_2$</td>
+          <td>가중치</td>
+      </tr>
+      <tr>
+          <td>$B$ (또는 $w_0$)</td>
+          <td>Bias(편향)</td>
+      </tr>
+      <tr>
+          <td>$y$</td>
+          <td>출력 값</td>
+      </tr>
+  </tbody>
+</table></div>
+<p>입력 값들에 각각의 가중치를 곱하여 모두 더한 뒤(Σ), 활성화 함수(Activation function)를 거쳐 최종 출력 값을 얻는 구조입니다.</p>
+<h3 id="활성화-함수activation-function">활성화 함수(Activation Function)
+</h3><p>퍼셉트론에서 사용되는 대표적인 활성화 함수는 **계단 함수(Step function)**입니다.</p>
+<p>$$
+activation(x) =
+\begin{cases}
+1 &amp; x \geq 0 \
+0 &amp; x &lt; 0
+\end{cases}
+$$</p>
+<h3 id="퍼셉트론-동작-예시">퍼셉트론 동작 예시
+</h3><p>입력값 $x_1 = 1$(가중치 2), $x_2 = 0$(가중치 1), bias $= -0.5$일 때:</p>
+<p>$$y = activation(-0.5 + 1 \cdot 0 + 2 \cdot 1) = activation(1.5) = 1$$</p>
+<h3 id="퍼셉트론-코드-예시-python">퍼셉트론 코드 예시 (Python)
+</h3><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">perceptron</span>(x, weights):
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># bias</span>
+</span></span><span style="display:flex;"><span>    sum_ <span style="color:#f92672">=</span> weights[<span style="color:#ae81ff">0</span>]
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(len(x)<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>):
+</span></span><span style="display:flex;"><span>        pre_y <span style="color:#f92672">+=</span> weights[i<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>] <span style="color:#f92672">*</span> x[i]
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">1</span> <span style="color:#66d9ef">if</span> pre_y <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">0</span> <span style="color:#66d9ef">else</span> <span style="color:#ae81ff">0</span>
+</span></span></code></pre></div><hr>
+<h2 id="3-퍼셉트론-선형-분류기">3. 퍼셉트론 선형 분류기
+</h2><h3 id="논리-회로의-역할을-수행하는-퍼셉트론">논리 회로의 역할을 수행하는 퍼셉트론
+</h3><p>사람의 신경계와 딥러닝은 다음과 같이 대응됩니다.</p>
+<ul>
+<li>사람의 신경계: 뉴런 → 신경망 → 지능</li>
+<li>딥러닝: 퍼셉트론 → 인공 신경망 → 인공지능</li>
+</ul>
+<p>퍼셉트론은 **논리 회로(Logic Gate)**의 역할을 수행할 수 있습니다.</p>
+<p>논리 회로란 일정한 논리 연산에 의해 출력을 얻는 회로를 의미합니다.</p>
+<h3 id="and-gate">AND gate
+</h3><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>A/B</th>
+          <th>C</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>0/0</td>
+          <td>0</td>
+      </tr>
+      <tr>
+          <td>1/0</td>
+          <td>0</td>
+      </tr>
+      <tr>
+          <td>0/1</td>
+          <td>0</td>
+      </tr>
+      <tr>
+          <td>1/1</td>
+          <td>1</td>
+      </tr>
+  </tbody>
+</table></div>
+<p>퍼셉트론으로 표현하면 다음과 같습니다.</p>
+<p>$$C = activation(1 \cdot A + 1 \cdot B - 1.5)$$</p>
+<h3 id="or-gate">OR gate
+</h3><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>A/B</th>
+          <th>C</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>0/0</td>
+          <td>0</td>
+      </tr>
+      <tr>
+          <td>1/0</td>
+          <td>1</td>
+      </tr>
+      <tr>
+          <td>0/1</td>
+          <td>1</td>
+      </tr>
+      <tr>
+          <td>1/1</td>
+          <td>1</td>
+      </tr>
+  </tbody>
+</table></div>
+<p>$$C = activation(1 \cdot A + 1 \cdot B - 0.5)$$</p>
+<h3 id="nand-gate-not-and">NAND gate (NOT-AND)
+</h3><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>A/B</th>
+          <th>C</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>0/0</td>
+          <td>1</td>
+      </tr>
+      <tr>
+          <td>1/0</td>
+          <td>1</td>
+      </tr>
+      <tr>
+          <td>0/1</td>
+          <td>1</td>
+      </tr>
+      <tr>
+          <td>1/1</td>
+          <td>0</td>
+      </tr>
+  </tbody>
+</table></div>
+<p>$$C = activation((-1) \cdot A + (-1) \cdot B + 1.5)$$</p>
+<h3 id="nor-gate-not-or">NOR gate (NOT-OR)
+</h3><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>A/B</th>
+          <th>C</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>0/0</td>
+          <td>1</td>
+      </tr>
+      <tr>
+          <td>1/0</td>
+          <td>0</td>
+      </tr>
+      <tr>
+          <td>0/1</td>
+          <td>0</td>
+      </tr>
+      <tr>
+          <td>1/1</td>
+          <td>0</td>
+      </tr>
+  </tbody>
+</table></div>
+<p>$$C = activation((-1) \cdot A + (-1) \cdot B + 0.5)$$</p>
+<h3 id="단층-퍼셉트론single-layer-perceptron의-구조">단층 퍼셉트론(Single Layer Perceptron)의 구조
+</h3><p>단층 퍼셉트론은 **입력층(Input Layer)**과 **출력층(Output Layer)**만으로 이루어져 있습니다.</p>
+<ul>
+<li><strong>입력층</strong>: 외부로부터 데이터를 입력받는 신경망 입구의 Layer</li>
+<li><strong>출력층</strong>: 모델의 최종 연산 결과를 내보내는 신경망 출구의 Layer</li>
+</ul>
+<h3 id="퍼셉트론을-활용한-선형-분류기">퍼셉트론을 활용한 선형 분류기
+</h3><p>앞서 살펴본 0, 1 데이터를 계산하던 논리 회로 개념을 확장하면, 퍼셉트론을 <strong>선형 분류기</strong>로 활용해 데이터를 분류할 수 있습니다.</p>
+<p>예를 들어 강아지와 고양이 데이터를 하나의 직선으로 구분하는 것이 가능합니다.</p>
+<hr>
+<h2 id="4-비선형적인-문제">4. 비선형적인 문제
+</h2><h3 id="하나의-선으로-분류할-수-없는-문제의-등장">하나의 선으로 분류할 수 없는 문제의 등장
+</h3><p>모든 데이터가 하나의 직선으로 깔끔하게 분류되는 것은 아닙니다.</p>
+<p>데이터의 분포에 따라 하나의 직선으로는 분류할 수 없는 경우가 발생합니다.</p>
+<h3 id="비선형적-논리-게이트-xor-gate">비선형적 논리 게이트, XOR gate
+</h3><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>A/B</th>
+          <th>C</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>0/0</td>
+          <td>0</td>
+      </tr>
+      <tr>
+          <td>1/0</td>
+          <td>1</td>
+      </tr>
+      <tr>
+          <td>0/1</td>
+          <td>1</td>
+      </tr>
+      <tr>
+          <td>1/1</td>
+          <td>0</td>
+      </tr>
+  </tbody>
+</table></div>
+<p>XOR(Exclusive OR)은 대표적인 <strong>비선형 문제</strong>입니다.</p>
+<p>좌표평면에 XOR의 출력값을 표시해보면, 하나의 직선만으로는 $C=1$인 점들과 $C=0$인 점들을 완벽히 구분할 수 없습니다.</p>
+<h3 id="단층-퍼셉트론으로는-해결-불가능한-xor-gate">단층 퍼셉트론으로는 해결 불가능한 XOR gate
+</h3><p>이처럼 단층 퍼셉트론은 선형 분류만 가능하기 때문에 XOR 문제를 해결할 수 없습니다.</p>
+<p>이 한계는 실제로 **1969년 첫 번째 AI 겨울(First AI Winter)**을 초래한 주요 원인 중 하나였습니다.</p>
+<h3 id="비선형적-접근-방법의-필요성">비선형적 접근 방법의 필요성
+</h3><p>XOR 문제를 해결하기 위해서는 직선이 아닌 곡선, 혹은 여러 개의 직선을 조합한 비선형적인 접근 방법이 필요합니다.</p>
+<hr>
+<h2 id="5-다층-퍼셉트론">5. 다층 퍼셉트론
+</h2><h3 id="1986년-첫-번째-빙하기의-끝">1986년, 첫 번째 빙하기의 끝
+</h3><p>XOR 문제로 촉발된 AI 겨울은 1986년 <strong>다층 퍼셉트론</strong>의 등장과 함께 극복되기 시작했습니다.</p>
+<h3 id="비선형적인-문제-해결의-아이디어">비선형적인 문제 해결의 아이디어
+</h3><p>단층 퍼셉트론은 입력층과 출력층만 존재하기 때문에 XOR과 같은 비선형 문제를 풀 수 없었습니다.</p>
+<p>이를 해결하기 위해 입력층과 출력층 사이에 **은닉층(Hidden Layer)**을 추가하는 아이디어가 제시되었습니다.</p>
+<h3 id="xor-gate-예시로-보는-다층-구조">XOR gate 예시로 보는 다층 구조
+</h3><p>XOR 연산은 하나의 레이어만으로는 표현이 불가능하지만, <strong>NAND 연산과 OR 연산을 함께 사용</strong>하면 표현이 가능합니다.</p>
+<ul>
+<li>입력층 → 은닉층(NAND Gate, OR Gate) → 출력층(XOR Gate)</li>
+</ul>
+<p>이렇게 단층 퍼셉트론을 여러 개 쌓은 구조를 **다층 퍼셉트론(Multi Layer Perceptron, MLP)**이라고 부릅니다.</p>
+<h3 id="은닉층hidden-layer">은닉층(Hidden Layer)
+</h3><p>은닉층이란 <strong>입력층과 출력층 사이의 모든 Layer</strong>를 의미합니다.</p>
+<h3 id="은닉층의-개수와-딥러닝">은닉층의 개수와 딥러닝
+</h3><p>은닉층이 <strong>3층 이상</strong>일 경우, 깊은 신경망이라는 의미에서 <strong>Deep Learning</strong>이라는 용어를 사용합니다.</p>
+<h3 id="다층-퍼셉트론이-결정할-수-있는-영역">다층 퍼셉트론이 결정할 수 있는 영역
+</h3><p>은닉층의 개수가 늘어날수록 모델이 표현할 수 있는 결정 경계(Decision Boundary)의 형태도 더욱 복잡해집니다.</p>
+<ul>
+<li><strong>1 Hidden Layer</strong>: 반평면 형태의 단순한 영역 구분 가능</li>
+<li><strong>2 Hidden Layers</strong>: 볼록한(convex) 다각형 형태의 영역 구분 가능</li>
+<li><strong>N Hidden Layers</strong>: 임의의 복잡한 형태(비볼록 영역 포함)까지 표현 가능</li>
+</ul>
+<p>이처럼 은닉층을 깊게 쌓을수록 더 복잡하고 비선형적인 문제를 해결할 수 있게 되며, 이것이 바로 딥러닝이 강력한 성능을 발휘하는 핵심 원리입니다.</p>
+<hr>
+<h2 id="마무리-정리">마무리 정리
+</h2><p>이번 장에서는 딥러닝의 출발점인 <strong>퍼셉트론</strong>의 개념과 구조, 그리고 이를 활용한 논리 회로 구현과 선형 분류의 원리를 살펴보았습니다.</p>
+<p>또한 단층 퍼셉트론이 가진 <strong>비선형 문제(XOR)의 한계</strong>와, 이를 극복하기 위해 등장한 **다층 퍼셉트론(MLP)**의 개념까지 정리해보았습니다.</p>
+<p>다음은 텐서플로우와 딥러닝 학습에 대해 정리하겠습니다.</p>
+
+</section>
+
+
+    <footer class="article-meta article-footer">
+    
+
+    </footer>
+
+
+    
+        <link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI&#43;WdtXRGWt2kTvGFasHpSy3SV"crossorigin="anonymous"
+            ><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG&#43;vnGctmUb0ZY0l8"crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"integrity="sha384-&#43;VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4&#43;/RRE05"crossorigin="anonymous"
+                defer
+                >
+            </script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        const elementsToRender = [".main-article", ".widget--toc"];
+
+        elementsToRender.forEach(selector => {
+            const element = document.querySelector(selector);
+            if (element) {
+                renderMathInElement(element, {
+                    delimiters: [
+                        { left: "$$", right: "$$", display: true },
+                        { left: "$", right: "$", display: false },
+                        { left: "\\(", right: "\\)", display: false },
+                        { left: "\\[", right: "\\]", display: true }
+                    ],
+                    ignoredClasses: ["gist"]
+                });
+            }
+        });
+    });
+</script>
+    
+</article>
+
+    
+
+    
+<nav class="article-prev-next">
+  
+  <a class="prev-next-card prev" href="/data-analysis/python_data_analysis_27/">
+    <div class="direction">← 이전 글</div>
+    <div class="title">[머신러닝 II] 의사결정나무(Decision Tree)</div>
+  </a>
+  
+
+  
+  <a class="prev-next-card next" href="/data-analysis/python_data_analysis_29/">
+    <div class="direction">다음 글 →</div>
+    <div class="title">[딥러닝 기초] 텐서플로우와 딥러닝 학습</div>
+  </a>
+  
+</nav>
+
+
+    
+
+     
+    
+        
+
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2026 LucasPark Blog
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="4.0.3">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+
+
+
+<script type="module">
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script>
+
+    
+
+            </main>
+        </div>
+        
+<script type="text/javascript" src="/ts/main.1ff1e5fdc4e178ed422e50aa407526dc552f26342d729343fded19416194382c.js" defer></script>
+
+
+    </body>
+</html>
