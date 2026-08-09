@@ -262,10 +262,8 @@ $$</p>
 logit(p)=\log\frac{p}{1-p}
 $$</p>
 <p>로지스틱 회귀는 다음과 같이 표현할 수 있습니다.</p>
-<h1 id="1-py1x">$$
-\log\frac{P(Y=1|X)}
-{1-P(Y=1|X)}
-</h1><p>\beta_0+\beta^TX
+<p>$$
+\log\frac{P(Y=1|X)}{1-P(Y=1|X)} = \beta_0+\beta^TX
 $$</p>
 <p>즉, <strong>확률 자체가 아니라 log-odds가 선형식으로 표현됩니다.</strong></p>
 <hr>
@@ -279,13 +277,8 @@ p_i^{y_i}(1-p_i)^{1-y_i}
 $$</p>
 <p>형태로 표현됩니다.</p>
 <p>계산을 편하게 하기 위해 로그를 취하면</p>
-<h1 id="log-l">$$
-\log L
-</h1><p>\sum_i
-[
-y_i\log p_i+
-(1-y_i)\log(1-p_i)
-]
+<p>$$
+\log L = \sum_i \left[ y_i\log p_i+ (1-y_i)\log(1-p_i) \right]
 $$</p>
 <p>가 됩니다.</p>
 <p>결국 학습에서는 <strong>데이터가 관측될 가능도를 최대화하는 파라미터</strong>를 찾습니다.</p>
