@@ -1,163 +1,575 @@
-<!doctype html><html lang=ko-kr dir=ltr><head><meta charset=utf-8><meta name=viewport content='width=device-width,initial-scale=1'><meta name=description content="들어가며 이번 글에서는 PyTorch의 기본 문법에 대해 정리해보겠습니다.\nPyTorch가 무엇인지부터 시작해서, 데이터를 다루는 핵심 개념들, 그리고 Tensor의 생성과 연산, 마지막으로 자동 미분 기능인 Autograd까지 순서대로 살펴보겠습니다.\n1. 딥러닝 프레임워크란 딥러닝 모델을 처음부터 직접 구현하려면 행렬, 선형대수학 등 수학에 대한 깊은 이해가 필요합니다.\n하지만 딥러닝 프레임워크를 활용하면 수학에 대한 깊은 지식이 없어도 딥러닝 모델을 구현할 수 있습니다.\n딥러닝 프레임워크는 딥러닝 학습의 전 과정을 쉽게 진행할 수 있도록 다양한 도구를 제공해줍니다.\n2. PyTorch 소개 PyTorch는 Torch 기반의 오픈소스 머신러닝 라이브러리로, 컴퓨터 비전과 자연어 처리 분야에서 유용하게 사용됩니다.\n"><title>[PyTorch] 기본 문법 정리</title><link rel=canonical href=https://lucaspark-10.github.io/data-analysis/python_data_analysis_31/><link rel=preconnect href=https://fonts.googleapis.com><link rel=preconnect href=https://fonts.gstatic.com crossorigin><link rel=preload as=style href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap"><link rel=stylesheet href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap"><link rel=stylesheet href=/scss/style.min.de7e6698ac54e40edf7f3d56f131b6bbacde7bdf742f829e1185371a8af17315.css><meta property='og:title' content="[PyTorch] 기본 문법 정리"><meta property='og:description' content="들어가며 이번 글에서는 PyTorch의 기본 문법에 대해 정리해보겠습니다.\nPyTorch가 무엇인지부터 시작해서, 데이터를 다루는 핵심 개념들, 그리고 Tensor의 생성과 연산, 마지막으로 자동 미분 기능인 Autograd까지 순서대로 살펴보겠습니다.\n1. 딥러닝 프레임워크란 딥러닝 모델을 처음부터 직접 구현하려면 행렬, 선형대수학 등 수학에 대한 깊은 이해가 필요합니다.\n하지만 딥러닝 프레임워크를 활용하면 수학에 대한 깊은 지식이 없어도 딥러닝 모델을 구현할 수 있습니다.\n딥러닝 프레임워크는 딥러닝 학습의 전 과정을 쉽게 진행할 수 있도록 다양한 도구를 제공해줍니다.\n2. PyTorch 소개 PyTorch는 Torch 기반의 오픈소스 머신러닝 라이브러리로, 컴퓨터 비전과 자연어 처리 분야에서 유용하게 사용됩니다.\n"><meta property='og:url' content='https://lucaspark-10.github.io/data-analysis/python_data_analysis_31/'><meta property='og:site_name' content='LucasPark Blog'><meta property='og:type' content='article'><meta property='article:section' content='Data-Analysis'><meta property='article:published_time' content='2026-08-03T00:00:00+00:00'><meta property='article:modified_time' content='2026-08-03T00:00:00+00:00'><meta name=twitter:title content="[PyTorch] 기본 문법 정리"><meta name=twitter:description content="들어가며 이번 글에서는 PyTorch의 기본 문법에 대해 정리해보겠습니다.\nPyTorch가 무엇인지부터 시작해서, 데이터를 다루는 핵심 개념들, 그리고 Tensor의 생성과 연산, 마지막으로 자동 미분 기능인 Autograd까지 순서대로 살펴보겠습니다.\n1. 딥러닝 프레임워크란 딥러닝 모델을 처음부터 직접 구현하려면 행렬, 선형대수학 등 수학에 대한 깊은 이해가 필요합니다.\n하지만 딥러닝 프레임워크를 활용하면 수학에 대한 깊은 지식이 없어도 딥러닝 모델을 구현할 수 있습니다.\n딥러닝 프레임워크는 딥러닝 학습의 전 과정을 쉽게 진행할 수 있도록 다양한 도구를 제공해줍니다.\n2. PyTorch 소개 PyTorch는 Torch 기반의 오픈소스 머신러닝 라이브러리로, 컴퓨터 비전과 자연어 처리 분야에서 유용하게 사용됩니다.\n"><script async src="https://www.googletagmanager.com/gtag/js?id=G-EVK5B22CB3"></script><script>var doNotTrack=!1,dnt=navigator.doNotTrack||window.doNotTrack||navigator.msDoNotTrack,doNotTrack=dnt=="1"||dnt=="yes";if(!doNotTrack){window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag("js",new Date),gtag("config","G-EVK5B22CB3")}</script></head><body class=article-page><script>(function(){const e="StackColorScheme";localStorage.getItem(e)||localStorage.setItem(e,"auto")})()</script><script>(function(){const t="StackColorScheme",e=localStorage.getItem(t),n=window.matchMedia("(prefers-color-scheme: dark)").matches===!0;e=="dark"||e==="auto"&&n?document.documentElement.dataset.scheme="dark":document.documentElement.dataset.scheme="light"})()</script><div class="container main-container flex on-phone--column compact"><aside class="sidebar left-sidebar sticky"><button class="hamburger hamburger--spin" type=button id=toggle-menu aria-label="Toggle Menu">
-<span class=hamburger-box><span class=hamburger-inner></span></span></button><header><div class=site-meta><h1 class=site-name><a href=/>LucasPark Blog</a></h1><h2 class=site-description>Lucas Park의 개인 블로그</h2></div></header><ol class=menu id=main-menu><li><a href=/><span>Home</span></a></li><li><a href=/posts/><span>Posts</span></a></li><li><a href=/git-study/><span>Git-study</span></a></li><li><a href=/data-analysis/><span>Data Analysis</span></a></li><li><a href=/gold-news-and-analysis/><span>Gold Price Check & Analysis</span></a></li><li><a href=/atmospheric-environment/><span>Atmospheric Environment</span></a></li><li class=menu-bottom-section><ol class=menu><li id=dark-mode-toggle><svg class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="8" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
-<svg class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="16" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
-<span>Dark Mode</span></li></ol></li></ol></aside><main class="main full-width"><article class=main-article><header class=article-header><div class=article-details><div class=article-title-wrapper><h2 class=article-title><a href=/data-analysis/python_data_analysis_31/>[PyTorch] 기본 문법 정리</a></h2></div><footer class=article-meta><div class=inline-meta><svg class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M11.795 21H5a2 2 0 01-2-2V7a2 2 0 012-2h12a2 2 0 012 2v4"/><circle cx="18" cy="18" r="4"/><path d="M15 3v4"/><path d="M7 3v4"/><path d="M3 11h16"/><path d="M18 16.496V18l1 1"/></svg>
-<time class=article-time--published datetime=2026-08-03T00:00:00Z>2026년 8월 3일 월요일</time></div></footer></div></header><section class=article-content><h1 id=들어가며>들어가며</h1><p>이번 글에서는 PyTorch의 기본 문법에 대해 정리해보겠습니다.</p><p>PyTorch가 무엇인지부터 시작해서, 데이터를 다루는 핵심 개념들, 그리고 Tensor의 생성과 연산, 마지막으로 자동 미분 기능인 Autograd까지 순서대로 살펴보겠습니다.</p><hr><h2 id=1-딥러닝-프레임워크란>1. 딥러닝 프레임워크란</h2><p>딥러닝 모델을 처음부터 직접 구현하려면 행렬, 선형대수학 등 수학에 대한 깊은 이해가 필요합니다.</p><p>하지만 딥러닝 프레임워크를 활용하면 수학에 대한 깊은 지식이 없어도 딥러닝 모델을 구현할 수 있습니다.</p><p>딥러닝 프레임워크는 딥러닝 학습의 전 과정을 쉽게 진행할 수 있도록 다양한 도구를 제공해줍니다.</p><h2 id=2-pytorch-소개>2. PyTorch 소개</h2><p>PyTorch는 Torch 기반의 오픈소스 머신러닝 라이브러리로, 컴퓨터 비전과 자연어 처리 분야에서 유용하게 사용됩니다.</p><ul><li>Meta의 AI 연구소에서 Torch 라이브러리를 파이썬 기반으로 개발하여 PyTorch라는 이름이 붙었습니다.</li><li>연구 분야에서 거의 80% 이상의 논문이 PyTorch를 사용하고 있을 정도로 널리 쓰이고 있습니다.</li></ul><h2 id=3-pytorch-주요-키워드>3. PyTorch 주요 키워드</h2><p>PyTorch를 학습하기 전에 아래 다섯 가지 핵심 키워드를 먼저 알아두면 좋습니다.</p><div class=table-wrapper><table><thead><tr><th>키워드</th><th>설명</th></tr></thead><tbody><tr><td><strong>Datasets</strong></td><td>데이터와 그 라벨(존재할 경우)을 담고 있는 개체입니다. 데이터 전처리 로직을 적용할 수 있습니다.</td></tr><tr><td><strong>DataLoaders</strong></td><td>학습 및 테스트 과정에서 Dataset을 순회하면서 데이터를 제공하는 개체입니다. Mini-batch 구성 등 데이터셋에 대한 다양한 로직을 적용할 수 있습니다.</td></tr><tr><td><strong>torch.nn</strong></td><td>딥러닝 모델을 구성하기 위한 여러 레이어가 구현되어 있는 공간입니다. 다양한 레이어를 활용해 딥러닝 모델을 구현할 수 있습니다.</td></tr><tr><td><strong>손실 함수</strong></td><td>Adam, SGD를 비롯한 다양한 손실 함수를 모델 학습에 활용할 수 있습니다. DataLoader와 손실 함수를 바탕으로 모델을 학습시킵니다.</td></tr><tr><td><strong>모델 학습</strong></td><td>위 요소들을 종합하여 실제로 모델을 학습시키는 과정입니다.</td></tr></tbody></table></div><p>이 다섯 가지 개념이 PyTorch로 딥러닝 모델을 만드는 전체 흐름의 뼈대가 된다고 볼 수 있습니다.</p><h2 id=4-pytorch-tensor-기초-문법>4. PyTorch Tensor 기초 문법</h2><h3 id=4-1-tensor란>4-1. Tensor란</h3><p>Tensor는 PyTorch에서 데이터를 표현하는 기본 단위이며, 인공신경망 학습의 전 과정에서 필수적으로 사용됩니다.</p><p>수학적으로 Tensor는 다차원 배열(n차원 행렬)로 이해할 수 있습니다.</p><ul><li>1차원 Tensor: Vector</li><li>2차원 Tensor: Matrix</li><li>n차원 Tensor: nD Tensor</li></ul><p>또한 PyTorch에서는 Tensor와 Numpy 배열 간 상호 변환이 가능합니다.</p><h3 id=4-2-tensor와-numpy의-관계>4-2. Tensor와 Numpy의 관계</h3><p><code>torch.from_numpy()</code>와 <code>numpy()</code> 메서드를 활용하면 Tensor와 Numpy 배열 간 상호 변환이 가능합니다.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#f92672>import</span> numpy <span style=color:#66d9ef>as</span> np
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>arr <span style=color:#f92672>=</span> np<span style=color:#f92672>.</span>array([[<span style=color:#ae81ff>1</span>, <span style=color:#ae81ff>2</span>, <span style=color:#ae81ff>3</span>]])
-</span></span><span style=display:flex><span>t <span style=color:#f92672>=</span> torch<span style=color:#f92672>.</span>from_numpy(arr)
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>print(<span style=color:#e6db74>&#34;Tensor:&#34;</span>, t)
-</span></span><span style=display:flex><span><span style=color:#75715e># Tensor: tensor([[1, 2, 3]], dtype=torch.int32)</span>
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>print(<span style=color:#e6db74>&#34;Back to Numpy:&#34;</span>, t<span style=color:#f92672>.</span>numpy())
-</span></span><span style=display:flex><span><span style=color:#75715e># Back to Numpy: [[1 2 3]]</span>
-</span></span></code></pre></div><p>여기서 주의할 점은, Tensor와 Numpy 배열이 <strong>메모리를 공유</strong>한다는 것입니다.</p><p>따라서 한쪽에서 값을 변경하면 다른 쪽에도 그 변경 사항이 영향을 줄 수 있으므로 유의해야 합니다.</p><h3 id=4-3-tensor-생성>4-3. Tensor 생성</h3><p>PyTorch에서 Tensor를 생성하는 방법은 다양합니다.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#f92672>import</span> torch
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># 리스트로부터 생성</span>
-</span></span><span style=display:flex><span>t1 <span style=color:#f92672>=</span> torch<span style=color:#f92672>.</span>tensor([<span style=color:#ae81ff>1.0</span>, <span style=color:#ae81ff>2.0</span>, <span style=color:#ae81ff>3.0</span>])
-</span></span><span style=display:flex><span>print(<span style=color:#e6db74>&#34;t1:&#34;</span>, t1)
-</span></span><span style=display:flex><span><span style=color:#75715e># t1: tensor([1., 2., 3.])</span>
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># 0으로 채워진 텐서</span>
-</span></span><span style=display:flex><span>t2 <span style=color:#f92672>=</span> torch<span style=color:#f92672>.</span>zeros((<span style=color:#ae81ff>2</span>, <span style=color:#ae81ff>3</span>))
-</span></span><span style=display:flex><span>print(<span style=color:#e6db74>&#34;t2:&#34;</span>, t2)
-</span></span><span style=display:flex><span><span style=color:#75715e># t2: tensor([[0., 0., 0.],</span>
-</span></span><span style=display:flex><span><span style=color:#75715e>#             [0., 0., 0.]])</span>
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># 평균 0, 표준편차 1의 정규분포 텐서</span>
-</span></span><span style=display:flex><span>t3 <span style=color:#f92672>=</span> torch<span style=color:#f92672>.</span>randn((<span style=color:#ae81ff>2</span>, <span style=color:#ae81ff>2</span>))
-</span></span><span style=display:flex><span>print(<span style=color:#e6db74>&#34;t3:&#34;</span>, t3)
-</span></span><span style=display:flex><span><span style=color:#75715e># t3: tensor([[ 0.6208,  0.0195],</span>
-</span></span><span style=display:flex><span><span style=color:#75715e>#             [-0.8228, -0.0672]])</span>
-</span></span></code></pre></div><ul><li><code>torch.tensor()</code>: 리스트로부터 Tensor를 직접 생성합니다.</li><li><code>torch.zeros()</code> / <code>torch.ones()</code>: 각각 0, 1로 채워진 Tensor를 생성합니다.</li><li><code>torch.randn()</code>: 정규분포를 따르는 무작위 값으로 구성된 Tensor를 생성합니다.</li></ul><h3 id=4-4-tensor-속성>4-4. Tensor 속성</h3><p>Tensor 객체는 3가지 주요 속성을 가집니다.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-python data-lang=python><span style=display:flex><span>x <span style=color:#f92672>=</span> torch<span style=color:#f92672>.</span>rand((<span style=color:#ae81ff>3</span>, <span style=color:#ae81ff>4</span>), dtype<span style=color:#f92672>=</span>torch<span style=color:#f92672>.</span>float32, device<span style=color:#f92672>=</span><span style=color:#e6db74>&#39;cpu&#39;</span>)
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>print(<span style=color:#e6db74>&#34;Shape:&#34;</span>, x<span style=color:#f92672>.</span>shape)
-</span></span><span style=display:flex><span><span style=color:#75715e># Shape: torch.Size([3, 4])</span>
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>print(<span style=color:#e6db74>&#34;Data type:&#34;</span>, x<span style=color:#f92672>.</span>dtype)
-</span></span><span style=display:flex><span><span style=color:#75715e># Data type: torch.float32</span>
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>print(<span style=color:#e6db74>&#34;Device:&#34;</span>, x<span style=color:#f92672>.</span>device)
-</span></span><span style=display:flex><span><span style=color:#75715e># Device: cpu</span>
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>x<span style=color:#f92672>.</span>to(<span style=color:#e6db74>&#34;cuda:0&#34;</span>)  <span style=color:#75715e># GPU로 이동</span>
-</span></span></code></pre></div><ul><li><strong>shape</strong>: Tensor의 크기와 차원을 나타냅니다.</li><li><strong>dtype</strong>: Tensor에 저장되는 데이터의 타입을 의미합니다.</li><li><strong>device</strong>: 해당 Tensor가 CPU에 있는지, 혹은 GPU에 있는지를 나타냅니다. PyTorch는 GPU 가속 연산을 지원하므로, GPU를 사용할 수 있는 경우 device 설정은 성능에 매우 중요한 요소입니다.</li></ul><h3 id=4-5-tensor-연산>4-5. Tensor 연산</h3><p>Tensor는 덧셈, 곱셈, 행렬곱과 같은 수치 연산을 지원합니다.</p><p><code>+</code>, <code>*</code>, <code>@</code> 연산자나 <code>torch.add()</code>, <code>torch.matmul()</code> 같은 함수를 사용할 수 있습니다.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-python data-lang=python><span style=display:flex><span>a <span style=color:#f92672>=</span> torch<span style=color:#f92672>.</span>tensor([[<span style=color:#ae81ff>1</span>, <span style=color:#ae81ff>2</span>], [<span style=color:#ae81ff>3</span>, <span style=color:#ae81ff>4</span>]])
-</span></span><span style=display:flex><span>b <span style=color:#f92672>=</span> torch<span style=color:#f92672>.</span>tensor([[<span style=color:#ae81ff>10</span>, <span style=color:#ae81ff>20</span>], [<span style=color:#ae81ff>30</span>, <span style=color:#ae81ff>40</span>]])
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># 덧셈, 곱셈, 행렬곱</span>
-</span></span><span style=display:flex><span>print(<span style=color:#e6db74>&#34;Add:</span><span style=color:#ae81ff>\n</span><span style=color:#e6db74>&#34;</span>, a <span style=color:#f92672>+</span> b)
-</span></span><span style=display:flex><span><span style=color:#75715e># Add:</span>
-</span></span><span style=display:flex><span><span style=color:#75715e>#  tensor([[11, 22],</span>
-</span></span><span style=display:flex><span><span style=color:#75715e>#          [33, 44]])</span>
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>print(<span style=color:#e6db74>&#34;Element-wise Multiply:</span><span style=color:#ae81ff>\n</span><span style=color:#e6db74>&#34;</span>, a <span style=color:#f92672>*</span> b)
-</span></span><span style=display:flex><span><span style=color:#75715e># Element-wise Multiply:</span>
-</span></span><span style=display:flex><span><span style=color:#75715e>#  tensor([[ 10,  40],</span>
-</span></span><span style=display:flex><span><span style=color:#75715e>#          [ 90, 160]])</span>
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>print(<span style=color:#e6db74>&#34;Matrix Multiply:</span><span style=color:#ae81ff>\n</span><span style=color:#e6db74>&#34;</span>, a <span style=color:#f92672>@</span> b)
-</span></span><span style=display:flex><span><span style=color:#75715e># Matrix Multiply:</span>
-</span></span><span style=display:flex><span><span style=color:#75715e>#  tensor([[ 70, 100],</span>
-</span></span><span style=display:flex><span><span style=color:#75715e>#          [150, 220]])</span>
-</span></span></code></pre></div><p>함수 형태로도 동일한 연산이 가능합니다.</p><p>이때 브로드캐스팅이 함께 적용될 수도 있습니다.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-python data-lang=python><span style=display:flex><span>a <span style=color:#f92672>=</span> torch<span style=color:#f92672>.</span>tensor([[<span style=color:#ae81ff>1</span>, <span style=color:#ae81ff>2</span>], [<span style=color:#ae81ff>3</span>, <span style=color:#ae81ff>4</span>]])
-</span></span><span style=display:flex><span>b <span style=color:#f92672>=</span> torch<span style=color:#f92672>.</span>tensor([[<span style=color:#ae81ff>10</span>], [<span style=color:#ae81ff>20</span>]])
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>print(<span style=color:#e6db74>&#34;Add:</span><span style=color:#ae81ff>\n</span><span style=color:#e6db74>&#34;</span>, torch<span style=color:#f92672>.</span>add(a, b))
-</span></span><span style=display:flex><span><span style=color:#75715e># Add:</span>
-</span></span><span style=display:flex><span><span style=color:#75715e>#  tensor([[11, 12],</span>
-</span></span><span style=display:flex><span><span style=color:#75715e>#          [23, 24]])</span>
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>print(<span style=color:#e6db74>&#34;Matmul:</span><span style=color:#ae81ff>\n</span><span style=color:#e6db74>&#34;</span>, torch<span style=color:#f92672>.</span>matmul(a, b))
-</span></span><span style=display:flex><span><span style=color:#75715e># Matmul:</span>
-</span></span><span style=display:flex><span><span style=color:#75715e>#  tensor([[ 50],</span>
-</span></span><span style=display:flex><span><span style=color:#75715e>#          [110]])</span>
-</span></span></code></pre></div><p>이 연산들은 역전파 과정을 위한 <strong>자동 미분이 가능한 연산 그래프</strong>를 형성하게 되며, 이후 모델 학습 시 사용됩니다.</p><h3 id=4-6-tensor-차원>4-6. Tensor 차원</h3><p>Tensor는 다양한 차원으로 구성되며, 차원을 자유롭게 추가하거나 제거할 수 있습니다.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-python data-lang=python><span style=display:flex><span>x <span style=color:#f92672>=</span> torch<span style=color:#f92672>.</span>randn(<span style=color:#ae81ff>1</span>, <span style=color:#ae81ff>3</span>, <span style=color:#ae81ff>1</span>, <span style=color:#ae81ff>5</span>)
-</span></span><span style=display:flex><span>print(<span style=color:#e6db74>&#34;Original shape:&#34;</span>, x<span style=color:#f92672>.</span>shape)
-</span></span><span style=display:flex><span><span style=color:#75715e># Original shape: torch.Size([1, 3, 1, 5])</span>
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># 차원 제거</span>
-</span></span><span style=display:flex><span>x_squeezed <span style=color:#f92672>=</span> x<span style=color:#f92672>.</span>squeeze()
-</span></span><span style=display:flex><span>print(<span style=color:#e6db74>&#34;After squeeze:&#34;</span>, x_squeezed<span style=color:#f92672>.</span>shape)
-</span></span><span style=display:flex><span><span style=color:#75715e># After squeeze: torch.Size([3, 5])</span>
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># 차원 추가</span>
-</span></span><span style=display:flex><span>x_unsqueezed <span style=color:#f92672>=</span> x_squeezed<span style=color:#f92672>.</span>unsqueeze(<span style=color:#ae81ff>0</span>)
-</span></span><span style=display:flex><span>print(<span style=color:#e6db74>&#34;After unsqueeze:&#34;</span>, x_unsqueezed<span style=color:#f92672>.</span>shape)
-</span></span><span style=display:flex><span><span style=color:#75715e># After unsqueeze: torch.Size([1, 3, 5])</span>
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># 모양 변경 (reshape)</span>
-</span></span><span style=display:flex><span>x_viewed <span style=color:#f92672>=</span> x<span style=color:#f92672>.</span>view(<span style=color:#f92672>-</span><span style=color:#ae81ff>1</span>, <span style=color:#ae81ff>5</span>)  <span style=color:#75715e># -1은 크기를 자동 계산</span>
-</span></span><span style=display:flex><span>print(<span style=color:#e6db74>&#34;After view:&#34;</span>, x_viewed<span style=color:#f92672>.</span>shape)
-</span></span><span style=display:flex><span><span style=color:#75715e># After view: torch.Size([3, 5])</span>
-</span></span></code></pre></div><ul><li><code>tensor.shape</code>: 텐서의 모양을 확인합니다.</li><li><code>squeeze()</code>: 차원이 1인 부분을 제거합니다.</li><li><code>unsqueeze(dim)</code>: 특정 위치에 차원을 추가합니다.</li><li><code>view()</code>: 텐서의 크기를 재조정합니다.</li></ul><h3 id=4-7-tensor-차원-확장-브로드캐스팅>4-7. Tensor 차원 확장 (브로드캐스팅)</h3><p>PyTorch는 자동으로 차원을 확장하는 <strong>브로드캐스팅</strong>을 지원합니다.</p><p>이를 활용하면 서로 크기가 다른 일부 Tensor 간에도 연산이 가능합니다.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-python data-lang=python><span style=display:flex><span>a <span style=color:#f92672>=</span> torch<span style=color:#f92672>.</span>tensor([[<span style=color:#ae81ff>1</span>], [<span style=color:#ae81ff>2</span>], [<span style=color:#ae81ff>3</span>]])  <span style=color:#75715e># 3x1</span>
-</span></span><span style=display:flex><span>b <span style=color:#f92672>=</span> torch<span style=color:#f92672>.</span>tensor([<span style=color:#ae81ff>40</span>, <span style=color:#ae81ff>50</span>, <span style=color:#ae81ff>60</span>])     <span style=color:#75715e># 1x3</span>
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># 브로드캐스팅되어 3x3 연산 수행</span>
-</span></span><span style=display:flex><span>result <span style=color:#f92672>=</span> a <span style=color:#f92672>+</span> b
-</span></span><span style=display:flex><span>print(<span style=color:#e6db74>&#34;Broadcasted result:</span><span style=color:#ae81ff>\n</span><span style=color:#e6db74>&#34;</span>, result)
-</span></span><span style=display:flex><span><span style=color:#75715e># Broadcasted result:</span>
-</span></span><span style=display:flex><span><span style=color:#75715e>#  tensor([[41, 51, 61],</span>
-</span></span><span style=display:flex><span><span style=color:#75715e>#          [42, 52, 62],</span>
-</span></span><span style=display:flex><span><span style=color:#75715e>#          [43, 53, 63]])</span>
-</span></span></code></pre></div><h2 id=5-pytorch-역전파-연산-autograd>5. PyTorch 역전파 연산 (Autograd)</h2><h3 id=5-1-autograd란>5-1. Autograd란</h3><p>PyTorch <strong>Autograd</strong>는 Tensor 연산 과정에서 생성된 연산 그래프를 활용하여 자동으로 역전파 연산과 가중치 업데이트를 수행하는 기능입니다.</p><ul><li>Tensor는 <code>requires_grad</code> 속성을 가질 수 있습니다.</li><li><code>requires_grad</code>가 <code>True</code>로 설정된 Tensor는 연산 기록을 저장하며, 이후 <code>.backward()</code> 호출 시 gradient가 자동으로 계산됩니다.</li></ul><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-python data-lang=python><span style=display:flex><span>a <span style=color:#f92672>=</span> torch<span style=color:#f92672>.</span>tensor([<span style=color:#ae81ff>3.0</span>], requires_grad<span style=color:#f92672>=</span><span style=color:#66d9ef>True</span>)
-</span></span><span style=display:flex><span>b <span style=color:#f92672>=</span> torch<span style=color:#f92672>.</span>tensor([<span style=color:#ae81ff>2.0</span>], requires_grad<span style=color:#f92672>=</span><span style=color:#66d9ef>True</span>)
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>z <span style=color:#f92672>=</span> a <span style=color:#f92672>*</span> b <span style=color:#f92672>+</span> b <span style=color:#f92672>**</span> <span style=color:#ae81ff>2</span>  <span style=color:#75715e># z = ab + b²</span>
-</span></span><span style=display:flex><span>z<span style=color:#f92672>.</span>backward()
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>print(<span style=color:#e6db74>&#34;dz/da:&#34;</span>, a<span style=color:#f92672>.</span>grad)  <span style=color:#75715e># b = 2</span>
-</span></span><span style=display:flex><span>print(<span style=color:#e6db74>&#34;dz/db:&#34;</span>, b<span style=color:#f92672>.</span>grad)  <span style=color:#75715e># a + 2b = 3 + 4 = 7</span>
-</span></span><span style=display:flex><span><span style=color:#75715e># dz/da: tensor([2.])</span>
-</span></span><span style=display:flex><span><span style=color:#75715e># dz/db: tensor([7.])</span>
-</span></span></code></pre></div><h3 id=5-2-torchno_grad-블록>5-2. torch.no_grad() 블록</h3><p>모델 검증과 같이 역전파 연산이 필요 없는 경우, <code>with torch.no_grad()</code> 블록을 통해 연산 기록을 하지 않는 블록을 설정할 수 있습니다.</p><p>해당 블록 안에서 새로 생성된 Tensor는 <code>requires_grad</code> 값이 <code>False</code>로 설정됩니다.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-python data-lang=python><span style=display:flex><span>x <span style=color:#f92672>=</span> torch<span style=color:#f92672>.</span>tensor([<span style=color:#ae81ff>5.0</span>], requires_grad<span style=color:#f92672>=</span><span style=color:#66d9ef>True</span>)
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>with</span> torch<span style=color:#f92672>.</span>no_grad():
-</span></span><span style=display:flex><span>    y <span style=color:#f92672>=</span> x <span style=color:#f92672>**</span> <span style=color:#ae81ff>2</span>
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>print(<span style=color:#e6db74>&#34;Requires grad?&#34;</span>, y<span style=color:#f92672>.</span>requires_grad)  <span style=color:#75715e># False</span>
-</span></span></code></pre></div><h3 id=5-3-신경망-모델의-requires_grad-속성>5-3. 신경망 모델의 requires_grad 속성</h3><p>신경망 모델의 각 레이어의 가중치는 대부분 <code>requires_grad=True</code>로 설정된 Tensor로 구성됩니다.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#f92672>import</span> torch.nn <span style=color:#66d9ef>as</span> nn
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>class</span> <span style=color:#a6e22e>MLP</span>(nn<span style=color:#f92672>.</span>Module):
-</span></span><span style=display:flex><span>    <span style=color:#66d9ef>def</span> <span style=color:#a6e22e>__init__</span>(self):
-</span></span><span style=display:flex><span>        super(MLP, self)<span style=color:#f92672>.</span><span style=color:#a6e22e>__init__</span>()
-</span></span><span style=display:flex><span>        self<span style=color:#f92672>.</span>flatten <span style=color:#f92672>=</span> nn<span style=color:#f92672>.</span>Flatten()
-</span></span><span style=display:flex><span>        self<span style=color:#f92672>.</span>fc1 <span style=color:#f92672>=</span> nn<span style=color:#f92672>.</span>Linear(<span style=color:#ae81ff>28</span><span style=color:#f92672>*</span><span style=color:#ae81ff>28</span>, <span style=color:#ae81ff>128</span>)
-</span></span><span style=display:flex><span>        self<span style=color:#f92672>.</span>relu1 <span style=color:#f92672>=</span> nn<span style=color:#f92672>.</span>ReLU()
-</span></span><span style=display:flex><span>        self<span style=color:#f92672>.</span>fc2 <span style=color:#f92672>=</span> nn<span style=color:#f92672>.</span>Linear(<span style=color:#ae81ff>128</span>, <span style=color:#ae81ff>64</span>)
-</span></span><span style=display:flex><span>        self<span style=color:#f92672>.</span>relu2 <span style=color:#f92672>=</span> nn<span style=color:#f92672>.</span>ReLU()
-</span></span><span style=display:flex><span>        self<span style=color:#f92672>.</span>fc3 <span style=color:#f92672>=</span> nn<span style=color:#f92672>.</span>Linear(<span style=color:#ae81ff>64</span>, <span style=color:#ae81ff>10</span>)
-</span></span><span style=display:flex><span>        self<span style=color:#f92672>.</span>softmax <span style=color:#f92672>=</span> nn<span style=color:#f92672>.</span>Softmax(dim<span style=color:#f92672>=</span><span style=color:#ae81ff>1</span>)
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>    <span style=color:#66d9ef>def</span> <span style=color:#a6e22e>forward</span>(self, x):
-</span></span><span style=display:flex><span>        x <span style=color:#f92672>=</span> self<span style=color:#f92672>.</span>flatten(x)
-</span></span><span style=display:flex><span>        x <span style=color:#f92672>=</span> self<span style=color:#f92672>.</span>relu1(self<span style=color:#f92672>.</span>fc1(x))
-</span></span><span style=display:flex><span>        x <span style=color:#f92672>=</span> self<span style=color:#f92672>.</span>relu2(self<span style=color:#f92672>.</span>fc2(x))
-</span></span><span style=display:flex><span>        x <span style=color:#f92672>=</span> self<span style=color:#f92672>.</span>softmax(self<span style=color:#f92672>.</span>fc3(x))
-</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> x
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>model <span style=color:#f92672>=</span> MLP()
-</span></span></code></pre></div><h3 id=5-4-신경망-모델의-검증-모드와-학습-모드>5-4. 신경망 모델의 검증 모드와 학습 모드</h3><p>모델 검증을 위해 <code>eval()</code> 메서드를 호출하면, 해당 모델 가중치의 <code>requires_grad</code>를 <code>False</code>로 설정하고 Dropout 등 학습 과정에서 사용되는 일부 기능을 비활성화합니다.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#75715e># 학습 코드와 같은 for loop에서 각 epoch 마다 실행되는 검증 코드</span>
-</span></span><span style=display:flex><span>model<span style=color:#f92672>.</span>eval()  <span style=color:#75715e># 모델을 검증 모드로 설정</span>
-</span></span><span style=display:flex><span>val_loss <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span>
-</span></span><span style=display:flex><span>correct <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>with</span> torch<span style=color:#f92672>.</span>no_grad():  <span style=color:#75715e># 최적화를 진행하지 않도록 환경 설정</span>
-</span></span><span style=display:flex><span>    <span style=color:#66d9ef>for</span> images, labels <span style=color:#f92672>in</span> val_loader:  <span style=color:#75715e># DataLoader</span>
-</span></span><span style=display:flex><span>        outputs <span style=color:#f92672>=</span> model(images)  <span style=color:#75715e># 모델에 데이터를 입력하고 예측값 도출</span>
-</span></span><span style=display:flex><span>        val_loss <span style=color:#f92672>+=</span> criterion(outputs, labels)<span style=color:#f92672>.</span>item()
-</span></span><span style=display:flex><span>        pred <span style=color:#f92672>=</span> outputs<span style=color:#f92672>.</span>argmax(dim<span style=color:#f92672>=</span><span style=color:#ae81ff>1</span>, keepdim<span style=color:#f92672>=</span><span style=color:#66d9ef>True</span>)
-</span></span><span style=display:flex><span>        correct <span style=color:#f92672>+=</span> pred<span style=color:#f92672>.</span>eq(labels<span style=color:#f92672>.</span>view_as(pred))<span style=color:#f92672>.</span>sum()<span style=color:#f92672>.</span>item()
-</span></span></code></pre></div><p>반대로 학습 과정에서는 <code>train()</code> 메서드를 호출하여 가중치를 <code>requires_grad=True</code>로 설정하고, Dropout 등 일부 기능을 다시 활성화합니다.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-python data-lang=python><span style=display:flex><span>epochs <span style=color:#f92672>=</span> <span style=color:#ae81ff>10</span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>for</span> epoch <span style=color:#f92672>in</span> range(epochs):
-</span></span><span style=display:flex><span>    model<span style=color:#f92672>.</span>train()
-</span></span><span style=display:flex><span>    <span style=color:#66d9ef>for</span> images, labels <span style=color:#f92672>in</span> train_loader:  <span style=color:#75715e># DataLoader</span>
-</span></span><span style=display:flex><span>        optimizer<span style=color:#f92672>.</span>zero_grad()          <span style=color:#75715e># 최적화 함수 초기화</span>
-</span></span><span style=display:flex><span>        outputs <span style=color:#f92672>=</span> model(images)        <span style=color:#75715e># 모델에 데이터를 입력하고 예측값 도출</span>
-</span></span><span style=display:flex><span>        loss <span style=color:#f92672>=</span> criterion(outputs, labels)  <span style=color:#75715e># 모델의 예측값과 참값을 바탕으로 손실(Loss) 계산</span>
-</span></span><span style=display:flex><span>        loss<span style=color:#f92672>.</span>backward()                <span style=color:#75715e># 손실 함수의 역전파 연산</span>
-</span></span><span style=display:flex><span>        optimizer<span style=color:#f92672>.</span>step()               <span style=color:#75715e># 최적화 함수를 통한 모델 업데이트</span>
-</span></span></code></pre></div><hr><h2 id=마무리-정리>마무리 정리</h2><p>이번 글에서는 PyTorch의 기본 문법을 정리해보았습니다.</p><p>Tensor의 생성부터 속성, 연산, 차원 조작, 그리고 Autograd를 활용한 자동 미분까지 살펴보았습니다.</p><p>이 개념들은 이후 실제 신경망 모델을 구현하고 학습시키는 데 있어 기초가 되는 내용이므로, 잘 익혀두면 다음 단계인 모델 구현 학습에 큰 도움이 될 것입니다.</p></section><footer class="article-meta article-footer"></footer><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css integrity=sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV crossorigin=anonymous><script src=https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js integrity=sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG+vnGctmUb0ZY0l8 crossorigin=anonymous defer></script><script src=https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js integrity=sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05 crossorigin=anonymous defer></script><script>window.addEventListener("DOMContentLoaded",()=>{const e=[".main-article",".widget--toc"];e.forEach(e=>{const t=document.querySelector(e);t&&renderMathInElement(t,{delimiters:[{left:"$$",right:"$$",display:!0},{left:"$",right:"$",display:!1},{left:"\\(",right:"\\)",display:!1},{left:"\\[",right:"\\]",display:!0}],ignoredClasses:["gist"]})})})</script></article><nav class=article-prev-next><a class="prev-next-card prev" href=/data-analysis/python_data_analysis_30/><div class=direction>← 이전 글</div><div class=title>[딥러닝 기초] 딥러닝 학습의 문제점</div></a><a class="prev-next-card next" href=/data-analysis/python_data_analysis_32/><div class=direction>다음 글 →</div><div class=title>[PyTorch] PyTorch 모델 구현과 최적화</div></a></nav><footer class=site-footer><section class=copyright>&copy;
-2026 LucasPark Blog</section><section class=powerby>Built with <a href=https://gohugo.io/ target=_blank rel=noopener>Hugo</a><br>Theme <b><a href=https://github.com/CaiJimmy/hugo-theme-stack target=_blank rel=noopener data-version=4.0.3>Stack</a></b> designed by <a href=https://jimmycai.com target=_blank rel=noopener>Jimmy</a></section></footer><script type=module>
+<!DOCTYPE html>
+<html lang="ko-kr" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="들어가며 이번 글에서는 PyTorch의 기본 문법에 대해 정리해보겠습니다.\nPyTorch가 무엇인지부터 시작해서, 데이터를 다루는 핵심 개념들, 그리고 Tensor의 생성과 연산, 마지막으로 자동 미분 기능인 Autograd까지 순서대로 살펴보겠습니다.\n1. 딥러닝 프레임워크란 딥러닝 모델을 처음부터 직접 구현하려면 행렬, 선형대수학 등 수학에 대한 깊은 이해가 필요합니다.\n하지만 딥러닝 프레임워크를 활용하면 수학에 대한 깊은 지식이 없어도 딥러닝 모델을 구현할 수 있습니다.\n딥러닝 프레임워크는 딥러닝 학습의 전 과정을 쉽게 진행할 수 있도록 다양한 도구를 제공해줍니다.\n2. PyTorch 소개 PyTorch는 Torch 기반의 오픈소스 머신러닝 라이브러리로, 컴퓨터 비전과 자연어 처리 분야에서 유용하게 사용됩니다.\n">
+<title>[PyTorch] 기본 문법 정리</title>
+
+
+<link rel="canonical" href="https://lucaspark-10.github.io/data-analysis/python_data_analysis_31/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
+
+
+<link rel="stylesheet" href="/scss/style.min.de7e6698ac54e40edf7f3d56f131b6bbacde7bdf742f829e1185371a8af17315.css"><meta property='og:title' content="[PyTorch] 기본 문법 정리">
+<meta property='og:description' content="들어가며 이번 글에서는 PyTorch의 기본 문법에 대해 정리해보겠습니다.\nPyTorch가 무엇인지부터 시작해서, 데이터를 다루는 핵심 개념들, 그리고 Tensor의 생성과 연산, 마지막으로 자동 미분 기능인 Autograd까지 순서대로 살펴보겠습니다.\n1. 딥러닝 프레임워크란 딥러닝 모델을 처음부터 직접 구현하려면 행렬, 선형대수학 등 수학에 대한 깊은 이해가 필요합니다.\n하지만 딥러닝 프레임워크를 활용하면 수학에 대한 깊은 지식이 없어도 딥러닝 모델을 구현할 수 있습니다.\n딥러닝 프레임워크는 딥러닝 학습의 전 과정을 쉽게 진행할 수 있도록 다양한 도구를 제공해줍니다.\n2. PyTorch 소개 PyTorch는 Torch 기반의 오픈소스 머신러닝 라이브러리로, 컴퓨터 비전과 자연어 처리 분야에서 유용하게 사용됩니다.\n">
+<meta property='og:url' content='https://lucaspark-10.github.io/data-analysis/python_data_analysis_31/'>
+<meta property='og:site_name' content='LucasPark Blog'>
+<meta property='og:type' content='article'><meta property='article:section' content='Data-Analysis' /><meta property='article:published_time' content='2026-08-03T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2026-08-03T00:00:00&#43;00:00'/>
+<meta name="twitter:title" content="[PyTorch] 기본 문법 정리">
+<meta name="twitter:description" content="들어가며 이번 글에서는 PyTorch의 기본 문법에 대해 정리해보겠습니다.\nPyTorch가 무엇인지부터 시작해서, 데이터를 다루는 핵심 개념들, 그리고 Tensor의 생성과 연산, 마지막으로 자동 미분 기능인 Autograd까지 순서대로 살펴보겠습니다.\n1. 딥러닝 프레임워크란 딥러닝 모델을 처음부터 직접 구현하려면 행렬, 선형대수학 등 수학에 대한 깊은 이해가 필요합니다.\n하지만 딥러닝 프레임워크를 활용하면 수학에 대한 깊은 지식이 없어도 딥러닝 모델을 구현할 수 있습니다.\n딥러닝 프레임워크는 딥러닝 학습의 전 과정을 쉽게 진행할 수 있도록 다양한 도구를 제공해줍니다.\n2. PyTorch 소개 PyTorch는 Torch 기반의 오픈소스 머신러닝 라이브러리로, 컴퓨터 비전과 자연어 처리 분야에서 유용하게 사용됩니다.\n">
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-EVK5B22CB3"></script>
+      <script>
+        var doNotTrack = false;
+        if ( true ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-EVK5B22CB3');
+        }
+      </script>
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column compact"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">LucasPark Blog</a></h1>
+            <h2 class="site-description">Lucas Park의 개인 블로그</h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                <span>Home</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/posts/' >
+                
+                <span>Posts</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/git-study/' >
+                
+                <span>Git-study</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/data-analysis/' >
+                
+                <span>Data Analysis</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/gold-news-and-analysis/' >
+                
+                <span>Gold Price Check &amp; Analysis</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/atmospheric-environment/' >
+                
+                <span>Atmospheric Environment</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>Dark Mode</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/data-analysis/python_data_analysis_31/">[PyTorch] 기본 문법 정리</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    
+    
+    
+    
+    
+    
+    <footer class="article-meta">
+        
+            <div class="inline-meta">
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                    <time class="article-time--published" datetime='2026-08-03T00:00:00Z'>2026년 8월 3일 월요일</time>
+                
+
+                
+            </div>
+        
+
+        
+
+        
+    </footer>
+    
+</div>
+
+</header>
+
+    
+
+    <section class="article-content">
+    
+    
+    <h1 id="들어가며">들어가며
+</h1><p>이번 글에서는 PyTorch의 기본 문법에 대해 정리해보겠습니다.</p>
+<p>PyTorch가 무엇인지부터 시작해서, 데이터를 다루는 핵심 개념들, 그리고 Tensor의 생성과 연산, 마지막으로 자동 미분 기능인 Autograd까지 순서대로 살펴보겠습니다.</p>
+<hr>
+<h2 id="1-딥러닝-프레임워크란">1. 딥러닝 프레임워크란
+</h2><p>딥러닝 모델을 처음부터 직접 구현하려면 행렬, 선형대수학 등 수학에 대한 깊은 이해가 필요합니다.</p>
+<p>하지만 딥러닝 프레임워크를 활용하면 수학에 대한 깊은 지식이 없어도 딥러닝 모델을 구현할 수 있습니다.</p>
+<p>딥러닝 프레임워크는 딥러닝 학습의 전 과정을 쉽게 진행할 수 있도록 다양한 도구를 제공해줍니다.</p>
+<h2 id="2-pytorch-소개">2. PyTorch 소개
+</h2><p>PyTorch는 Torch 기반의 오픈소스 머신러닝 라이브러리로, 컴퓨터 비전과 자연어 처리 분야에서 유용하게 사용됩니다.</p>
+<ul>
+<li>Meta의 AI 연구소에서 Torch 라이브러리를 파이썬 기반으로 개발하여 PyTorch라는 이름이 붙었습니다.</li>
+<li>연구 분야에서 거의 80% 이상의 논문이 PyTorch를 사용하고 있을 정도로 널리 쓰이고 있습니다.</li>
+</ul>
+<h2 id="3-pytorch-주요-키워드">3. PyTorch 주요 키워드
+</h2><p>PyTorch를 학습하기 전에 아래 다섯 가지 핵심 키워드를 먼저 알아두면 좋습니다.</p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>키워드</th>
+          <th>설명</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>Datasets</strong></td>
+          <td>데이터와 그 라벨(존재할 경우)을 담고 있는 개체입니다. 데이터 전처리 로직을 적용할 수 있습니다.</td>
+      </tr>
+      <tr>
+          <td><strong>DataLoaders</strong></td>
+          <td>학습 및 테스트 과정에서 Dataset을 순회하면서 데이터를 제공하는 개체입니다. Mini-batch 구성 등 데이터셋에 대한 다양한 로직을 적용할 수 있습니다.</td>
+      </tr>
+      <tr>
+          <td><strong>torch.nn</strong></td>
+          <td>딥러닝 모델을 구성하기 위한 여러 레이어가 구현되어 있는 공간입니다. 다양한 레이어를 활용해 딥러닝 모델을 구현할 수 있습니다.</td>
+      </tr>
+      <tr>
+          <td><strong>손실 함수</strong></td>
+          <td>Adam, SGD를 비롯한 다양한 손실 함수를 모델 학습에 활용할 수 있습니다. DataLoader와 손실 함수를 바탕으로 모델을 학습시킵니다.</td>
+      </tr>
+      <tr>
+          <td><strong>모델 학습</strong></td>
+          <td>위 요소들을 종합하여 실제로 모델을 학습시키는 과정입니다.</td>
+      </tr>
+  </tbody>
+</table></div>
+<p>이 다섯 가지 개념이 PyTorch로 딥러닝 모델을 만드는 전체 흐름의 뼈대가 된다고 볼 수 있습니다.</p>
+<h2 id="4-pytorch-tensor-기초-문법">4. PyTorch Tensor 기초 문법
+</h2><h3 id="4-1-tensor란">4-1. Tensor란
+</h3><p>Tensor는 PyTorch에서 데이터를 표현하는 기본 단위이며, 인공신경망 학습의 전 과정에서 필수적으로 사용됩니다.</p>
+<p>수학적으로 Tensor는 다차원 배열(n차원 행렬)로 이해할 수 있습니다.</p>
+<ul>
+<li>1차원 Tensor: Vector</li>
+<li>2차원 Tensor: Matrix</li>
+<li>n차원 Tensor: nD Tensor</li>
+</ul>
+<p>또한 PyTorch에서는 Tensor와 Numpy 배열 간 상호 변환이 가능합니다.</p>
+<h3 id="4-2-tensor와-numpy의-관계">4-2. Tensor와 Numpy의 관계
+</h3><p><code>torch.from_numpy()</code>와 <code>numpy()</code> 메서드를 활용하면 Tensor와 Numpy 배열 간 상호 변환이 가능합니다.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> numpy <span style="color:#66d9ef">as</span> np
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>arr <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>array([[<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">3</span>]])
+</span></span><span style="display:flex;"><span>t <span style="color:#f92672">=</span> torch<span style="color:#f92672">.</span>from_numpy(arr)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">&#34;Tensor:&#34;</span>, t)
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Tensor: tensor([[1, 2, 3]], dtype=torch.int32)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">&#34;Back to Numpy:&#34;</span>, t<span style="color:#f92672">.</span>numpy())
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Back to Numpy: [[1 2 3]]</span>
+</span></span></code></pre></div><p>여기서 주의할 점은, Tensor와 Numpy 배열이 <strong>메모리를 공유</strong>한다는 것입니다.</p>
+<p>따라서 한쪽에서 값을 변경하면 다른 쪽에도 그 변경 사항이 영향을 줄 수 있으므로 유의해야 합니다.</p>
+<h3 id="4-3-tensor-생성">4-3. Tensor 생성
+</h3><p>PyTorch에서 Tensor를 생성하는 방법은 다양합니다.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> torch
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 리스트로부터 생성</span>
+</span></span><span style="display:flex;"><span>t1 <span style="color:#f92672">=</span> torch<span style="color:#f92672">.</span>tensor([<span style="color:#ae81ff">1.0</span>, <span style="color:#ae81ff">2.0</span>, <span style="color:#ae81ff">3.0</span>])
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">&#34;t1:&#34;</span>, t1)
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># t1: tensor([1., 2., 3.])</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 0으로 채워진 텐서</span>
+</span></span><span style="display:flex;"><span>t2 <span style="color:#f92672">=</span> torch<span style="color:#f92672">.</span>zeros((<span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">3</span>))
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">&#34;t2:&#34;</span>, t2)
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># t2: tensor([[0., 0., 0.],</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#             [0., 0., 0.]])</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 평균 0, 표준편차 1의 정규분포 텐서</span>
+</span></span><span style="display:flex;"><span>t3 <span style="color:#f92672">=</span> torch<span style="color:#f92672">.</span>randn((<span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">2</span>))
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">&#34;t3:&#34;</span>, t3)
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># t3: tensor([[ 0.6208,  0.0195],</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#             [-0.8228, -0.0672]])</span>
+</span></span></code></pre></div><ul>
+<li><code>torch.tensor()</code>: 리스트로부터 Tensor를 직접 생성합니다.</li>
+<li><code>torch.zeros()</code> / <code>torch.ones()</code>: 각각 0, 1로 채워진 Tensor를 생성합니다.</li>
+<li><code>torch.randn()</code>: 정규분포를 따르는 무작위 값으로 구성된 Tensor를 생성합니다.</li>
+</ul>
+<h3 id="4-4-tensor-속성">4-4. Tensor 속성
+</h3><p>Tensor 객체는 3가지 주요 속성을 가집니다.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>x <span style="color:#f92672">=</span> torch<span style="color:#f92672">.</span>rand((<span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">4</span>), dtype<span style="color:#f92672">=</span>torch<span style="color:#f92672">.</span>float32, device<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;cpu&#39;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">&#34;Shape:&#34;</span>, x<span style="color:#f92672">.</span>shape)
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Shape: torch.Size([3, 4])</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">&#34;Data type:&#34;</span>, x<span style="color:#f92672">.</span>dtype)
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Data type: torch.float32</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">&#34;Device:&#34;</span>, x<span style="color:#f92672">.</span>device)
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Device: cpu</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>x<span style="color:#f92672">.</span>to(<span style="color:#e6db74">&#34;cuda:0&#34;</span>)  <span style="color:#75715e"># GPU로 이동</span>
+</span></span></code></pre></div><ul>
+<li><strong>shape</strong>: Tensor의 크기와 차원을 나타냅니다.</li>
+<li><strong>dtype</strong>: Tensor에 저장되는 데이터의 타입을 의미합니다.</li>
+<li><strong>device</strong>: 해당 Tensor가 CPU에 있는지, 혹은 GPU에 있는지를 나타냅니다. PyTorch는 GPU 가속 연산을 지원하므로, GPU를 사용할 수 있는 경우 device 설정은 성능에 매우 중요한 요소입니다.</li>
+</ul>
+<h3 id="4-5-tensor-연산">4-5. Tensor 연산
+</h3><p>Tensor는 덧셈, 곱셈, 행렬곱과 같은 수치 연산을 지원합니다.</p>
+<p><code>+</code>, <code>*</code>, <code>@</code> 연산자나 <code>torch.add()</code>, <code>torch.matmul()</code> 같은 함수를 사용할 수 있습니다.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>a <span style="color:#f92672">=</span> torch<span style="color:#f92672">.</span>tensor([[<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span>], [<span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">4</span>]])
+</span></span><span style="display:flex;"><span>b <span style="color:#f92672">=</span> torch<span style="color:#f92672">.</span>tensor([[<span style="color:#ae81ff">10</span>, <span style="color:#ae81ff">20</span>], [<span style="color:#ae81ff">30</span>, <span style="color:#ae81ff">40</span>]])
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 덧셈, 곱셈, 행렬곱</span>
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">&#34;Add:</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, a <span style="color:#f92672">+</span> b)
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Add:</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#  tensor([[11, 22],</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#          [33, 44]])</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">&#34;Element-wise Multiply:</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, a <span style="color:#f92672">*</span> b)
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Element-wise Multiply:</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#  tensor([[ 10,  40],</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#          [ 90, 160]])</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">&#34;Matrix Multiply:</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, a <span style="color:#f92672">@</span> b)
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Matrix Multiply:</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#  tensor([[ 70, 100],</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#          [150, 220]])</span>
+</span></span></code></pre></div><p>함수 형태로도 동일한 연산이 가능합니다.</p>
+<p>이때 브로드캐스팅이 함께 적용될 수도 있습니다.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>a <span style="color:#f92672">=</span> torch<span style="color:#f92672">.</span>tensor([[<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span>], [<span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">4</span>]])
+</span></span><span style="display:flex;"><span>b <span style="color:#f92672">=</span> torch<span style="color:#f92672">.</span>tensor([[<span style="color:#ae81ff">10</span>], [<span style="color:#ae81ff">20</span>]])
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">&#34;Add:</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, torch<span style="color:#f92672">.</span>add(a, b))
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Add:</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#  tensor([[11, 12],</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#          [23, 24]])</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">&#34;Matmul:</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, torch<span style="color:#f92672">.</span>matmul(a, b))
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Matmul:</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#  tensor([[ 50],</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#          [110]])</span>
+</span></span></code></pre></div><p>이 연산들은 역전파 과정을 위한 <strong>자동 미분이 가능한 연산 그래프</strong>를 형성하게 되며, 이후 모델 학습 시 사용됩니다.</p>
+<h3 id="4-6-tensor-차원">4-6. Tensor 차원
+</h3><p>Tensor는 다양한 차원으로 구성되며, 차원을 자유롭게 추가하거나 제거할 수 있습니다.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>x <span style="color:#f92672">=</span> torch<span style="color:#f92672">.</span>randn(<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">5</span>)
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">&#34;Original shape:&#34;</span>, x<span style="color:#f92672">.</span>shape)
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Original shape: torch.Size([1, 3, 1, 5])</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 차원 제거</span>
+</span></span><span style="display:flex;"><span>x_squeezed <span style="color:#f92672">=</span> x<span style="color:#f92672">.</span>squeeze()
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">&#34;After squeeze:&#34;</span>, x_squeezed<span style="color:#f92672">.</span>shape)
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># After squeeze: torch.Size([3, 5])</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 차원 추가</span>
+</span></span><span style="display:flex;"><span>x_unsqueezed <span style="color:#f92672">=</span> x_squeezed<span style="color:#f92672">.</span>unsqueeze(<span style="color:#ae81ff">0</span>)
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">&#34;After unsqueeze:&#34;</span>, x_unsqueezed<span style="color:#f92672">.</span>shape)
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># After unsqueeze: torch.Size([1, 3, 5])</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 모양 변경 (reshape)</span>
+</span></span><span style="display:flex;"><span>x_viewed <span style="color:#f92672">=</span> x<span style="color:#f92672">.</span>view(<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">5</span>)  <span style="color:#75715e"># -1은 크기를 자동 계산</span>
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">&#34;After view:&#34;</span>, x_viewed<span style="color:#f92672">.</span>shape)
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># After view: torch.Size([3, 5])</span>
+</span></span></code></pre></div><ul>
+<li><code>tensor.shape</code>: 텐서의 모양을 확인합니다.</li>
+<li><code>squeeze()</code>: 차원이 1인 부분을 제거합니다.</li>
+<li><code>unsqueeze(dim)</code>: 특정 위치에 차원을 추가합니다.</li>
+<li><code>view()</code>: 텐서의 크기를 재조정합니다.</li>
+</ul>
+<h3 id="4-7-tensor-차원-확장-브로드캐스팅">4-7. Tensor 차원 확장 (브로드캐스팅)
+</h3><p>PyTorch는 자동으로 차원을 확장하는 <strong>브로드캐스팅</strong>을 지원합니다.</p>
+<p>이를 활용하면 서로 크기가 다른 일부 Tensor 간에도 연산이 가능합니다.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>a <span style="color:#f92672">=</span> torch<span style="color:#f92672">.</span>tensor([[<span style="color:#ae81ff">1</span>], [<span style="color:#ae81ff">2</span>], [<span style="color:#ae81ff">3</span>]])  <span style="color:#75715e"># 3x1</span>
+</span></span><span style="display:flex;"><span>b <span style="color:#f92672">=</span> torch<span style="color:#f92672">.</span>tensor([<span style="color:#ae81ff">40</span>, <span style="color:#ae81ff">50</span>, <span style="color:#ae81ff">60</span>])     <span style="color:#75715e"># 1x3</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 브로드캐스팅되어 3x3 연산 수행</span>
+</span></span><span style="display:flex;"><span>result <span style="color:#f92672">=</span> a <span style="color:#f92672">+</span> b
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">&#34;Broadcasted result:</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, result)
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Broadcasted result:</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#  tensor([[41, 51, 61],</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#          [42, 52, 62],</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#          [43, 53, 63]])</span>
+</span></span></code></pre></div><h2 id="5-pytorch-역전파-연산-autograd">5. PyTorch 역전파 연산 (Autograd)
+</h2><h3 id="5-1-autograd란">5-1. Autograd란
+</h3><p>PyTorch <strong>Autograd</strong>는 Tensor 연산 과정에서 생성된 연산 그래프를 활용하여 자동으로 역전파 연산과 가중치 업데이트를 수행하는 기능입니다.</p>
+<ul>
+<li>Tensor는 <code>requires_grad</code> 속성을 가질 수 있습니다.</li>
+<li><code>requires_grad</code>가 <code>True</code>로 설정된 Tensor는 연산 기록을 저장하며, 이후 <code>.backward()</code> 호출 시 gradient가 자동으로 계산됩니다.</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>a <span style="color:#f92672">=</span> torch<span style="color:#f92672">.</span>tensor([<span style="color:#ae81ff">3.0</span>], requires_grad<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)
+</span></span><span style="display:flex;"><span>b <span style="color:#f92672">=</span> torch<span style="color:#f92672">.</span>tensor([<span style="color:#ae81ff">2.0</span>], requires_grad<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>z <span style="color:#f92672">=</span> a <span style="color:#f92672">*</span> b <span style="color:#f92672">+</span> b <span style="color:#f92672">**</span> <span style="color:#ae81ff">2</span>  <span style="color:#75715e"># z = ab + b²</span>
+</span></span><span style="display:flex;"><span>z<span style="color:#f92672">.</span>backward()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">&#34;dz/da:&#34;</span>, a<span style="color:#f92672">.</span>grad)  <span style="color:#75715e"># b = 2</span>
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">&#34;dz/db:&#34;</span>, b<span style="color:#f92672">.</span>grad)  <span style="color:#75715e"># a + 2b = 3 + 4 = 7</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># dz/da: tensor([2.])</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># dz/db: tensor([7.])</span>
+</span></span></code></pre></div><h3 id="5-2-torchno_grad-블록">5-2. torch.no_grad() 블록
+</h3><p>모델 검증과 같이 역전파 연산이 필요 없는 경우, <code>with torch.no_grad()</code> 블록을 통해 연산 기록을 하지 않는 블록을 설정할 수 있습니다.</p>
+<p>해당 블록 안에서 새로 생성된 Tensor는 <code>requires_grad</code> 값이 <code>False</code>로 설정됩니다.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>x <span style="color:#f92672">=</span> torch<span style="color:#f92672">.</span>tensor([<span style="color:#ae81ff">5.0</span>], requires_grad<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">with</span> torch<span style="color:#f92672">.</span>no_grad():
+</span></span><span style="display:flex;"><span>    y <span style="color:#f92672">=</span> x <span style="color:#f92672">**</span> <span style="color:#ae81ff">2</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">&#34;Requires grad?&#34;</span>, y<span style="color:#f92672">.</span>requires_grad)  <span style="color:#75715e"># False</span>
+</span></span></code></pre></div><h3 id="5-3-신경망-모델의-requires_grad-속성">5-3. 신경망 모델의 requires_grad 속성
+</h3><p>신경망 모델의 각 레이어의 가중치는 대부분 <code>requires_grad=True</code>로 설정된 Tensor로 구성됩니다.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> torch.nn <span style="color:#66d9ef">as</span> nn
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MLP</span>(nn<span style="color:#f92672">.</span>Module):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">__init__</span>(self):
+</span></span><span style="display:flex;"><span>        super(MLP, self)<span style="color:#f92672">.</span><span style="color:#a6e22e">__init__</span>()
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>flatten <span style="color:#f92672">=</span> nn<span style="color:#f92672">.</span>Flatten()
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>fc1 <span style="color:#f92672">=</span> nn<span style="color:#f92672">.</span>Linear(<span style="color:#ae81ff">28</span><span style="color:#f92672">*</span><span style="color:#ae81ff">28</span>, <span style="color:#ae81ff">128</span>)
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>relu1 <span style="color:#f92672">=</span> nn<span style="color:#f92672">.</span>ReLU()
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>fc2 <span style="color:#f92672">=</span> nn<span style="color:#f92672">.</span>Linear(<span style="color:#ae81ff">128</span>, <span style="color:#ae81ff">64</span>)
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>relu2 <span style="color:#f92672">=</span> nn<span style="color:#f92672">.</span>ReLU()
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>fc3 <span style="color:#f92672">=</span> nn<span style="color:#f92672">.</span>Linear(<span style="color:#ae81ff">64</span>, <span style="color:#ae81ff">10</span>)
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>softmax <span style="color:#f92672">=</span> nn<span style="color:#f92672">.</span>Softmax(dim<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">forward</span>(self, x):
+</span></span><span style="display:flex;"><span>        x <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>flatten(x)
+</span></span><span style="display:flex;"><span>        x <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>relu1(self<span style="color:#f92672">.</span>fc1(x))
+</span></span><span style="display:flex;"><span>        x <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>relu2(self<span style="color:#f92672">.</span>fc2(x))
+</span></span><span style="display:flex;"><span>        x <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>softmax(self<span style="color:#f92672">.</span>fc3(x))
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> x
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>model <span style="color:#f92672">=</span> MLP()
+</span></span></code></pre></div><h3 id="5-4-신경망-모델의-검증-모드와-학습-모드">5-4. 신경망 모델의 검증 모드와 학습 모드
+</h3><p>모델 검증을 위해 <code>eval()</code> 메서드를 호출하면, 해당 모델 가중치의 <code>requires_grad</code>를 <code>False</code>로 설정하고 Dropout 등 학습 과정에서 사용되는 일부 기능을 비활성화합니다.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># 학습 코드와 같은 for loop에서 각 epoch 마다 실행되는 검증 코드</span>
+</span></span><span style="display:flex;"><span>model<span style="color:#f92672">.</span>eval()  <span style="color:#75715e"># 모델을 검증 모드로 설정</span>
+</span></span><span style="display:flex;"><span>val_loss <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>correct <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">with</span> torch<span style="color:#f92672">.</span>no_grad():  <span style="color:#75715e"># 최적화를 진행하지 않도록 환경 설정</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> images, labels <span style="color:#f92672">in</span> val_loader:  <span style="color:#75715e"># DataLoader</span>
+</span></span><span style="display:flex;"><span>        outputs <span style="color:#f92672">=</span> model(images)  <span style="color:#75715e"># 모델에 데이터를 입력하고 예측값 도출</span>
+</span></span><span style="display:flex;"><span>        val_loss <span style="color:#f92672">+=</span> criterion(outputs, labels)<span style="color:#f92672">.</span>item()
+</span></span><span style="display:flex;"><span>        pred <span style="color:#f92672">=</span> outputs<span style="color:#f92672">.</span>argmax(dim<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>, keepdim<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)
+</span></span><span style="display:flex;"><span>        correct <span style="color:#f92672">+=</span> pred<span style="color:#f92672">.</span>eq(labels<span style="color:#f92672">.</span>view_as(pred))<span style="color:#f92672">.</span>sum()<span style="color:#f92672">.</span>item()
+</span></span></code></pre></div><p>반대로 학습 과정에서는 <code>train()</code> 메서드를 호출하여 가중치를 <code>requires_grad=True</code>로 설정하고, Dropout 등 일부 기능을 다시 활성화합니다.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>epochs <span style="color:#f92672">=</span> <span style="color:#ae81ff">10</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> epoch <span style="color:#f92672">in</span> range(epochs):
+</span></span><span style="display:flex;"><span>    model<span style="color:#f92672">.</span>train()
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> images, labels <span style="color:#f92672">in</span> train_loader:  <span style="color:#75715e"># DataLoader</span>
+</span></span><span style="display:flex;"><span>        optimizer<span style="color:#f92672">.</span>zero_grad()          <span style="color:#75715e"># 최적화 함수 초기화</span>
+</span></span><span style="display:flex;"><span>        outputs <span style="color:#f92672">=</span> model(images)        <span style="color:#75715e"># 모델에 데이터를 입력하고 예측값 도출</span>
+</span></span><span style="display:flex;"><span>        loss <span style="color:#f92672">=</span> criterion(outputs, labels)  <span style="color:#75715e"># 모델의 예측값과 참값을 바탕으로 손실(Loss) 계산</span>
+</span></span><span style="display:flex;"><span>        loss<span style="color:#f92672">.</span>backward()                <span style="color:#75715e"># 손실 함수의 역전파 연산</span>
+</span></span><span style="display:flex;"><span>        optimizer<span style="color:#f92672">.</span>step()               <span style="color:#75715e"># 최적화 함수를 통한 모델 업데이트</span>
+</span></span></code></pre></div><hr>
+<h2 id="마무리-정리">마무리 정리
+</h2><p>이번 글에서는 PyTorch의 기본 문법을 정리해보았습니다.</p>
+<p>Tensor의 생성부터 속성, 연산, 차원 조작, 그리고 Autograd를 활용한 자동 미분까지 살펴보았습니다.</p>
+<p>이 개념들은 이후 실제 신경망 모델을 구현하고 학습시키는 데 있어 기초가 되는 내용이므로, 잘 익혀두면 다음 단계인 모델 구현 학습에 큰 도움이 될 것입니다.</p>
+
+</section>
+
+
+    <footer class="article-meta article-footer">
+    
+
+    </footer>
+
+
+    
+        <link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI&#43;WdtXRGWt2kTvGFasHpSy3SV"crossorigin="anonymous"
+            ><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG&#43;vnGctmUb0ZY0l8"crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"integrity="sha384-&#43;VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4&#43;/RRE05"crossorigin="anonymous"
+                defer
+                >
+            </script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        const elementsToRender = [".main-article", ".widget--toc"];
+
+        elementsToRender.forEach(selector => {
+            const element = document.querySelector(selector);
+            if (element) {
+                renderMathInElement(element, {
+                    delimiters: [
+                        { left: "$$", right: "$$", display: true },
+                        { left: "$", right: "$", display: false },
+                        { left: "\\(", right: "\\)", display: false },
+                        { left: "\\[", right: "\\]", display: true }
+                    ],
+                    ignoredClasses: ["gist"]
+                });
+            }
+        });
+    });
+</script>
+    
+</article>
+
+    
+
+    
+<nav class="article-prev-next">
+  
+  <a class="prev-next-card prev" href="/data-analysis/python_data_analysis_30/">
+    <div class="direction">← 이전 글</div>
+    <div class="title">[딥러닝 기초] 딥러닝 학습의 문제점</div>
+  </a>
+  
+
+  
+  <a class="prev-next-card next" href="/data-analysis/python_data_analysis_32/">
+    <div class="direction">다음 글 →</div>
+    <div class="title">[PyTorch] PyTorch 모델 구현과 최적화</div>
+  </a>
+  
+</nav>
+
+
+    
+
+     
+    
+        
+
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2026 LucasPark Blog
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="4.0.3">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+
+
+
+<script type="module">
     import gallery from '\/ts\/gallery.js';
 
     const articleContent = document.querySelector('.article-content');
@@ -181,4 +593,15 @@
         });
         lightbox.init();
     }
-</script></main></div><script type=text/javascript src=/ts/main.1ff1e5fdc4e178ed422e50aa407526dc552f26342d729343fded19416194382c.js defer></script></body></html>
+</script>
+
+    
+
+            </main>
+        </div>
+        
+<script type="text/javascript" src="/ts/main.1ff1e5fdc4e178ed422e50aa407526dc552f26342d729343fded19416194382c.js" defer></script>
+
+
+    </body>
+</html>

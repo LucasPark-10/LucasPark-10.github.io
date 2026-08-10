@@ -1,107 +1,500 @@
-<!doctype html><html lang=ko-kr dir=ltr><head><meta charset=utf-8><meta name=viewport content='width=device-width,initial-scale=1'><meta name=description content="Git 브랜치와 병합 브랜치란? 브랜치는 메인 작업에서 가지를 쳐서 별도 방향으로 작업할 수 있게 해줍니다.\n머리에 가지가 뻗어나가는 나무를 상상하세요.\nmaster HEAD → like_feature c1 — c2 (new branch) like_feature HEAD → master c1 — c2 — c3 (merged back) 브랜치 만들기와 전환 # 새 브랜치 생성 (현재 상태 그대로 복사됨) git branch like_feature # 브랜치 목록 확인 $ git branch like_feature * master # *가 현재 있는 브랜치 # 브랜치 전환 (checkout) git checkout like_feature Switched to branch 'like_feature' # 생성과 전환을 한 번에 git checkout -b feature/login 브랜치는 스냅샷의 다른 라벨일 뿐입니다.\n"><title>[Git] - 브랜치와 병합 (Branch & Merge)</title><link rel=canonical href=https://lucaspark-10.github.io/git-study/github-study03/><link rel=preconnect href=https://fonts.googleapis.com><link rel=preconnect href=https://fonts.gstatic.com crossorigin><link rel=preload as=style href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap"><link rel=stylesheet href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap"><link rel=stylesheet href=/scss/style.min.de7e6698ac54e40edf7f3d56f131b6bbacde7bdf742f829e1185371a8af17315.css><meta property='og:title' content="[Git] - 브랜치와 병합 (Branch & Merge)"><meta property='og:description' content="Git 브랜치와 병합 브랜치란? 브랜치는 메인 작업에서 가지를 쳐서 별도 방향으로 작업할 수 있게 해줍니다.\n머리에 가지가 뻗어나가는 나무를 상상하세요.\nmaster HEAD → like_feature c1 — c2 (new branch) like_feature HEAD → master c1 — c2 — c3 (merged back) 브랜치 만들기와 전환 # 새 브랜치 생성 (현재 상태 그대로 복사됨) git branch like_feature # 브랜치 목록 확인 $ git branch like_feature * master # *가 현재 있는 브랜치 # 브랜치 전환 (checkout) git checkout like_feature Switched to branch 'like_feature' # 생성과 전환을 한 번에 git checkout -b feature/login 브랜치는 스냅샷의 다른 라벨일 뿐입니다.\n"><meta property='og:url' content='https://lucaspark-10.github.io/git-study/github-study03/'><meta property='og:site_name' content='LucasPark Blog'><meta property='og:type' content='article'><meta property='article:section' content='Git-Study'><meta property='article:published_time' content='2026-07-30T00:00:00+00:00'><meta property='article:modified_time' content='2026-07-30T00:00:00+00:00'><meta name=twitter:title content="[Git] - 브랜치와 병합 (Branch & Merge)"><meta name=twitter:description content="Git 브랜치와 병합 브랜치란? 브랜치는 메인 작업에서 가지를 쳐서 별도 방향으로 작업할 수 있게 해줍니다.\n머리에 가지가 뻗어나가는 나무를 상상하세요.\nmaster HEAD → like_feature c1 — c2 (new branch) like_feature HEAD → master c1 — c2 — c3 (merged back) 브랜치 만들기와 전환 # 새 브랜치 생성 (현재 상태 그대로 복사됨) git branch like_feature # 브랜치 목록 확인 $ git branch like_feature * master # *가 현재 있는 브랜치 # 브랜치 전환 (checkout) git checkout like_feature Switched to branch 'like_feature' # 생성과 전환을 한 번에 git checkout -b feature/login 브랜치는 스냅샷의 다른 라벨일 뿐입니다.\n"><script async src="https://www.googletagmanager.com/gtag/js?id=G-EVK5B22CB3"></script><script>var doNotTrack=!1,dnt=navigator.doNotTrack||window.doNotTrack||navigator.msDoNotTrack,doNotTrack=dnt=="1"||dnt=="yes";if(!doNotTrack){window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag("js",new Date),gtag("config","G-EVK5B22CB3")}</script></head><body class=article-page><script>(function(){const e="StackColorScheme";localStorage.getItem(e)||localStorage.setItem(e,"auto")})()</script><script>(function(){const t="StackColorScheme",e=localStorage.getItem(t),n=window.matchMedia("(prefers-color-scheme: dark)").matches===!0;e=="dark"||e==="auto"&&n?document.documentElement.dataset.scheme="dark":document.documentElement.dataset.scheme="light"})()</script><div class="container main-container flex on-phone--column compact"><aside class="sidebar left-sidebar sticky"><button class="hamburger hamburger--spin" type=button id=toggle-menu aria-label="Toggle Menu">
-<span class=hamburger-box><span class=hamburger-inner></span></span></button><header><div class=site-meta><h1 class=site-name><a href=/>LucasPark Blog</a></h1><h2 class=site-description>Lucas Park의 개인 블로그</h2></div></header><ol class=menu id=main-menu><li><a href=/><span>Home</span></a></li><li><a href=/posts/><span>Posts</span></a></li><li><a href=/git-study/><span>Git-study</span></a></li><li><a href=/data-analysis/><span>Data Analysis</span></a></li><li><a href=/gold-news-and-analysis/><span>Gold Price Check & Analysis</span></a></li><li><a href=/atmospheric-environment/><span>Atmospheric Environment</span></a></li><li class=menu-bottom-section><ol class=menu><li id=dark-mode-toggle><svg class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="8" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
-<svg class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="16" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
-<span>Dark Mode</span></li></ol></li></ol></aside><main class="main full-width"><article class=main-article><header class=article-header><div class=article-details><div class=article-title-wrapper><h2 class=article-title><a href=/git-study/github-study03/>[Git] - 브랜치와 병합 (Branch & Merge)</a></h2></div><footer class=article-meta><div class=inline-meta><svg class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M11.795 21H5a2 2 0 01-2-2V7a2 2 0 012-2h12a2 2 0 012 2v4"/><circle cx="18" cy="18" r="4"/><path d="M15 3v4"/><path d="M7 3v4"/><path d="M3 11h16"/><path d="M18 16.496V18l1 1"/></svg>
-<time class=article-time--published datetime=2026-07-30T00:00:00Z>2026년 7월 30일 목요일</time></div></footer></div></header><section class=article-content><h1 id=git-브랜치와-병합>Git 브랜치와 병합</h1><h2 id=브랜치란>브랜치란?</h2><p>브랜치는 메인 작업에서 <strong>가지를 쳐서 별도 방향으로 작업</strong>할 수 있게 해줍니다.</p><p>머리에 가지가 뻗어나가는 나무를 상상하세요.</p><pre tabindex=0><code>master        HEAD → like_feature
+<!DOCTYPE html>
+<html lang="ko-kr" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="Git 브랜치와 병합 브랜치란? 브랜치는 메인 작업에서 가지를 쳐서 별도 방향으로 작업할 수 있게 해줍니다.\n머리에 가지가 뻗어나가는 나무를 상상하세요.\nmaster HEAD → like_feature c1 — c2 (new branch) like_feature HEAD → master c1 — c2 — c3 (merged back) 브랜치 만들기와 전환 # 새 브랜치 생성 (현재 상태 그대로 복사됨) git branch like_feature # 브랜치 목록 확인 $ git branch like_feature * master # *가 현재 있는 브랜치 # 브랜치 전환 (checkout) git checkout like_feature Switched to branch &#39;like_feature&#39; # 생성과 전환을 한 번에 git checkout -b feature/login 브랜치는 스냅샷의 다른 라벨일 뿐입니다.\n">
+<title>[Git] - 브랜치와 병합 (Branch &amp; Merge)</title>
+
+
+<link rel="canonical" href="https://lucaspark-10.github.io/git-study/github-study03/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
+
+
+<link rel="stylesheet" href="/scss/style.min.de7e6698ac54e40edf7f3d56f131b6bbacde7bdf742f829e1185371a8af17315.css"><meta property='og:title' content="[Git] - 브랜치와 병합 (Branch & Merge)">
+<meta property='og:description' content="Git 브랜치와 병합 브랜치란? 브랜치는 메인 작업에서 가지를 쳐서 별도 방향으로 작업할 수 있게 해줍니다.\n머리에 가지가 뻗어나가는 나무를 상상하세요.\nmaster HEAD → like_feature c1 — c2 (new branch) like_feature HEAD → master c1 — c2 — c3 (merged back) 브랜치 만들기와 전환 # 새 브랜치 생성 (현재 상태 그대로 복사됨) git branch like_feature # 브랜치 목록 확인 $ git branch like_feature * master # *가 현재 있는 브랜치 # 브랜치 전환 (checkout) git checkout like_feature Switched to branch &#39;like_feature&#39; # 생성과 전환을 한 번에 git checkout -b feature/login 브랜치는 스냅샷의 다른 라벨일 뿐입니다.\n">
+<meta property='og:url' content='https://lucaspark-10.github.io/git-study/github-study03/'>
+<meta property='og:site_name' content='LucasPark Blog'>
+<meta property='og:type' content='article'><meta property='article:section' content='Git-Study' /><meta property='article:published_time' content='2026-07-30T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2026-07-30T00:00:00&#43;00:00'/>
+<meta name="twitter:title" content="[Git] - 브랜치와 병합 (Branch & Merge)">
+<meta name="twitter:description" content="Git 브랜치와 병합 브랜치란? 브랜치는 메인 작업에서 가지를 쳐서 별도 방향으로 작업할 수 있게 해줍니다.\n머리에 가지가 뻗어나가는 나무를 상상하세요.\nmaster HEAD → like_feature c1 — c2 (new branch) like_feature HEAD → master c1 — c2 — c3 (merged back) 브랜치 만들기와 전환 # 새 브랜치 생성 (현재 상태 그대로 복사됨) git branch like_feature # 브랜치 목록 확인 $ git branch like_feature * master # *가 현재 있는 브랜치 # 브랜치 전환 (checkout) git checkout like_feature Switched to branch &#39;like_feature&#39; # 생성과 전환을 한 번에 git checkout -b feature/login 브랜치는 스냅샷의 다른 라벨일 뿐입니다.\n">
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-EVK5B22CB3"></script>
+      <script>
+        var doNotTrack = false;
+        if ( true ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-EVK5B22CB3');
+        }
+      </script>
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column compact"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">LucasPark Blog</a></h1>
+            <h2 class="site-description">Lucas Park의 개인 블로그</h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                <span>Home</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/posts/' >
+                
+                <span>Posts</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/git-study/' >
+                
+                <span>Git-study</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/data-analysis/' >
+                
+                <span>Data Analysis</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/gold-news-and-analysis/' >
+                
+                <span>Gold Price Check &amp; Analysis</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/atmospheric-environment/' >
+                
+                <span>Atmospheric Environment</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>Dark Mode</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/git-study/github-study03/">[Git] - 브랜치와 병합 (Branch &amp; Merge)</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    
+    
+    
+    
+    
+    
+    <footer class="article-meta">
+        
+            <div class="inline-meta">
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                    <time class="article-time--published" datetime='2026-07-30T00:00:00Z'>2026년 7월 30일 목요일</time>
+                
+
+                
+            </div>
+        
+
+        
+
+        
+    </footer>
+    
+</div>
+
+</header>
+
+    
+
+    <section class="article-content">
+    
+    
+    <h1 id="git-브랜치와-병합">Git 브랜치와 병합
+</h1><h2 id="브랜치란">브랜치란?
+</h2><p>브랜치는 메인 작업에서 <strong>가지를 쳐서 별도 방향으로 작업</strong>할 수 있게 해줍니다.</p>
+<p>머리에 가지가 뻗어나가는 나무를 상상하세요.</p>
+<pre tabindex="0"><code>master        HEAD → like_feature
 c1 — c2              (new branch)
 
 like_feature   HEAD → master
 c1 — c2 — c3   (merged back)
-</code></pre><h3 id=브랜치-만들기와-전환>브랜치 만들기와 전환</h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#75715e># 새 브랜치 생성 (현재 상태 그대로 복사됨)</span>
-</span></span><span style=display:flex><span>git branch like_feature
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># 브랜치 목록 확인</span>
-</span></span><span style=display:flex><span>$ git branch
-</span></span><span style=display:flex><span>   like_feature
-</span></span><span style=display:flex><span>* master           <span style=color:#75715e># *가 현재 있는 브랜치</span>
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># 브랜치 전환 (checkout)</span>
-</span></span><span style=display:flex><span>git checkout like_feature
-</span></span><span style=display:flex><span>Switched to branch <span style=color:#e6db74>&#39;like_feature&#39;</span>
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># 생성과 전환을 한 번에</span>
-</span></span><span style=display:flex><span>git checkout -b feature/login
-</span></span></code></pre></div><p>브랜치는 <strong>스냅샷의 다른 라벨</strong>일 뿐입니다.</p><p>새로운 파일이 생기는 게 아니라, 같은 내용을 가리키는 이름이 늘어나는 것입니다.</p><h2 id=fast-forward-merge>Fast Forward Merge</h2><h3 id=기본-병합-흐름>기본 병합 흐름</h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#75715e># 1. feature 브랜치에서 작업 완료 후 master로 전환</span>
-</span></span><span style=display:flex><span>git checkout master
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># 2. merge (fast-forward 방식)</span>
-</span></span><span style=display:flex><span>$ git merge like_feature
-</span></span><span style=display:flex><span>Updating d78ade4..a63hec2
-</span></span><span style=display:flex><span>Fast-forward
-</span></span><span style=display:flex><span> comment.js | <span style=color:#ae81ff>3</span> ++-
-</span></span><span style=display:flex><span> <span style=color:#ae81ff>1</span> file changed, <span style=color:#ae81ff>2</span> insertions<span style=color:#f92672>(</span>+<span style=color:#f92672>)</span>, <span style=color:#ae81ff>1</span> deletion<span style=color:#f92672>(</span>-<span style=color:#f92672>)</span>
-</span></span></code></pre></div><p><strong>Fast Forward</strong>는 master의 커밋이 nothing_changed일 때 발생합니다.</p><p>브랜치의 커밋을 master로 &ldquo;당겨오기&rdquo; 때문에 병합 커밋이 생성되지 않습니다.</p><p>가장 깔끔한 방식입니다.</p><h3 id=fast-forward가-아닌-경우>Fast Forward가 아닌 경우</h3><p>master에 새 커밋이 있으면 자동으로 <strong>3-way merge</strong>가 발생합니다.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-bash data-lang=bash><span style=display:flex><span>$ git log --graph --all --pretty<span style=color:#f92672>=</span>oneline
-</span></span><span style=display:flex><span>* c3360a...<span style=color:#f92672>(</span>HEAD-&gt;master<span style=color:#f92672>)</span> add master
-</span></span><span style=display:flex><span>| * 782d90...<span style=color:#f92672>(</span>like_feature<span style=color:#f92672>)</span> add like_feature
-</span></span><span style=display:flex><span>|/
-</span></span><span style=display:flex><span>* 1c7881... init git
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># merge 수행</span>
-</span></span><span style=display:flex><span>$ git checkout master
-</span></span><span style=display:flex><span>$ git merge like_feature
-</span></span><span style=display:flex><span><span style=color:#f92672>[</span>main<span style=color:#f92672>]</span> update#setState idle
-</span></span><span style=display:flex><span>Merge made by the <span style=color:#e6db74>&#39;recursive&#39;</span> strategy.
-</span></span><span style=display:flex><span> checkout.txt | <span style=color:#ae81ff>2</span> +-
-</span></span><span style=display:flex><span> <span style=color:#ae81ff>1</span> file changed, <span style=color:#ae81ff>1</span> insertion<span style=color:#f92672>(</span>+<span style=color:#f92672>)</span>, <span style=color:#ae81ff>1</span> deletion<span style=color:#f92672>(</span>-<span style=color:#f92672>)</span>
-</span></span></code></pre></div><p>결과: 병합 커밋이 새로 생성됩니다.</p><pre tabindex=0><code>c3 (HEAD-&gt;master)
+</code></pre><h3 id="브랜치-만들기와-전환">브랜치 만들기와 전환
+</h3><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># 새 브랜치 생성 (현재 상태 그대로 복사됨)</span>
+</span></span><span style="display:flex;"><span>git branch like_feature
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 브랜치 목록 확인</span>
+</span></span><span style="display:flex;"><span>$ git branch
+</span></span><span style="display:flex;"><span>   like_feature
+</span></span><span style="display:flex;"><span>* master           <span style="color:#75715e"># *가 현재 있는 브랜치</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 브랜치 전환 (checkout)</span>
+</span></span><span style="display:flex;"><span>git checkout like_feature
+</span></span><span style="display:flex;"><span>Switched to branch <span style="color:#e6db74">&#39;like_feature&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 생성과 전환을 한 번에</span>
+</span></span><span style="display:flex;"><span>git checkout -b feature/login
+</span></span></code></pre></div><p>브랜치는 <strong>스냅샷의 다른 라벨</strong>일 뿐입니다.</p>
+<p>새로운 파일이 생기는 게 아니라, 같은 내용을 가리키는 이름이 늘어나는 것입니다.</p>
+<h2 id="fast-forward-merge">Fast Forward Merge
+</h2><h3 id="기본-병합-흐름">기본 병합 흐름
+</h3><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># 1. feature 브랜치에서 작업 완료 후 master로 전환</span>
+</span></span><span style="display:flex;"><span>git checkout master
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 2. merge (fast-forward 방식)</span>
+</span></span><span style="display:flex;"><span>$ git merge like_feature
+</span></span><span style="display:flex;"><span>Updating d78ade4..a63hec2
+</span></span><span style="display:flex;"><span>Fast-forward
+</span></span><span style="display:flex;"><span> comment.js | <span style="color:#ae81ff">3</span> ++-
+</span></span><span style="display:flex;"><span> <span style="color:#ae81ff">1</span> file changed, <span style="color:#ae81ff">2</span> insertions<span style="color:#f92672">(</span>+<span style="color:#f92672">)</span>, <span style="color:#ae81ff">1</span> deletion<span style="color:#f92672">(</span>-<span style="color:#f92672">)</span>
+</span></span></code></pre></div><p><strong>Fast Forward</strong>는 master의 커밋이 nothing_changed일 때 발생합니다.</p>
+<p>브랜치의 커밋을 master로 &ldquo;당겨오기&rdquo; 때문에 병합 커밋이 생성되지 않습니다.</p>
+<p>가장 깔끔한 방식입니다.</p>
+<h3 id="fast-forward가-아닌-경우">Fast Forward가 아닌 경우
+</h3><p>master에 새 커밋이 있으면 자동으로 <strong>3-way merge</strong>가 발생합니다.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>$ git log --graph --all --pretty<span style="color:#f92672">=</span>oneline
+</span></span><span style="display:flex;"><span>* c3360a...<span style="color:#f92672">(</span>HEAD-&gt;master<span style="color:#f92672">)</span> add master
+</span></span><span style="display:flex;"><span>| * 782d90...<span style="color:#f92672">(</span>like_feature<span style="color:#f92672">)</span> add like_feature
+</span></span><span style="display:flex;"><span>|/
+</span></span><span style="display:flex;"><span>* 1c7881... init git
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># merge 수행</span>
+</span></span><span style="display:flex;"><span>$ git checkout master
+</span></span><span style="display:flex;"><span>$ git merge like_feature
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>main<span style="color:#f92672">]</span> update#setState idle
+</span></span><span style="display:flex;"><span>Merge made by the <span style="color:#e6db74">&#39;recursive&#39;</span> strategy.
+</span></span><span style="display:flex;"><span> checkout.txt | <span style="color:#ae81ff">2</span> +-
+</span></span><span style="display:flex;"><span> <span style="color:#ae81ff">1</span> file changed, <span style="color:#ae81ff">1</span> insertion<span style="color:#f92672">(</span>+<span style="color:#f92672">)</span>, <span style="color:#ae81ff">1</span> deletion<span style="color:#f92672">(</span>-<span style="color:#f92672">)</span>
+</span></span></code></pre></div><p>결과: 병합 커밋이 새로 생성됩니다.</p>
+<pre tabindex="0"><code>c3 (HEAD-&gt;master)
 /
 c5 ← merge commit
  \    \
   c4   c2
    \   /
     c1
-</code></pre><h2 id=merge-conflict--충돌-처리>Merge Conflict — 충돌 처리</h2><h3 id=충돌이-발생하는-경우>충돌이 발생하는 경우</h3><p>두 브랜치가 <strong>같은 파일의 같은 부분</strong>을 다른 내용으로 수정했을 때 발생합니다.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-bash data-lang=bash><span style=display:flex><span>$ git merge like_feature
-</span></span><span style=display:flex><span>Auto-merging comment.js
-</span></span><span style=display:flex><span>CONFLICT <span style=color:#f92672>(</span>content<span style=color:#f92672>)</span>: Merge conflict in comment.js
-</span></span><span style=display:flex><span>Automatic merge failed; fix conflicts and <span style=color:#66d9ef>then</span> commit the result.
-</span></span></code></pre></div><h3 id=충돌-해결-방법>충돌 해결 방법</h3><h4 id=1-수동으로-파일에서-conflict-표시-제거>1. 수동으로 파일에서 conflict 표시 제거</h4><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-javascript data-lang=javascript><span style=display:flex><span><span style=color:#f92672>&lt;&lt;&lt;&lt;&lt;&lt;&lt;</span> <span style=color:#a6e22e>HEAD</span>          <span style=color:#75715e>// ← 현재(master)의 버전
-</span></span></span><span style=display:flex><span><span style=color:#a6e22e>$</span>(<span style=color:#e6db74>&#34;.comment-good&#34;</span>).<span style=color:#a6e22e>text</span>(<span style=color:#a6e22e>$</span>(<span style=color:#e6db74>&#34;.comment-good&#34;</span>).<span style=color:#a6e22e>val</span>()<span style=color:#f92672>-</span><span style=color:#ae81ff>1</span>);
-</span></span><span style=display:flex><span><span style=color:#f92672>=======</span>              <span style=color:#75715e>// ← 병합하려는(branch) 버전
-</span></span></span><span style=display:flex><span><span style=color:#a6e22e>$</span>(<span style=color:#e6db74>&#34;.comment-good&#34;</span>).<span style=color:#a6e22e>text</span>(<span style=color:#a6e22e>$</span>(<span style=color:#e6db74>&#34;.comment-good&#34;</span>).<span style=color:#a6e22e>val</span>()<span style=color:#f92672>-</span><span style=color:#ae81ff>1</span> <span style=color:#f92672>&lt;</span> <span style=color:#ae81ff>0</span> <span style=color:#f92672>?</span> <span style=color:#ae81ff>0</span> <span style=color:#f92672>:</span> <span style=color:#a6e22e>$</span>(<span style=color:#e6db74>&#34;.comment-good&#34;</span>).<span style=color:#a6e22e>val</span>()<span style=color:#f92672>-</span><span style=color:#ae81ff>1</span>);
-</span></span><span style=display:flex><span><span style=color:#f92672>&gt;&gt;&gt;&gt;&gt;&gt;&gt;</span> <span style=color:#a6e22e>like_feature</span>   <span style=color:#75715e>// ← 병합 끝 표시
-</span></span></span></code></pre></div><p>위에서 <code>&lt;</code>, <code>=</code>, <code>></code> 기호를 찾아서 불필요한 부분을 삭제하고 원하는 내용으로 수정합니다:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-javascript data-lang=javascript><span style=display:flex><span><span style=color:#75715e>// ✅ 충돌 해결 후 (두 버전 중 선택 또는 조합)
-</span></span></span><span style=display:flex><span><span style=color:#a6e22e>$</span>(<span style=color:#e6db74>&#34;.comment-good&#34;</span>).<span style=color:#a6e22e>text</span>(
-</span></span><span style=display:flex><span>    <span style=color:#a6e22e>$</span>(<span style=color:#e6db74>&#34;.comment-good&#34;</span>).<span style=color:#a6e22e>val</span>() <span style=color:#f92672>-</span> <span style=color:#ae81ff>1</span> <span style=color:#f92672>&lt;</span> <span style=color:#ae81ff>0</span> <span style=color:#f92672>?</span> <span style=color:#ae81ff>0</span> <span style=color:#f92672>:</span> <span style=color:#a6e22e>$</span>(<span style=color:#e6db74>&#34;.comment-good&#34;</span>).<span style=color:#a6e22e>val</span>() <span style=color:#f92672>-</span> <span style=color:#ae81ff>1</span>
-</span></span><span style=display:flex><span>);
-</span></span></code></pre></div><h4 id=2-git-status로-충돌-파일-확인>2. git status로 충돌 파일 확인</h4><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-bash data-lang=bash><span style=display:flex><span>$ git status
-</span></span><span style=display:flex><span>On branch master
-</span></span><span style=display:flex><span>You have unmerged paths.
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>   <span style=color:#f92672>(</span>fix conflicts and run <span style=color:#e6db74>&#34;git commit&#34;</span><span style=color:#f92672>)</span>
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>Unmerged paths:
-</span></span><span style=display:flex><span>   <span style=color:#f92672>(</span>use <span style=color:#e6db74>&#34;git add &lt;file&gt;...&#34;</span> to mark resolution<span style=color:#f92672>)</span>
-</span></span><span style=display:flex><span>       both modified:  comment.js
-</span></span></code></pre></div><h4 id=3-충돌-해결-후-커밋>3. 충돌 해결 후 커밋</h4><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-bash data-lang=bash><span style=display:flex><span>git add comment.js    <span style=color:#75715e># 충돌 해결 파일 추가</span>
-</span></span><span style=display:flex><span>git commit -m <span style=color:#e6db74>&#34;Merge branch &#39;like_feature&#39; — resolve conflict&#34;</span>
-</span></span></code></pre></div><h3 id=충돌을-완전히-피하는-방법>충돌을 완전히 피하는 방법</h3><div class=table-wrapper><table><thead><tr><th>전략</th><th>설명</th></tr></thead><tbody><tr><td><strong>작은 브랜치</strong></td><td>한 브랜치가 다루는 범위가 작을수록 충돌 확률 감소</td></tr><tr><td><strong>자주 master에 merge</strong></td><td>오래된 브랜치를 자주 병합하면 변경 범위 예측 가능</td></tr><tr><td><strong>.gitignore 활용</strong></td><td>빌드 산출물, 로그 등은 버전 관리하지 않음</td></tr></tbody></table></div><h2 id=브랜치-정리>브랜치 정리</h2><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#75715e># 이미 병합된 브랜치 확인</span>
-</span></span><span style=display:flex><span>$ git branch --merged
-</span></span><span style=display:flex><span>   like_feature           <span style=color:#75715e># ✅ master에 merge됨 — 삭제 안전</span>
-</span></span><span style=display:flex><span>* master
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># 브랜치 삭제 (병합 완료된 브랜치)</span>
-</span></span><span style=display:flex><span>git branch -d like_feature
-</span></span><span style=display:flex><span>Deleted branch like_feature <span style=color:#f92672>(</span>was 782d90<span style=color:#f92672>)</span>.
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># 강제로 삭제 (아직 병합 안 됨)</span>
-</span></span><span style=display:flex><span>git branch -D like_feature
+</code></pre><h2 id="merge-conflict--충돌-처리">Merge Conflict — 충돌 처리
+</h2><h3 id="충돌이-발생하는-경우">충돌이 발생하는 경우
+</h3><p>두 브랜치가 <strong>같은 파일의 같은 부분</strong>을 다른 내용으로 수정했을 때 발생합니다.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>$ git merge like_feature
+</span></span><span style="display:flex;"><span>Auto-merging comment.js
+</span></span><span style="display:flex;"><span>CONFLICT <span style="color:#f92672">(</span>content<span style="color:#f92672">)</span>: Merge conflict in comment.js
+</span></span><span style="display:flex;"><span>Automatic merge failed; fix conflicts and <span style="color:#66d9ef">then</span> commit the result.
+</span></span></code></pre></div><h3 id="충돌-해결-방법">충돌 해결 방법
+</h3><h4 id="1-수동으로-파일에서-conflict-표시-제거">1. 수동으로 파일에서 conflict 표시 제거
+</h4><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-javascript" data-lang="javascript"><span style="display:flex;"><span><span style="color:#f92672">&lt;&lt;&lt;&lt;&lt;&lt;&lt;</span> <span style="color:#a6e22e">HEAD</span>          <span style="color:#75715e">// ← 현재(master)의 버전
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">$</span>(<span style="color:#e6db74">&#34;.comment-good&#34;</span>).<span style="color:#a6e22e">text</span>(<span style="color:#a6e22e">$</span>(<span style="color:#e6db74">&#34;.comment-good&#34;</span>).<span style="color:#a6e22e">val</span>()<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>);
+</span></span><span style="display:flex;"><span><span style="color:#f92672">=======</span>              <span style="color:#75715e">// ← 병합하려는(branch) 버전
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">$</span>(<span style="color:#e6db74">&#34;.comment-good&#34;</span>).<span style="color:#a6e22e">text</span>(<span style="color:#a6e22e">$</span>(<span style="color:#e6db74">&#34;.comment-good&#34;</span>).<span style="color:#a6e22e">val</span>()<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span> <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">?</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">:</span> <span style="color:#a6e22e">$</span>(<span style="color:#e6db74">&#34;.comment-good&#34;</span>).<span style="color:#a6e22e">val</span>()<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>);
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;&gt;&gt;&gt;&gt;</span> <span style="color:#a6e22e">like_feature</span>   <span style="color:#75715e">// ← 병합 끝 표시
+</span></span></span></code></pre></div><p>위에서 <code>&lt;</code>, <code>=</code>, <code>&gt;</code> 기호를 찾아서 불필요한 부분을 삭제하고 원하는 내용으로 수정합니다:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-javascript" data-lang="javascript"><span style="display:flex;"><span><span style="color:#75715e">// ✅ 충돌 해결 후 (두 버전 중 선택 또는 조합)
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">$</span>(<span style="color:#e6db74">&#34;.comment-good&#34;</span>).<span style="color:#a6e22e">text</span>(
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">$</span>(<span style="color:#e6db74">&#34;.comment-good&#34;</span>).<span style="color:#a6e22e">val</span>() <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">?</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">:</span> <span style="color:#a6e22e">$</span>(<span style="color:#e6db74">&#34;.comment-good&#34;</span>).<span style="color:#a6e22e">val</span>() <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>);
+</span></span></code></pre></div><h4 id="2-git-status로-충돌-파일-확인">2. git status로 충돌 파일 확인
+</h4><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>$ git status
+</span></span><span style="display:flex;"><span>On branch master
+</span></span><span style="display:flex;"><span>You have unmerged paths.
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>   <span style="color:#f92672">(</span>fix conflicts and run <span style="color:#e6db74">&#34;git commit&#34;</span><span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Unmerged paths:
+</span></span><span style="display:flex;"><span>   <span style="color:#f92672">(</span>use <span style="color:#e6db74">&#34;git add &lt;file&gt;...&#34;</span> to mark resolution<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>       both modified:  comment.js
+</span></span></code></pre></div><h4 id="3-충돌-해결-후-커밋">3. 충돌 해결 후 커밋
+</h4><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>git add comment.js    <span style="color:#75715e"># 충돌 해결 파일 추가</span>
+</span></span><span style="display:flex;"><span>git commit -m <span style="color:#e6db74">&#34;Merge branch &#39;like_feature&#39; — resolve conflict&#34;</span>
+</span></span></code></pre></div><h3 id="충돌을-완전히-피하는-방법">충돌을 완전히 피하는 방법
+</h3><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>전략</th>
+          <th>설명</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>작은 브랜치</strong></td>
+          <td>한 브랜치가 다루는 범위가 작을수록 충돌 확률 감소</td>
+      </tr>
+      <tr>
+          <td><strong>자주 master에 merge</strong></td>
+          <td>오래된 브랜치를 자주 병합하면 변경 범위 예측 가능</td>
+      </tr>
+      <tr>
+          <td><strong>.gitignore 활용</strong></td>
+          <td>빌드 산출물, 로그 등은 버전 관리하지 않음</td>
+      </tr>
+  </tbody>
+</table></div>
+<h2 id="브랜치-정리">브랜치 정리
+</h2><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># 이미 병합된 브랜치 확인</span>
+</span></span><span style="display:flex;"><span>$ git branch --merged
+</span></span><span style="display:flex;"><span>   like_feature           <span style="color:#75715e"># ✅ master에 merge됨 — 삭제 안전</span>
+</span></span><span style="display:flex;"><span>* master
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 브랜치 삭제 (병합 완료된 브랜치)</span>
+</span></span><span style="display:flex;"><span>git branch -d like_feature
+</span></span><span style="display:flex;"><span>Deleted branch like_feature <span style="color:#f92672">(</span>was 782d90<span style="color:#f92672">)</span>.
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 강제로 삭제 (아직 병합 안 됨)</span>
+</span></span><span style="display:flex;"><span>git branch -D like_feature
 </span></span></code></pre></div><p><code>-d</code> (소문자)는 병합된 브랜치만 삭제합니다. 안전 장치입니다.
-<code>-D</code> (대문자)는 강제 삭제 — 내용 손실 가능.</p><h2 id=head-detached-state>HEAD Detached State</h2><p>git checkout로 특정 커밋 해시에 이동하면 <strong>detached HEAD</strong> 상태가 됩니다.</p><p>이 상태에서 한 것은 임시 작업일 뿐, 브랜치에 반영되지 않습니다.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-bash data-lang=bash><span style=display:flex><span>$ git log --pretty<span style=color:#f92672>=</span>oneline
-</span></span><span style=display:flex><span>e4abb6f... <span style=color:#f92672>(</span>HEAD -&gt; master<span style=color:#f92672>)</span> this is master
-</span></span><span style=display:flex><span>d97d387... another snapshot
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>$ git checkout d97d38
-</span></span><span style=display:flex><span>HEAD is now at d97d38 another snapshot
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># detached 상태 — 원하면 브랜치로 만들어서 저장</span>
-</span></span><span style=display:flex><span>git checkout -b old-snapshot d97d38
-</span></span></code></pre></div><h2 id=git-internals--git-내부-구조-이해>Git Internals — Git 내부 구조 이해</h2><p>Git이 어떤 객체들로 이루어져 있는지 이해하면 병합 전략이 훨씬 명확해집니다.</p><h3 id=핵심-객체>핵심 객체</h3><div class=table-wrapper><table><thead><tr><th>객체</th><th>역할</th><th>파일 형식</th></tr></thead><tbody><tr><td><strong>Blob</strong></td><td>파일 내용 (압축)</td><td><code>git/objects/{2자}{38자}</code></td></tr><tr><td><strong>Tree</strong></td><td>폴더 구조 (블러브 + 하위 트리를 참조)</td><td>동일</td></tr><tr><td><strong>Commit</strong></td><td>스냅샷 + 메타데이터 (author, date, parent)</td><td>동일</td></tr><tr><td><strong>Tag</strong></td><td>커밋에 이름 붙임 (버전 표시)</td><td>동일</td></tr></tbody></table></div><h3 id=sha-1-해시-확인>SHA-1 해시 확인</h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#75715e># 객체 타입 확인 (commit, tree, blob 등)</span>
-</span></span><span style=display:flex><span>git cat-file -t &lt;SHA-1&gt;
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># 객체 내용 보기</span>
-</span></span><span style=display:flex><span>git cat-file -p &lt;SHA-1&gt;
-</span></span></code></pre></div><h2 id=왜-브랜치-전략이-중요한가>왜 브랜치 전략이 중요한가?</h2><ol><li><strong>실험 안전성</strong>: 버그 수정, 새로운 기능 등을 별도 공간에서 시도 — 메인에 영향 없음</li><li><strong>동시 개발</strong>: 여러 팀원이 동시에 다른 기능 개발 가능</li><li><strong>코드 리뷰 용이</strong>: 작은 브랜치별로 diff를 보면 리뷰하기 쉬움</li><li><strong>릴리즈 관리</strong>: release 브랜치에서 QA → main으로 배포하는 프로세스</li></ol></section><footer class="article-meta article-footer"></footer><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css integrity=sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV crossorigin=anonymous><script src=https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js integrity=sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG+vnGctmUb0ZY0l8 crossorigin=anonymous defer></script><script src=https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js integrity=sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05 crossorigin=anonymous defer></script><script>window.addEventListener("DOMContentLoaded",()=>{const e=[".main-article",".widget--toc"];e.forEach(e=>{const t=document.querySelector(e);t&&renderMathInElement(t,{delimiters:[{left:"$$",right:"$$",display:!0},{left:"$",right:"$",display:!1},{left:"\\(",right:"\\)",display:!1},{left:"\\[",right:"\\]",display:!0}],ignoredClasses:["gist"]})})})</script></article><nav class=article-prev-next><a class="prev-next-card prev" href=/git-study/github-study02/><div class=direction>← 이전 글</div><div class=title>[Git] - 설치부터 커밋까지</div></a><a class="prev-next-card next" href=/git-study/github-study04/><div class=direction>다음 글 →</div><div class=title>[Git] - Git 원격 저장소 관리 (Remote & Clone)</div></a></nav><footer class=site-footer><section class=copyright>&copy;
-2026 LucasPark Blog</section><section class=powerby>Built with <a href=https://gohugo.io/ target=_blank rel=noopener>Hugo</a><br>Theme <b><a href=https://github.com/CaiJimmy/hugo-theme-stack target=_blank rel=noopener data-version=4.0.3>Stack</a></b> designed by <a href=https://jimmycai.com target=_blank rel=noopener>Jimmy</a></section></footer><script type=module>
+<code>-D</code> (대문자)는 강제 삭제 — 내용 손실 가능.</p>
+<h2 id="head-detached-state">HEAD Detached State
+</h2><p>git checkout로 특정 커밋 해시에 이동하면 <strong>detached HEAD</strong> 상태가 됩니다.</p>
+<p>이 상태에서 한 것은 임시 작업일 뿐, 브랜치에 반영되지 않습니다.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>$ git log --pretty<span style="color:#f92672">=</span>oneline
+</span></span><span style="display:flex;"><span>e4abb6f... <span style="color:#f92672">(</span>HEAD -&gt; master<span style="color:#f92672">)</span> this is master
+</span></span><span style="display:flex;"><span>d97d387... another snapshot
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>$ git checkout d97d38
+</span></span><span style="display:flex;"><span>HEAD is now at d97d38 another snapshot
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># detached 상태 — 원하면 브랜치로 만들어서 저장</span>
+</span></span><span style="display:flex;"><span>git checkout -b old-snapshot d97d38
+</span></span></code></pre></div><h2 id="git-internals--git-내부-구조-이해">Git Internals — Git 내부 구조 이해
+</h2><p>Git이 어떤 객체들로 이루어져 있는지 이해하면 병합 전략이 훨씬 명확해집니다.</p>
+<h3 id="핵심-객체">핵심 객체
+</h3><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>객체</th>
+          <th>역할</th>
+          <th>파일 형식</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>Blob</strong></td>
+          <td>파일 내용 (압축)</td>
+          <td><code>git/objects/{2자}{38자}</code></td>
+      </tr>
+      <tr>
+          <td><strong>Tree</strong></td>
+          <td>폴더 구조 (블러브 + 하위 트리를 참조)</td>
+          <td>동일</td>
+      </tr>
+      <tr>
+          <td><strong>Commit</strong></td>
+          <td>스냅샷 + 메타데이터 (author, date, parent)</td>
+          <td>동일</td>
+      </tr>
+      <tr>
+          <td><strong>Tag</strong></td>
+          <td>커밋에 이름 붙임 (버전 표시)</td>
+          <td>동일</td>
+      </tr>
+  </tbody>
+</table></div>
+<h3 id="sha-1-해시-확인">SHA-1 해시 확인
+</h3><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># 객체 타입 확인 (commit, tree, blob 등)</span>
+</span></span><span style="display:flex;"><span>git cat-file -t &lt;SHA-1&gt;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 객체 내용 보기</span>
+</span></span><span style="display:flex;"><span>git cat-file -p &lt;SHA-1&gt;
+</span></span></code></pre></div><h2 id="왜-브랜치-전략이-중요한가">왜 브랜치 전략이 중요한가?
+</h2><ol>
+<li><strong>실험 안전성</strong>: 버그 수정, 새로운 기능 등을 별도 공간에서 시도 — 메인에 영향 없음</li>
+<li><strong>동시 개발</strong>: 여러 팀원이 동시에 다른 기능 개발 가능</li>
+<li><strong>코드 리뷰 용이</strong>: 작은 브랜치별로 diff를 보면 리뷰하기 쉬움</li>
+<li><strong>릴리즈 관리</strong>: release 브랜치에서 QA → main으로 배포하는 프로세스</li>
+</ol>
+
+</section>
+
+
+    <footer class="article-meta article-footer">
+    
+
+    </footer>
+
+
+    
+        <link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI&#43;WdtXRGWt2kTvGFasHpSy3SV"crossorigin="anonymous"
+            ><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG&#43;vnGctmUb0ZY0l8"crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"integrity="sha384-&#43;VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4&#43;/RRE05"crossorigin="anonymous"
+                defer
+                >
+            </script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        const elementsToRender = [".main-article", ".widget--toc"];
+
+        elementsToRender.forEach(selector => {
+            const element = document.querySelector(selector);
+            if (element) {
+                renderMathInElement(element, {
+                    delimiters: [
+                        { left: "$$", right: "$$", display: true },
+                        { left: "$", right: "$", display: false },
+                        { left: "\\(", right: "\\)", display: false },
+                        { left: "\\[", right: "\\]", display: true }
+                    ],
+                    ignoredClasses: ["gist"]
+                });
+            }
+        });
+    });
+</script>
+    
+</article>
+
+    
+
+    
+<nav class="article-prev-next">
+  
+  <a class="prev-next-card prev" href="/git-study/github-study02/">
+    <div class="direction">← 이전 글</div>
+    <div class="title">[Git] - 설치부터 커밋까지</div>
+  </a>
+  
+
+  
+  <a class="prev-next-card next" href="/git-study/github-study04/">
+    <div class="direction">다음 글 →</div>
+    <div class="title">[Git] - Git 원격 저장소 관리 (Remote &amp; Clone)</div>
+  </a>
+  
+</nav>
+
+
+    
+
+     
+    
+        
+
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2026 LucasPark Blog
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="4.0.3">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+
+
+
+<script type="module">
     import gallery from '\/ts\/gallery.js';
 
     const articleContent = document.querySelector('.article-content');
@@ -125,4 +518,15 @@ c5 ← merge commit
         });
         lightbox.init();
     }
-</script></main></div><script type=text/javascript src=/ts/main.1ff1e5fdc4e178ed422e50aa407526dc552f26342d729343fded19416194382c.js defer></script></body></html>
+</script>
+
+    
+
+            </main>
+        </div>
+        
+<script type="text/javascript" src="/ts/main.1ff1e5fdc4e178ed422e50aa407526dc552f26342d729343fded19416194382c.js" defer></script>
+
+
+    </body>
+</html>
