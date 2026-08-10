@@ -296,9 +296,8 @@ x\rightarrow\phi(x)
 <hr>
 <h1 id="7-kernel-trick">7. Kernel Trick
 </h1><p>그래서 직접 변환하지 않고 다음 값을 계산합니다.</p>
-<h1 id="kx_ix_j">\[
-K(x_i,x_j)
-</h1><p>\phi(x_i)^T\phi(x_j)
+<p>\[
+K(x_i,x_j) = \phi(x_i)^T\phi(x_j)
 \]</p>
 <p>이것이 Kernel Trick입니다.</p>
 <p>대표적인 Kernel은 다음과 같습니다.</p>
@@ -307,26 +306,22 @@ K(x_i,x_j)
 K(x_1,x_2)=x_1^Tx_2
 \]</p>
 <h3 id="polynomial">Polynomial
-</h3><h1 id="kx_1x_2">\[
-K(x_1,x_2)
-</h1><p>(\gamma x_1^Tx_2+\theta)^d
+</h3><p>\[
+K(x_1,x_2) = (\gamma x_1^Tx_2+\theta)^d
 \]</p>
 <h3 id="rbf">RBF
-</h3><h1 id="kx_1x_2-1">\[
-K(x_1,x_2)
-</h1><p>\exp(-\gamma\|x_1-x_2\|^2)
+</h3><p>\[
+K(x_1,x_2) = \exp(-\gamma\|x_1-x_2\|^2)
 \]</p>
 <h3 id="sigmoid">Sigmoid
-</h3><h1 id="kx_1x_2-2">\[
-K(x_1,x_2)
-</h1><p>\tanh(\gamma x_1^Tx_2+\theta)
+</h3><p>\[
+K(x_1,x_2) = \tanh(\gamma x_1^Tx_2+\theta)
 \]</p>
 <hr>
 <h1 id="8-rbf-kernel과-gamma">8. RBF Kernel과 Gamma
 </h1><p>RBF Kernel에서는 Gamma가 매우 중요합니다.</p>
-<h1 id="kx_1x_2-3">\[
-K(x_1,x_2)
-</h1><p>e^{-\gamma\|x_1-x_2\|^2}
+<p>\[
+K(x_1,x_2) = e^{-\gamma\|x_1-x_2\|^2}
 \]</p>
 <h3 id="gamma-">Gamma ↑
 </h3><ul>
