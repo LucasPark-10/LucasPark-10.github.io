@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="ko-kr" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content=" 이번 글에서는 Bayes 정리 → 조건부 독립 → Naive Bayes → Laplace Smoothing → 텍스트 분류를 정리합니다.\n1. Bayes 정리 Naive Bayes의 출발점은 Bayes 정리다.\n$$ P(Y|X) = \\frac{P(X|Y)P(Y)}{P(X)} $$\n각 항의 의미는 다음과 같습니다.\n기호 의미 $P(Y|X)$ 사후확률 $P(X|Y)$ 가능도 $P(Y)$ 사전확률 $P(X)$ 증거 분류에서는 각 클래스의 사후확률을 비교하여 가장 높은 클래스를 선택합니다.\n2. Naive Bayes란? Naive Bayes는 Bayes 정리를 이용하는 확률 기반 분류 모델입니다.\n핵심은 특징들이 조건부 독립이라고 가정한다는 것입니다.\n">
+<title>[머신러닝 분류 모델] 확률로 분류하기 - Naive Bayes</title>
+
+
+<link rel="canonical" href="https://lucaspark-10.github.io/data-analysis/python_data_analysis_37/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
+
+
+<link rel="stylesheet" href="/scss/style.min.de7e6698ac54e40edf7f3d56f131b6bbacde7bdf742f829e1185371a8af17315.css"><meta property='og:title' content="[머신러닝 분류 모델] 확률로 분류하기 - Naive Bayes">
+<meta property='og:description' content=" 이번 글에서는 Bayes 정리 → 조건부 독립 → Naive Bayes → Laplace Smoothing → 텍스트 분류를 정리합니다.\n1. Bayes 정리 Naive Bayes의 출발점은 Bayes 정리다.\n$$ P(Y|X) = \\frac{P(X|Y)P(Y)}{P(X)} $$\n각 항의 의미는 다음과 같습니다.\n기호 의미 $P(Y|X)$ 사후확률 $P(X|Y)$ 가능도 $P(Y)$ 사전확률 $P(X)$ 증거 분류에서는 각 클래스의 사후확률을 비교하여 가장 높은 클래스를 선택합니다.\n2. Naive Bayes란? Naive Bayes는 Bayes 정리를 이용하는 확률 기반 분류 모델입니다.\n핵심은 특징들이 조건부 독립이라고 가정한다는 것입니다.\n">
+<meta property='og:url' content='https://lucaspark-10.github.io/data-analysis/python_data_analysis_37/'>
+<meta property='og:site_name' content='LucasPark Blog'>
+<meta property='og:type' content='article'><meta property='article:section' content='Data-Analysis' /><meta property='article:published_time' content='2026-08-11T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2026-08-11T00:00:00&#43;00:00'/>
+<meta name="twitter:title" content="[머신러닝 분류 모델] 확률로 분류하기 - Naive Bayes">
+<meta name="twitter:description" content=" 이번 글에서는 Bayes 정리 → 조건부 독립 → Naive Bayes → Laplace Smoothing → 텍스트 분류를 정리합니다.\n1. Bayes 정리 Naive Bayes의 출발점은 Bayes 정리다.\n$$ P(Y|X) = \\frac{P(X|Y)P(Y)}{P(X)} $$\n각 항의 의미는 다음과 같습니다.\n기호 의미 $P(Y|X)$ 사후확률 $P(X|Y)$ 가능도 $P(Y)$ 사전확률 $P(X)$ 증거 분류에서는 각 클래스의 사후확률을 비교하여 가장 높은 클래스를 선택합니다.\n2. Naive Bayes란? Naive Bayes는 Bayes 정리를 이용하는 확률 기반 분류 모델입니다.\n핵심은 특징들이 조건부 독립이라고 가정한다는 것입니다.\n">
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-EVK5B22CB3"></script>
+      <script>
+        var doNotTrack = false;
+        if ( true ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-EVK5B22CB3');
+        }
+      </script>
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column compact"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">LucasPark Blog</a></h1>
+            <h2 class="site-description">Lucas Park의 개인 블로그</h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                <span>Home</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/posts/' >
+                
+                <span>Posts</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/git-study/' >
+                
+                <span>Git-study</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/data-analysis/' >
+                
+                <span>Data Analysis</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/gold-news-and-analysis/' >
+                
+                <span>Gold Price Check &amp; Analysis</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/atmospheric-environment/' >
+                
+                <span>Atmospheric Environment</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>Dark Mode</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/data-analysis/python_data_analysis_37/">[머신러닝 분류 모델] 확률로 분류하기 - Naive Bayes</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    
+    
+    
+    
+    
+    
+    <footer class="article-meta">
+        
+            <div class="inline-meta">
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                    <time class="article-time--published" datetime='2026-08-11T00:00:00Z'>2026년 8월 11일 화요일</time>
+                
+
+                
+            </div>
+        
+
+        
+
+        
+    </footer>
+    
+</div>
+
+</header>
+
+    
+
+    <section class="article-content">
+    
+    
+    
+    <blockquote>
+        <p>이번 글에서는 Bayes 정리 → 조건부 독립 → Naive Bayes → Laplace Smoothing → 텍스트 분류를 정리합니다.</p>
+
+    </blockquote>
+<hr>
+<h1 id="1-bayes-정리">1. Bayes 정리
+</h1><p>Naive Bayes의 출발점은 Bayes 정리다.</p>
+<p>$$
+P(Y|X) = \frac{P(X|Y)P(Y)}{P(X)}
+$$</p>
+<p>각 항의 의미는 다음과 같습니다.</p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>기호</th>
+          <th>의미</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>$P(Y|X)$</td>
+          <td>사후확률</td>
+      </tr>
+      <tr>
+          <td>$P(X|Y)$</td>
+          <td>가능도</td>
+      </tr>
+      <tr>
+          <td>$P(Y)$</td>
+          <td>사전확률</td>
+      </tr>
+      <tr>
+          <td>$P(X)$</td>
+          <td>증거</td>
+      </tr>
+  </tbody>
+</table></div>
+<p>분류에서는 각 클래스의 사후확률을 비교하여 가장 높은 클래스를 선택합니다.</p>
+<hr>
+<h1 id="2-naive-bayes란">2. Naive Bayes란?
+</h1><p>Naive Bayes는 Bayes 정리를 이용하는 확률 기반 분류 모델입니다.</p>
+<p>핵심은 <strong>특징들이 조건부 독립이라고 가정한다는 것</strong>입니다.</p>
+<p>예를 들어 이메일에</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>무료
+</span></span><span style="display:flex;"><span>당첨
+</span></span><span style="display:flex;"><span>쿠폰
+</span></span></code></pre></div><p>이라는 단어가 있다면</p>
+<p>$$
+P(X|Y) = P(x_1|Y)P(x_2|Y)P(x_3|Y)
+$$</p>
+<p>처럼 계산할 수 있습니다.</p>
+<p>현실에서 단어들이 완전히 독립인 것은 아니지만, 이 가정 덕분에 계산이 매우 단순해진다.</p>
+<hr>
+<h1 id="3-naive-bayes의-종류">3. Naive Bayes의 종류
+</h1><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>모델</th>
+          <th>주로 사용하는 데이터</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>GaussianNB</td>
+          <td>연속형 데이터</td>
+      </tr>
+      <tr>
+          <td>BernoulliNB</td>
+          <td>0/1 데이터</td>
+      </tr>
+      <tr>
+          <td>MultinomialNB</td>
+          <td>빈도/count 데이터, 텍스트</td>
+      </tr>
+  </tbody>
+</table></div>
+<p>특히 문서나 스팸 메일 같은 텍스트 분류에서는 Multinomial Naive Bayes가 자주 사용됩니다.</p>
+<hr>
+<h1 id="4-laplace-smoothing">4. Laplace Smoothing
+</h1><p>Naive Bayes에서 중요한 문제가 있습니다.</p>
+<p>훈련 데이터에 한 번도 등장하지 않은 단어가 있다면</p>
+<p>$$
+P(word|class)=0
+$$</p>
+<p>이 됩니다.</p>
+<p>확률을 여러 개 곱하기 때문에 하나라도 0이면 전체 확률도 0이 됩니다.</p>
+<p>이를 해결하기 위한 방법이 <strong>Laplace Smoothing</strong>입니다.</p>
+<p>대표적인 형태는</p>
+<p>$$
+P = \frac{N+\alpha}{N_{total}+\alpha V}
+$$</p>
+<p>입니다.</p>
+<h3 id="핵심">핵심
+</h3>
+    <blockquote>
+        <p>Laplace Smoothing = 0 확률 방지</p>
+
+    </blockquote>
+<hr>
+<h1 id="5-텍스트-분류와-로그-확률">5. 텍스트 분류와 로그 확률
+</h1><p>텍스트에서는 수많은 단어의 확률을 곱해야 합니다.</p>
+<p>예를 들어</p>
+<p>$$
+0.001\times0.002\times0.0001\times&hellip;
+$$</p>
+<p>처럼 값이 매우 작아질 수 있습니다.</p>
+<p>이런 문제를 <strong>Underflow</strong>라고 합니다.</p>
+<p>그래서 로그를 사용합니다.</p>
+<p>$$
+\log(ab)=\log a+\log b
+$$</p>
+<p>즉,</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>확률 곱셈
+</span></span><span style="display:flex;"><span> ↓
+</span></span><span style="display:flex;"><span>로그 변환
+</span></span><span style="display:flex;"><span> ↓
+</span></span><span style="display:flex;"><span>로그 확률 덧셈
+</span></span></code></pre></div><p>으로 바꿀 수 있습니다.</p>
+<hr>
+<h1 id="6-naive-bayes의-장점">6. Naive Bayes의 장점
+</h1><ul>
+<li>학습과 예측이 빠르다.</li>
+<li>비교적 적은 데이터에서도 잘 작동할 수 있습니다.</li>
+<li>텍스트 분류에 강하다.</li>
+<li>구현이 간단하다.</li>
+<li>확률 기반 모델이라 결과를 확률적으로 해석할 수 있습니다.</li>
+</ul>
+<h2 id="단점">단점
+</h2><ul>
+<li>조건부 독립 가정이 현실과 다를 수 있습니다.</li>
+<li>변수 간 상호작용을 충분히 반영하지 못할 수 있습니다.</li>
+<li>확률이 0이 되는 문제를 별도로 처리해야 합니다.</li>
+</ul>
+<hr>
+<h1 id="7-전체-흐름">7. 전체 흐름
+</h1><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>입력 데이터
+</span></span><span style="display:flex;"><span> ↓
+</span></span><span style="display:flex;"><span>Bayes 정리
+</span></span><span style="display:flex;"><span> ↓
+</span></span><span style="display:flex;"><span>각 클래스의 사후확률 계산
+</span></span><span style="display:flex;"><span> ↓
+</span></span><span style="display:flex;"><span>조건부 독립 가정으로 계산 단순화
+</span></span><span style="display:flex;"><span> ↓
+</span></span><span style="display:flex;"><span>가장 높은 확률의 클래스 선택
+</span></span></code></pre></div><p>텍스트라면 추가로</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>단어 빈도
+</span></span><span style="display:flex;"><span> ↓
+</span></span><span style="display:flex;"><span>Naive Bayes
+</span></span><span style="display:flex;"><span> ↓
+</span></span><span style="display:flex;"><span>Laplace Smoothing
+</span></span><span style="display:flex;"><span> ↓
+</span></span><span style="display:flex;"><span>로그 확률 계산
+</span></span><span style="display:flex;"><span> ↓
+</span></span><span style="display:flex;"><span>스팸 / 정상 등 분류
+</span></span></code></pre></div><hr>
+<h2 id="핵심-암기">핵심 암기
+</h2>
+    <blockquote>
+        <p>Naive Bayes = Bayes 정리 + 조건부 독립 가정</p>
+
+    </blockquote>
+
+    <blockquote>
+        <p>Laplace Smoothing = 0 확률 방지</p>
+
+    </blockquote>
+
+    <blockquote>
+        <p>로그 확률 = Underflow 방지</p>
+
+    </blockquote>
+<hr>
+<h2 id="한-문장-정리">한 문장 정리
+</h2>
+    <blockquote>
+        <p>Naive Bayes는 Bayes 정리와 조건부 독립 가정을 이용하여 각 클래스의 확률을 계산하는 빠르고 간단한 분류 모델이며, 특히 텍스트 분류에서 유용하다.</p>
+
+    </blockquote>
+
+</section>
+
+
+    <footer class="article-meta article-footer">
+    
+
+    </footer>
+
+
+    
+        <link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI&#43;WdtXRGWt2kTvGFasHpSy3SV"crossorigin="anonymous"
+            ><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG&#43;vnGctmUb0ZY0l8"crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"integrity="sha384-&#43;VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4&#43;/RRE05"crossorigin="anonymous"
+                defer
+                >
+            </script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        const elementsToRender = [".main-article", ".widget--toc"];
+
+        elementsToRender.forEach(selector => {
+            const element = document.querySelector(selector);
+            if (element) {
+                renderMathInElement(element, {
+                    delimiters: [
+                        { left: "$$", right: "$$", display: true },
+                        { left: "$", right: "$", display: false },
+                        { left: "\\(", right: "\\)", display: false },
+                        { left: "\\[", right: "\\]", display: true }
+                    ],
+                    ignoredClasses: ["gist"]
+                });
+            }
+        });
+    });
+</script>
+    
+</article>
+
+    
+
+    
+<nav class="article-prev-next">
+  
+  <a class="prev-next-card prev" href="/data-analysis/python_data_analysis_36/">
+    <div class="direction">← 이전 글</div>
+    <div class="title">[머신러닝 분류 모델] SVM과 커널 - 결정경계를 찾기</div>
+  </a>
+  
+
+  
+  <div class="prev-next-card empty"></div>
+  
+</nav>
+
+
+    
+
+     
+    
+        
+
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2026 LucasPark Blog
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="4.0.3">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+
+
+
+<script type="module">
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script>
+
+    
+
+            </main>
+        </div>
+        
+<script type="text/javascript" src="/ts/main.1ff1e5fdc4e178ed422e50aa407526dc552f26342d729343fded19416194382c.js" defer></script>
+
+
+    </body>
+</html>

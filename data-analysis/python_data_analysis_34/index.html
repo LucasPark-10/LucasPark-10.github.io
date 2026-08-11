@@ -1,162 +1,752 @@
-<!doctype html><html lang=ko-kr dir=ltr><head><meta charset=utf-8><meta name=viewport content='width=device-width,initial-scale=1'><meta name=description content="머신러닝 분류 모델 완벽 정리 지도학습부터 분류 알고리즘, 모델 평가와 앙상블까지 머신러닝을 공부하면서 가장 어려웠던 점은 개별 개념을 이해하는 것보다 서로 다른 개념들이 어떻게 연결되는지를 파악하는 것이었습니다.\n로지스틱 회귀, SVM, Naive Bayes, Decision Tree, Random Forest, AdaBoost, Gradient Boosting처럼 모델의 종류도 많고,\nEntropy, Information Gain, Maximum Likelihood, Margin, Kernel, Precision, Recall, AUC 등 처음 보면 서로 전혀 관계가 없어 보이는 개념도 계속 등장했습니다.\n하지만 전체 구조를 한 번에 보면 생각보다 단순합니다.\n"><title>[머신러닝 분류 모델] 지도학습부터 앙상블까지</title><link rel=canonical href=https://lucaspark-10.github.io/data-analysis/python_data_analysis_34/><link rel=preconnect href=https://fonts.googleapis.com><link rel=preconnect href=https://fonts.gstatic.com crossorigin><link rel=preload as=style href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap"><link rel=stylesheet href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap"><link rel=stylesheet href=/scss/style.min.de7e6698ac54e40edf7f3d56f131b6bbacde7bdf742f829e1185371a8af17315.css><meta property='og:title' content="[머신러닝 분류 모델] 지도학습부터 앙상블까지"><meta property='og:description' content="머신러닝 분류 모델 완벽 정리 지도학습부터 분류 알고리즘, 모델 평가와 앙상블까지 머신러닝을 공부하면서 가장 어려웠던 점은 개별 개념을 이해하는 것보다 서로 다른 개념들이 어떻게 연결되는지를 파악하는 것이었습니다.\n로지스틱 회귀, SVM, Naive Bayes, Decision Tree, Random Forest, AdaBoost, Gradient Boosting처럼 모델의 종류도 많고,\nEntropy, Information Gain, Maximum Likelihood, Margin, Kernel, Precision, Recall, AUC 등 처음 보면 서로 전혀 관계가 없어 보이는 개념도 계속 등장했습니다.\n하지만 전체 구조를 한 번에 보면 생각보다 단순합니다.\n"><meta property='og:url' content='https://lucaspark-10.github.io/data-analysis/python_data_analysis_34/'><meta property='og:site_name' content='LucasPark Blog'><meta property='og:type' content='article'><meta property='article:section' content='Data-Analysis'><meta property='article:published_time' content='2026-08-08T00:00:00+00:00'><meta property='article:modified_time' content='2026-08-08T00:00:00+00:00'><meta name=twitter:title content="[머신러닝 분류 모델] 지도학습부터 앙상블까지"><meta name=twitter:description content="머신러닝 분류 모델 완벽 정리 지도학습부터 분류 알고리즘, 모델 평가와 앙상블까지 머신러닝을 공부하면서 가장 어려웠던 점은 개별 개념을 이해하는 것보다 서로 다른 개념들이 어떻게 연결되는지를 파악하는 것이었습니다.\n로지스틱 회귀, SVM, Naive Bayes, Decision Tree, Random Forest, AdaBoost, Gradient Boosting처럼 모델의 종류도 많고,\nEntropy, Information Gain, Maximum Likelihood, Margin, Kernel, Precision, Recall, AUC 등 처음 보면 서로 전혀 관계가 없어 보이는 개념도 계속 등장했습니다.\n하지만 전체 구조를 한 번에 보면 생각보다 단순합니다.\n"><script async src="https://www.googletagmanager.com/gtag/js?id=G-EVK5B22CB3"></script><script>var doNotTrack=!1,dnt=navigator.doNotTrack||window.doNotTrack||navigator.msDoNotTrack,doNotTrack=dnt=="1"||dnt=="yes";if(!doNotTrack){window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag("js",new Date),gtag("config","G-EVK5B22CB3")}</script></head><body class=article-page><script>(function(){const e="StackColorScheme";localStorage.getItem(e)||localStorage.setItem(e,"auto")})()</script><script>(function(){const t="StackColorScheme",e=localStorage.getItem(t),n=window.matchMedia("(prefers-color-scheme: dark)").matches===!0;e=="dark"||e==="auto"&&n?document.documentElement.dataset.scheme="dark":document.documentElement.dataset.scheme="light"})()</script><div class="container main-container flex on-phone--column compact"><aside class="sidebar left-sidebar sticky"><button class="hamburger hamburger--spin" type=button id=toggle-menu aria-label="Toggle Menu">
-<span class=hamburger-box><span class=hamburger-inner></span></span></button><header><div class=site-meta><h1 class=site-name><a href=/>LucasPark Blog</a></h1><h2 class=site-description>Lucas Park의 개인 블로그</h2></div></header><ol class=menu id=main-menu><li><a href=/><span>Home</span></a></li><li><a href=/posts/><span>Posts</span></a></li><li><a href=/git-study/><span>Git-study</span></a></li><li><a href=/data-analysis/><span>Data Analysis</span></a></li><li><a href=/gold-news-and-analysis/><span>Gold Price Check & Analysis</span></a></li><li><a href=/atmospheric-environment/><span>Atmospheric Environment</span></a></li><li class=menu-bottom-section><ol class=menu><li id=dark-mode-toggle><svg class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="8" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
-<svg class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="16" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
-<span>Dark Mode</span></li></ol></li></ol></aside><main class="main full-width"><article class=main-article><header class=article-header><div class=article-details><div class=article-title-wrapper><h2 class=article-title><a href=/data-analysis/python_data_analysis_34/>[머신러닝 분류 모델] 지도학습부터 앙상블까지</a></h2></div><footer class=article-meta><div class=inline-meta><svg class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M11.795 21H5a2 2 0 01-2-2V7a2 2 0 012-2h12a2 2 0 012 2v4"/><circle cx="18" cy="18" r="4"/><path d="M15 3v4"/><path d="M7 3v4"/><path d="M3 11h16"/><path d="M18 16.496V18l1 1"/></svg>
-<time class=article-time--published datetime=2026-08-08T00:00:00Z>2026년 8월 8일 토요일</time></div></footer></div></header><section class=article-content><h1 id=머신러닝-분류-모델-완벽-정리>머신러닝 분류 모델 완벽 정리</h1><h2 id=지도학습부터-분류-알고리즘-모델-평가와-앙상블까지>지도학습부터 분류 알고리즘, 모델 평가와 앙상블까지</h2><p>머신러닝을 공부하면서 가장 어려웠던 점은 <strong>개별 개념을 이해하는 것보다 서로 다른 개념들이 어떻게 연결되는지를 파악하는 것</strong>이었습니다.</p><p>로지스틱 회귀, SVM, Naive Bayes, Decision Tree, Random Forest, AdaBoost, Gradient Boosting처럼 모델의 종류도 많고,</p><p>Entropy, Information Gain, Maximum Likelihood, Margin, Kernel, Precision, Recall, AUC 등 처음 보면 서로 전혀 관계가 없어 보이는 개념도 계속 등장했습니다.</p><p>하지만 전체 구조를 한 번에 보면 생각보다 단순합니다.</p><blockquote><p><strong>데이터를 보고 → 분류 모델을 학습하고 → 예측하고 → 성능을 평가하고 → 필요하면 여러 모델을 결합한다.</strong></p></blockquote><p>이제 나오는 글들은 이전 배운 내용 포함해서 머신러닝 내용을 흐름에 맞춰 다시 정리해보겠습니다.</p><hr><h1 id=1-먼저-머신러닝이란>1. 먼저 머신러닝이란?</h1><p>머신러닝(Machine Learning)은 데이터를 이용하여 컴퓨터가 <strong>데이터 속의 패턴이나 관계를 학습하고 새로운 데이터에 대한 예측을 수행하도록 만드는 방법</strong>입니다.</p><p>전통적인 프로그래밍에서는 사람이 규칙을 직접 작성합니다.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-text data-lang=text><span style=display:flex><span>입력 + 사람이 만든 규칙
-</span></span><span style=display:flex><span>        ↓
-</span></span><span style=display:flex><span>      결과
-</span></span></code></pre></div><p>머신러닝에서는 데이터와 정답을 이용해 컴퓨터가 규칙을 학습합니다.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-text data-lang=text><span style=display:flex><span>데이터 + 정답
-</span></span><span style=display:flex><span>     ↓
-</span></span><span style=display:flex><span>   학습
-</span></span><span style=display:flex><span>     ↓
-</span></span><span style=display:flex><span>   모델
-</span></span><span style=display:flex><span>     ↓
-</span></span><span style=display:flex><span>새로운 데이터
-</span></span><span style=display:flex><span>     ↓
-</span></span><span style=display:flex><span>   예측
-</span></span></code></pre></div><p>따라서 머신러닝에서 중요한 것은 단순히 &ldquo;모델을 실행하는 것"이 아니라,</p><ol><li>어떤 데이터를 사용하는가?</li><li>무엇을 예측하는가?</li><li>어떤 모델을 사용하는가?</li><li>모델이 얼마나 잘 예측하는가?</li></ol><p>를 함께 이해하는 것이다.</p><hr><h1 id=2-지도학습과-비지도학습>2. 지도학습과 비지도학습</h1><p>머신러닝은 여러 방식으로 나눌 수 있지만, 가장 먼저 이해해야 할 구분은 <strong>지도학습과 비지도학습</strong>이다.</p><h2 id=지도학습supervised-learning>지도학습(Supervised Learning)</h2><p>정답(Label)이 있는 데이터를 사용하여 학습합니다.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-text data-lang=text><span style=display:flex><span>입력 데이터 X + 정답 y
-</span></span><span style=display:flex><span>          ↓
-</span></span><span style=display:flex><span>        학습
-</span></span><span style=display:flex><span>          ↓
-</span></span><span style=display:flex><span>        모델
-</span></span><span style=display:flex><span>          ↓
-</span></span><span style=display:flex><span>새로운 X → y 예측
-</span></span></code></pre></div><p>예를 들어,</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-text data-lang=text><span style=display:flex><span>공부 시간 → 시험 점수
-</span></span></code></pre></div><p>처럼 정답이 있는 데이터를 학습할 수 있다.</p><p>지도학습은 대표적으로 회귀(Regression)와 분류(Classification)로 나뉩니다.</p><hr><h2 id=비지도학습unsupervised-learning>비지도학습(Unsupervised Learning)</h2><p>정답 Label이 없는 데이터를 이용해 데이터의 구조나 패턴을 찾습니다.</p><p>예:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-text data-lang=text><span style=display:flex><span>고객 데이터
-</span></span><span style=display:flex><span> ↓
-</span></span><span style=display:flex><span>비슷한 고객끼리 그룹화
-</span></span><span style=display:flex><span> ↓
-</span></span><span style=display:flex><span>고객군 발견
-</span></span></code></pre></div><p>대표적인 방법으로 군집화(Clustering) 등이 있습니다.</p><p>이번 시리즈에서 집중하는 부분은 <strong>지도학습 중 분류 문제</strong>입니다.</p><hr><h1 id=3-분류classification란>3. 분류(Classification)란?</h1><p>분류는 입력 데이터를 보고 <strong>미리 정해진 범주(Class)</strong> 중 하나를 예측하는 문제입니다.</p><p>예를 들어 이메일을 생각해보자.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-text data-lang=text><span style=display:flex><span>입력 데이터
-</span></span><span style=display:flex><span>   ↓
-</span></span><span style=display:flex><span>&#34;무료 쿠폰 당첨!&#34;
-</span></span><span style=display:flex><span>   ↓
-</span></span><span style=display:flex><span>분류 모델
-</span></span><span style=display:flex><span>   ↓
-</span></span><span style=display:flex><span>스팸
-</span></span></code></pre></div><p>정답이</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-text data-lang=text><span style=display:flex><span>Spam
-</span></span><span style=display:flex><span>Normal
-</span></span></code></pre></div><p>처럼 범주형 값으로 존재한다면 이것은 분류 문제다.</p><hr><h1 id=4-회귀와-분류의-차이>4. 회귀와 분류의 차이</h1><p>둘 다 지도학습이지만 예측하는 값의 형태가 다릅니다.</p><div class=table-wrapper><table><thead><tr><th>구분</th><th>회귀</th><th>분류</th></tr></thead><tbody><tr><td>예측 대상</td><td>연속적인 값</td><td>범주(Class)</td></tr><tr><td>예시</td><td>집값 예측</td><td>스팸 여부</td></tr><tr><td>결과</td><td>35000원</td><td>Spam</td></tr><tr><td>대표 모델</td><td>Linear Regression</td><td>Logistic Regression, SVM, Tree</td></tr></tbody></table></div><p>예를 들어,</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-text data-lang=text><span style=display:flex><span>집의 크기 → 집값
-</span></span></code></pre></div><p>은 회귀 문제다.</p><p>반면</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-text data-lang=text><span style=display:flex><span>이메일 내용 → 스팸 / 정상
-</span></span></code></pre></div><p>은 분류 문제다.</p><hr><h1 id=5-이번-수업의-핵심은-분류>5. 이번 수업의 핵심은 &ldquo;분류&rdquo;</h1><p>이번 52일 수업에서 다룬 모델들은 대부분 다음 문제를 해결하기 위한 방법입니다.</p><blockquote><p><strong>주어진 X를 보고 Y라는 Class를 어떻게 예측할 것인가?</strong></p></blockquote><p>이를 수식으로 표현하면</p><p>$$
+<!DOCTYPE html>
+<html lang="ko-kr" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="머신러닝 분류 모델 완벽 정리 지도학습부터 분류 알고리즘, 모델 평가와 앙상블까지 머신러닝을 공부하면서 가장 어려웠던 점은 개별 개념을 이해하는 것보다 서로 다른 개념들이 어떻게 연결되는지를 파악하는 것이었습니다.\n로지스틱 회귀, SVM, Naive Bayes, Decision Tree, Random Forest, AdaBoost, Gradient Boosting처럼 모델의 종류도 많고,\nEntropy, Information Gain, Maximum Likelihood, Margin, Kernel, Precision, Recall, AUC 등 처음 보면 서로 전혀 관계가 없어 보이는 개념도 계속 등장했습니다.\n하지만 전체 구조를 한 번에 보면 생각보다 단순합니다.\n">
+<title>[머신러닝 분류 모델] 지도학습부터 앙상블까지</title>
+
+
+<link rel="canonical" href="https://lucaspark-10.github.io/data-analysis/python_data_analysis_34/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
+
+
+<link rel="stylesheet" href="/scss/style.min.de7e6698ac54e40edf7f3d56f131b6bbacde7bdf742f829e1185371a8af17315.css"><meta property='og:title' content="[머신러닝 분류 모델] 지도학습부터 앙상블까지">
+<meta property='og:description' content="머신러닝 분류 모델 완벽 정리 지도학습부터 분류 알고리즘, 모델 평가와 앙상블까지 머신러닝을 공부하면서 가장 어려웠던 점은 개별 개념을 이해하는 것보다 서로 다른 개념들이 어떻게 연결되는지를 파악하는 것이었습니다.\n로지스틱 회귀, SVM, Naive Bayes, Decision Tree, Random Forest, AdaBoost, Gradient Boosting처럼 모델의 종류도 많고,\nEntropy, Information Gain, Maximum Likelihood, Margin, Kernel, Precision, Recall, AUC 등 처음 보면 서로 전혀 관계가 없어 보이는 개념도 계속 등장했습니다.\n하지만 전체 구조를 한 번에 보면 생각보다 단순합니다.\n">
+<meta property='og:url' content='https://lucaspark-10.github.io/data-analysis/python_data_analysis_34/'>
+<meta property='og:site_name' content='LucasPark Blog'>
+<meta property='og:type' content='article'><meta property='article:section' content='Data-Analysis' /><meta property='article:published_time' content='2026-08-08T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2026-08-08T00:00:00&#43;00:00'/>
+<meta name="twitter:title" content="[머신러닝 분류 모델] 지도학습부터 앙상블까지">
+<meta name="twitter:description" content="머신러닝 분류 모델 완벽 정리 지도학습부터 분류 알고리즘, 모델 평가와 앙상블까지 머신러닝을 공부하면서 가장 어려웠던 점은 개별 개념을 이해하는 것보다 서로 다른 개념들이 어떻게 연결되는지를 파악하는 것이었습니다.\n로지스틱 회귀, SVM, Naive Bayes, Decision Tree, Random Forest, AdaBoost, Gradient Boosting처럼 모델의 종류도 많고,\nEntropy, Information Gain, Maximum Likelihood, Margin, Kernel, Precision, Recall, AUC 등 처음 보면 서로 전혀 관계가 없어 보이는 개념도 계속 등장했습니다.\n하지만 전체 구조를 한 번에 보면 생각보다 단순합니다.\n">
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-EVK5B22CB3"></script>
+      <script>
+        var doNotTrack = false;
+        if ( true ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-EVK5B22CB3');
+        }
+      </script>
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column compact"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">LucasPark Blog</a></h1>
+            <h2 class="site-description">Lucas Park의 개인 블로그</h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                <span>Home</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/posts/' >
+                
+                <span>Posts</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/git-study/' >
+                
+                <span>Git-study</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/data-analysis/' >
+                
+                <span>Data Analysis</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/gold-news-and-analysis/' >
+                
+                <span>Gold Price Check &amp; Analysis</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/atmospheric-environment/' >
+                
+                <span>Atmospheric Environment</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>Dark Mode</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/data-analysis/python_data_analysis_34/">[머신러닝 분류 모델] 지도학습부터 앙상블까지</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    
+    
+    
+    
+    
+    
+    <footer class="article-meta">
+        
+            <div class="inline-meta">
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                    <time class="article-time--published" datetime='2026-08-08T00:00:00Z'>2026년 8월 8일 토요일</time>
+                
+
+                
+            </div>
+        
+
+        
+
+        
+    </footer>
+    
+</div>
+
+</header>
+
+    
+
+    <section class="article-content">
+    
+    
+    <h1 id="머신러닝-분류-모델-완벽-정리">머신러닝 분류 모델 완벽 정리
+</h1><h2 id="지도학습부터-분류-알고리즘-모델-평가와-앙상블까지">지도학습부터 분류 알고리즘, 모델 평가와 앙상블까지
+</h2><p>머신러닝을 공부하면서 가장 어려웠던 점은 <strong>개별 개념을 이해하는 것보다 서로 다른 개념들이 어떻게 연결되는지를 파악하는 것</strong>이었습니다.</p>
+<p>로지스틱 회귀, SVM, Naive Bayes, Decision Tree, Random Forest, AdaBoost, Gradient Boosting처럼 모델의 종류도 많고,</p>
+<p>Entropy, Information Gain, Maximum Likelihood, Margin, Kernel, Precision, Recall, AUC 등 처음 보면 서로 전혀 관계가 없어 보이는 개념도 계속 등장했습니다.</p>
+<p>하지만 전체 구조를 한 번에 보면 생각보다 단순합니다.</p>
+
+    <blockquote>
+        <p><strong>데이터를 보고 → 분류 모델을 학습하고 → 예측하고 → 성능을 평가하고 → 필요하면 여러 모델을 결합한다.</strong></p>
+
+    </blockquote>
+<p>이제 나오는 글들은 이전 배운 내용 포함해서 머신러닝 내용을 흐름에 맞춰 다시 정리해보겠습니다.</p>
+<hr>
+<h1 id="1-먼저-머신러닝이란">1. 먼저 머신러닝이란?
+</h1><p>머신러닝(Machine Learning)은 데이터를 이용하여 컴퓨터가 <strong>데이터 속의 패턴이나 관계를 학습하고 새로운 데이터에 대한 예측을 수행하도록 만드는 방법</strong>입니다.</p>
+<p>전통적인 프로그래밍에서는 사람이 규칙을 직접 작성합니다.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>입력 + 사람이 만든 규칙
+</span></span><span style="display:flex;"><span>        ↓
+</span></span><span style="display:flex;"><span>      결과
+</span></span></code></pre></div><p>머신러닝에서는 데이터와 정답을 이용해 컴퓨터가 규칙을 학습합니다.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>데이터 + 정답
+</span></span><span style="display:flex;"><span>     ↓
+</span></span><span style="display:flex;"><span>   학습
+</span></span><span style="display:flex;"><span>     ↓
+</span></span><span style="display:flex;"><span>   모델
+</span></span><span style="display:flex;"><span>     ↓
+</span></span><span style="display:flex;"><span>새로운 데이터
+</span></span><span style="display:flex;"><span>     ↓
+</span></span><span style="display:flex;"><span>   예측
+</span></span></code></pre></div><p>따라서 머신러닝에서 중요한 것은 단순히 &ldquo;모델을 실행하는 것&quot;이 아니라,</p>
+<ol>
+<li>어떤 데이터를 사용하는가?</li>
+<li>무엇을 예측하는가?</li>
+<li>어떤 모델을 사용하는가?</li>
+<li>모델이 얼마나 잘 예측하는가?</li>
+</ol>
+<p>를 함께 이해하는 것이다.</p>
+<hr>
+<h1 id="2-지도학습과-비지도학습">2. 지도학습과 비지도학습
+</h1><p>머신러닝은 여러 방식으로 나눌 수 있지만, 가장 먼저 이해해야 할 구분은 <strong>지도학습과 비지도학습</strong>이다.</p>
+<h2 id="지도학습supervised-learning">지도학습(Supervised Learning)
+</h2><p>정답(Label)이 있는 데이터를 사용하여 학습합니다.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>입력 데이터 X + 정답 y
+</span></span><span style="display:flex;"><span>          ↓
+</span></span><span style="display:flex;"><span>        학습
+</span></span><span style="display:flex;"><span>          ↓
+</span></span><span style="display:flex;"><span>        모델
+</span></span><span style="display:flex;"><span>          ↓
+</span></span><span style="display:flex;"><span>새로운 X → y 예측
+</span></span></code></pre></div><p>예를 들어,</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>공부 시간 → 시험 점수
+</span></span></code></pre></div><p>처럼 정답이 있는 데이터를 학습할 수 있다.</p>
+<p>지도학습은 대표적으로 회귀(Regression)와 분류(Classification)로 나뉩니다.</p>
+<hr>
+<h2 id="비지도학습unsupervised-learning">비지도학습(Unsupervised Learning)
+</h2><p>정답 Label이 없는 데이터를 이용해 데이터의 구조나 패턴을 찾습니다.</p>
+<p>예:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>고객 데이터
+</span></span><span style="display:flex;"><span> ↓
+</span></span><span style="display:flex;"><span>비슷한 고객끼리 그룹화
+</span></span><span style="display:flex;"><span> ↓
+</span></span><span style="display:flex;"><span>고객군 발견
+</span></span></code></pre></div><p>대표적인 방법으로 군집화(Clustering) 등이 있습니다.</p>
+<p>이번 시리즈에서 집중하는 부분은 <strong>지도학습 중 분류 문제</strong>입니다.</p>
+<hr>
+<h1 id="3-분류classification란">3. 분류(Classification)란?
+</h1><p>분류는 입력 데이터를 보고 <strong>미리 정해진 범주(Class)</strong> 중 하나를 예측하는 문제입니다.</p>
+<p>예를 들어 이메일을 생각해보자.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>입력 데이터
+</span></span><span style="display:flex;"><span>   ↓
+</span></span><span style="display:flex;"><span>&#34;무료 쿠폰 당첨!&#34;
+</span></span><span style="display:flex;"><span>   ↓
+</span></span><span style="display:flex;"><span>분류 모델
+</span></span><span style="display:flex;"><span>   ↓
+</span></span><span style="display:flex;"><span>스팸
+</span></span></code></pre></div><p>정답이</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>Spam
+</span></span><span style="display:flex;"><span>Normal
+</span></span></code></pre></div><p>처럼 범주형 값으로 존재한다면 이것은 분류 문제다.</p>
+<hr>
+<h1 id="4-회귀와-분류의-차이">4. 회귀와 분류의 차이
+</h1><p>둘 다 지도학습이지만 예측하는 값의 형태가 다릅니다.</p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>구분</th>
+          <th>회귀</th>
+          <th>분류</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>예측 대상</td>
+          <td>연속적인 값</td>
+          <td>범주(Class)</td>
+      </tr>
+      <tr>
+          <td>예시</td>
+          <td>집값 예측</td>
+          <td>스팸 여부</td>
+      </tr>
+      <tr>
+          <td>결과</td>
+          <td>35000원</td>
+          <td>Spam</td>
+      </tr>
+      <tr>
+          <td>대표 모델</td>
+          <td>Linear Regression</td>
+          <td>Logistic Regression, SVM, Tree</td>
+      </tr>
+  </tbody>
+</table></div>
+<p>예를 들어,</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>집의 크기 → 집값
+</span></span></code></pre></div><p>은 회귀 문제다.</p>
+<p>반면</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>이메일 내용 → 스팸 / 정상
+</span></span></code></pre></div><p>은 분류 문제다.</p>
+<hr>
+<h1 id="5-이번-수업의-핵심은-분류">5. 이번 수업의 핵심은 &ldquo;분류&rdquo;
+</h1><p>이번 52일 수업에서 다룬 모델들은 대부분 다음 문제를 해결하기 위한 방법입니다.</p>
+
+    <blockquote>
+        <p><strong>주어진 X를 보고 Y라는 Class를 어떻게 예측할 것인가?</strong></p>
+
+    </blockquote>
+<p>이를 수식으로 표현하면</p>
+<p>$$
 X \rightarrow Y
-$$</p><p>이다.</p><p>예를 들어 이진 분류에서는</p><p>$$
+$$</p>
+<p>이다.</p>
+<p>예를 들어 이진 분류에서는</p>
+<p>$$
 Y \in {0,1}
-$$</p><p>처럼 두 개의 클래스를 예측한다.</p><p>다중 분류에서는</p><p>$$
+$$</p>
+<p>처럼 두 개의 클래스를 예측한다.</p>
+<p>다중 분류에서는</p>
+<p>$$
 Y \in {1,2,\dots,K}
-$$</p><p>처럼 여러 개의 클래스를 예측할 수 있습니다.</p><hr><h1 id=6-그런데-왜-분류-모델이-여러-개일까>6. 그런데 왜 분류 모델이 여러 개일까?</h1><p>여기서 중요한 질문이 생깁니다.</p><blockquote><p><strong>분류를 하는 방법이 하나면 안 되는 걸까?</strong></p></blockquote><p>데이터의 형태와 문제의 특성이 서로 다르기 때문에 하나의 모델이 모든 문제에서 가장 좋은 성능을 내기는 어렵습니다.</p><p>그래서 여러 가지 접근 방법이 등장합니다.</p><hr><h2 id=61-확률을-이용하는-방법>6.1 확률을 이용하는 방법</h2><h3 id=logistic-regression>Logistic Regression</h3><p>입력 데이터와 클래스 사이의 관계를 선형식으로 표현한 뒤 <strong>Sigmoid 함수</strong>를 이용하여 확률로 변환합니다.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-text data-lang=text><span style=display:flex><span>X
-</span></span><span style=display:flex><span>↓
-</span></span><span style=display:flex><span>선형식
-</span></span><span style=display:flex><span>↓
-</span></span><span style=display:flex><span>Sigmoid
-</span></span><span style=display:flex><span>↓
-</span></span><span style=display:flex><span>확률
-</span></span><span style=display:flex><span>↓
-</span></span><span style=display:flex><span>Class
-</span></span></code></pre></div><hr><h2 id=62-결정경계를-찾는-방법>6.2 결정경계를 찾는 방법</h2><h3 id=svm>SVM</h3><p>각 클래스를 나누는 결정경계 중에서 <strong>Margin이 가장 큰 경계</strong>를 찾습니다.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-text data-lang=text><span style=display:flex><span>Class A  |  결정경계  |  Class B
-</span></span><span style=display:flex><span>          ← Margin →
-</span></span></code></pre></div><p>데이터가 직선으로 분리되지 않는다면 <strong>Kernel Trick</strong>을 이용하여 비선형 문제를 다룰 수 있습니다.</p><hr><h2 id=63-확률분포를-이용하는-방법>6.3 확률분포를 이용하는 방법</h2><h3 id=naive-bayes>Naive Bayes</h3><p>Bayes 정리를 이용하여</p><p>$$
+$$</p>
+<p>처럼 여러 개의 클래스를 예측할 수 있습니다.</p>
+<hr>
+<h1 id="6-그런데-왜-분류-모델이-여러-개일까">6. 그런데 왜 분류 모델이 여러 개일까?
+</h1><p>여기서 중요한 질문이 생깁니다.</p>
+
+    <blockquote>
+        <p><strong>분류를 하는 방법이 하나면 안 되는 걸까?</strong></p>
+
+    </blockquote>
+<p>데이터의 형태와 문제의 특성이 서로 다르기 때문에 하나의 모델이 모든 문제에서 가장 좋은 성능을 내기는 어렵습니다.</p>
+<p>그래서 여러 가지 접근 방법이 등장합니다.</p>
+<hr>
+<h2 id="61-확률을-이용하는-방법">6.1 확률을 이용하는 방법
+</h2><h3 id="logistic-regression">Logistic Regression
+</h3><p>입력 데이터와 클래스 사이의 관계를 선형식으로 표현한 뒤 <strong>Sigmoid 함수</strong>를 이용하여 확률로 변환합니다.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>X
+</span></span><span style="display:flex;"><span>↓
+</span></span><span style="display:flex;"><span>선형식
+</span></span><span style="display:flex;"><span>↓
+</span></span><span style="display:flex;"><span>Sigmoid
+</span></span><span style="display:flex;"><span>↓
+</span></span><span style="display:flex;"><span>확률
+</span></span><span style="display:flex;"><span>↓
+</span></span><span style="display:flex;"><span>Class
+</span></span></code></pre></div><hr>
+<h2 id="62-결정경계를-찾는-방법">6.2 결정경계를 찾는 방법
+</h2><h3 id="svm">SVM
+</h3><p>각 클래스를 나누는 결정경계 중에서 <strong>Margin이 가장 큰 경계</strong>를 찾습니다.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>Class A  |  결정경계  |  Class B
+</span></span><span style="display:flex;"><span>          ← Margin →
+</span></span></code></pre></div><p>데이터가 직선으로 분리되지 않는다면 <strong>Kernel Trick</strong>을 이용하여 비선형 문제를 다룰 수 있습니다.</p>
+<hr>
+<h2 id="63-확률분포를-이용하는-방법">6.3 확률분포를 이용하는 방법
+</h2><h3 id="naive-bayes">Naive Bayes
+</h3><p>Bayes 정리를 이용하여</p>
+<p>$$
 P(Y|X)
-$$</p><p>즉, 주어진 데이터가 각 클래스에 속할 확률을 계산합니다.</p><p>그리고 각 Feature가 조건부 독립이라는 <strong>Naive 가정</strong>을 사용하여 계산을 단순화합니다.</p><hr><h2 id=64-질문을-반복하는-방법>6.4 질문을 반복하는 방법</h2><h3 id=decision-tree>Decision Tree</h3><p>데이터에 질문을 계속 던지면서 데이터를 나눕니다.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-text data-lang=text><span style=display:flex><span>나이 &gt; 30?
-</span></span><span style=display:flex><span>├─ Yes → 소득 &gt; 3000?
-</span></span><span style=display:flex><span>│         ├─ Yes → Class A
-</span></span><span style=display:flex><span>│         └─ No  → Class B
-</span></span><span style=display:flex><span>│
-</span></span><span style=display:flex><span>└─ No  → Class B
-</span></span></code></pre></div><p>어떤 질문을 먼저 할 것인지를 결정하기 위해 <strong>Entropy와 Information Gain</strong> 등을 사용합니다.</p><hr><h1 id=7-서로-다른-모델을-하나로-묶을-수도-있다>7. 서로 다른 모델을 하나로 묶을 수도 있다</h1><p>여기서 또 하나의 아이디어가 나온다.</p><blockquote><p><strong>&ldquo;그렇다면 여러 모델의 의견을 합치면 더 좋은 결과를 얻을 수 있지 않을까요?&rdquo;</strong></p></blockquote><p>이것이 앙상블 학습(Ensemble Learning)입니다.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-text data-lang=text><span style=display:flex><span>모델 A ─┐
-</span></span><span style=display:flex><span>모델 B ─┼→ 결합 → 최종 예측
-</span></span><span style=display:flex><span>모델 C ─┘
-</span></span></code></pre></div><p>대표적인 방법은 다음과 같다.</p><h3 id=voting>Voting</h3><p>여러 모델의 예측을 투표로 결합합니다.</p><h3 id=bagging>Bagging</h3><p>여러 모델을 서로 다른 데이터 표본으로 학습시키고 결과를 결합합니다.</p><h3 id=random-forest>Random Forest</h3><p>여러 Decision Tree를 결합합니다.</p><h3 id=boosting>Boosting</h3><p>이전 모델이 잘못 예측한 부분을 다음 모델이 보완하면서 모델을 순차적으로 추가합니다.</p><p>대표적으로</p><ul><li>AdaBoost</li><li>Gradient Boosting</li></ul><p>등이 있습니다.</p><hr><h1 id=8-모델을-만들었으면-평가해야-한다>8. 모델을 만들었으면 평가해야 한다</h1><p>모델을 학습했다고 끝나는 것이 아닙니다.</p><p>오히려 중요한 질문은 다음과 같습니다.</p><blockquote><p><strong>&ldquo;이 모델이 실제로 얼마나 잘하는가?&rdquo;</strong></p></blockquote><p>분류에서는 예측 결과를 먼저 <strong>Confusion Matrix</strong>로 정리할 수 있습니다.</p><div class=table-wrapper><table><thead><tr><th></th><th style=text-align:right>실제 Positive</th><th style=text-align:right>실제 Negative</th></tr></thead><tbody><tr><td>예측 Positive</td><td style=text-align:right>TP</td><td style=text-align:right>FP</td></tr><tr><td>예측 Negative</td><td style=text-align:right>FN</td><td style=text-align:right>TN</td></tr></tbody></table></div><p>여기서 여러 가지 평가 지표를 계산할 수 있습니다.</p><hr><h2 id=accuracy>Accuracy</h2><p>전체 데이터 중 얼마나 정확하게 맞췄는지 나타냅니다.</p><p>$$
+$$</p>
+<p>즉, 주어진 데이터가 각 클래스에 속할 확률을 계산합니다.</p>
+<p>그리고 각 Feature가 조건부 독립이라는 <strong>Naive 가정</strong>을 사용하여 계산을 단순화합니다.</p>
+<hr>
+<h2 id="64-질문을-반복하는-방법">6.4 질문을 반복하는 방법
+</h2><h3 id="decision-tree">Decision Tree
+</h3><p>데이터에 질문을 계속 던지면서 데이터를 나눕니다.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>나이 &gt; 30?
+</span></span><span style="display:flex;"><span>├─ Yes → 소득 &gt; 3000?
+</span></span><span style="display:flex;"><span>│         ├─ Yes → Class A
+</span></span><span style="display:flex;"><span>│         └─ No  → Class B
+</span></span><span style="display:flex;"><span>│
+</span></span><span style="display:flex;"><span>└─ No  → Class B
+</span></span></code></pre></div><p>어떤 질문을 먼저 할 것인지를 결정하기 위해 <strong>Entropy와 Information Gain</strong> 등을 사용합니다.</p>
+<hr>
+<h1 id="7-서로-다른-모델을-하나로-묶을-수도-있다">7. 서로 다른 모델을 하나로 묶을 수도 있다
+</h1><p>여기서 또 하나의 아이디어가 나온다.</p>
+
+    <blockquote>
+        <p><strong>&ldquo;그렇다면 여러 모델의 의견을 합치면 더 좋은 결과를 얻을 수 있지 않을까요?&rdquo;</strong></p>
+
+    </blockquote>
+<p>이것이 앙상블 학습(Ensemble Learning)입니다.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>모델 A ─┐
+</span></span><span style="display:flex;"><span>모델 B ─┼→ 결합 → 최종 예측
+</span></span><span style="display:flex;"><span>모델 C ─┘
+</span></span></code></pre></div><p>대표적인 방법은 다음과 같다.</p>
+<h3 id="voting">Voting
+</h3><p>여러 모델의 예측을 투표로 결합합니다.</p>
+<h3 id="bagging">Bagging
+</h3><p>여러 모델을 서로 다른 데이터 표본으로 학습시키고 결과를 결합합니다.</p>
+<h3 id="random-forest">Random Forest
+</h3><p>여러 Decision Tree를 결합합니다.</p>
+<h3 id="boosting">Boosting
+</h3><p>이전 모델이 잘못 예측한 부분을 다음 모델이 보완하면서 모델을 순차적으로 추가합니다.</p>
+<p>대표적으로</p>
+<ul>
+<li>AdaBoost</li>
+<li>Gradient Boosting</li>
+</ul>
+<p>등이 있습니다.</p>
+<hr>
+<h1 id="8-모델을-만들었으면-평가해야-한다">8. 모델을 만들었으면 평가해야 한다
+</h1><p>모델을 학습했다고 끝나는 것이 아닙니다.</p>
+<p>오히려 중요한 질문은 다음과 같습니다.</p>
+
+    <blockquote>
+        <p><strong>&ldquo;이 모델이 실제로 얼마나 잘하는가?&rdquo;</strong></p>
+
+    </blockquote>
+<p>분류에서는 예측 결과를 먼저 <strong>Confusion Matrix</strong>로 정리할 수 있습니다.</p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th></th>
+          <th style="text-align: right">실제 Positive</th>
+          <th style="text-align: right">실제 Negative</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>예측 Positive</td>
+          <td style="text-align: right">TP</td>
+          <td style="text-align: right">FP</td>
+      </tr>
+      <tr>
+          <td>예측 Negative</td>
+          <td style="text-align: right">FN</td>
+          <td style="text-align: right">TN</td>
+      </tr>
+  </tbody>
+</table></div>
+<p>여기서 여러 가지 평가 지표를 계산할 수 있습니다.</p>
+<hr>
+<h2 id="accuracy">Accuracy
+</h2><p>전체 데이터 중 얼마나 정확하게 맞췄는지 나타냅니다.</p>
+<p>$$
 Accuracy=
 \frac{TP+TN}
 {TP+TN+FP+FN}
-$$</p><hr><h2 id=precision>Precision</h2><p>Positive라고 예측한 것 중 실제 Positive가 얼마나 되는지를 나타냅니다.</p><p>$$
+$$</p>
+<hr>
+<h2 id="precision">Precision
+</h2><p>Positive라고 예측한 것 중 실제 Positive가 얼마나 되는지를 나타냅니다.</p>
+<p>$$
 Precision=
 \frac{TP}{TP+FP}
-$$</p><hr><h2 id=recall>Recall</h2><p>실제 Positive 중에서 모델이 얼마나 찾아냈는지를 나타냅니다.</p><p>$$
+$$</p>
+<hr>
+<h2 id="recall">Recall
+</h2><p>실제 Positive 중에서 모델이 얼마나 찾아냈는지를 나타냅니다.</p>
+<p>$$
 Recall=
 \frac{TP}{TP+FN}
-$$</p><hr><h2 id=f1-score>F1 Score</h2><p>Precision과 Recall을 함께 고려하는 지표다.</p><p>$$
+$$</p>
+<hr>
+<h2 id="f1-score">F1 Score
+</h2><p>Precision과 Recall을 함께 고려하는 지표다.</p>
+<p>$$
 F1=
 2
 \frac{Precision\cdot Recall}
 {Precision+Recall}
-$$</p><hr><h2 id=roc와-auc>ROC와 AUC</h2><p>분류 기준값(Threshold)을 바꾸면서 모델의 성능이 어떻게 변하는지도 살펴볼 수 있습니다.</p><p>ROC Curve는</p><p>$$
+$$</p>
+<hr>
+<h2 id="roc와-auc">ROC와 AUC
+</h2><p>분류 기준값(Threshold)을 바꾸면서 모델의 성능이 어떻게 변하는지도 살펴볼 수 있습니다.</p>
+<p>ROC Curve는</p>
+<p>$$
 x축=FPR
-$$</p><p>$$
+$$</p>
+<p>$$
 y축=TPR(Recall)
-$$</p><p>로 표현한다.</p><p>그리고 ROC Curve 아래의 면적을 <strong>AUC</strong>라고 한다.</p><p>일반적으로 AUC가 1에 가까울수록 분류 성능이 좋다고 볼 수 있습니다.</p><hr><h1 id=9-그래서-전체-수업은-하나의-흐름이다>9. 그래서 전체 수업은 하나의 흐름이다</h1><p>52일 동안 배운 내용을 단순히 모델 이름으로 외우면 굉장히 복잡하게 느껴진다.</p><p>하지만 다음과 같이 연결하면 훨씬 쉽게 이해할 수 있습니다.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-text data-lang=text><span style=display:flex><span>                    머신러닝
-</span></span><span style=display:flex><span>                       │
-</span></span><span style=display:flex><span>                 지도학습
-</span></span><span style=display:flex><span>                       │
-</span></span><span style=display:flex><span>                 분류 문제
-</span></span><span style=display:flex><span>                       │
-</span></span><span style=display:flex><span>        ┌──────────────┼──────────────┐
-</span></span><span style=display:flex><span>        ↓              ↓              ↓
-</span></span><span style=display:flex><span>     확률 기반       결정경계        규칙 기반
-</span></span><span style=display:flex><span>        │              │              │
-</span></span><span style=display:flex><span>   Naive Bayes    Logistic / SVM   Decision Tree
-</span></span><span style=display:flex><span>                       │
-</span></span><span style=display:flex><span>                  Kernel SVM
-</span></span><span style=display:flex><span>        │              │              │
-</span></span><span style=display:flex><span>        └──────────────┼──────────────┘
-</span></span><span style=display:flex><span>                       ↓
-</span></span><span style=display:flex><span>                  모델 평가
-</span></span><span style=display:flex><span>                       │
-</span></span><span style=display:flex><span>       Accuracy / Precision / Recall
-</span></span><span style=display:flex><span>                       │
-</span></span><span style=display:flex><span>                  F1 / ROC / AUC
-</span></span><span style=display:flex><span>                       │
-</span></span><span style=display:flex><span>                       ↓
-</span></span><span style=display:flex><span>                 Ensemble Learning
-</span></span><span style=display:flex><span>                       │
-</span></span><span style=display:flex><span>              ┌────────┴────────┐
-</span></span><span style=display:flex><span>              ↓                 ↓
-</span></span><span style=display:flex><span>           Bagging           Boosting
-</span></span><span style=display:flex><span>              ↓                 ↓
-</span></span><span style=display:flex><span>        Random Forest      AdaBoost
-</span></span><span style=display:flex><span>                         Gradient Boosting
-</span></span></code></pre></div><p>이 그림이 이번 시리즈 전체를 이해하는 <strong>가장 중요한 지도</strong>다.</p><hr><h1 id=10-6편-시리즈에서는-무엇을-공부할까>10. 6편 시리즈에서는 무엇을 공부할까?</h1><p>이제 이 전체 구조를 6개의 글로 나누어 자세하게 살펴본다.</p><h2 id=01-로지스틱-회귀>01. 로지스틱 회귀</h2><p>가장 먼저 <strong>분류 문제를 확률로 표현하는 방법</strong>을 살펴본다.</p><p>주요 내용:</p><ul><li>분류 문제란?</li><li>비선형 함수가 필요한 이유</li><li>Sigmoid / Logistic 함수</li><li>Odds</li><li>Logit</li><li>로지스틱 분류기의 확률적 의미</li><li>최대우도추정(MLE)</li><li>로지스틱 분류기의 학습</li></ul><hr><h2 id=02-svm과-kernel>02. SVM과 Kernel</h2><p>다음으로 <strong>결정경계를 찾는 방법</strong>을 살펴본다.</p><p>주요 내용:</p><ul><li>SVM</li><li>Decision Boundary</li><li>Margin</li><li>Support Vector</li><li>Soft Margin</li><li>C</li><li>Kernel Trick</li><li>RBF Kernel</li><li>Gamma</li></ul><hr><h2 id=03-naive-bayes>03. Naive Bayes</h2><p>확률을 이용한 또 다른 분류 방법을 공부한다.</p><p>주요 내용:</p><ul><li>Bayes 정리</li><li>Prior / Likelihood / Posterior</li><li>Naive 가정</li><li>조건부 독립</li><li>Gaussian / Bernoulli / Multinomial 모델</li><li>Laplace Smoothing</li></ul><hr><h2 id=04-decision-tree>04. Decision Tree</h2><p>데이터를 질문으로 반복해서 나누는 방법을 공부한다.</p><p>주요 내용:</p><ul><li>Decision Tree</li><li>Entropy</li><li>Information Gain</li><li>분할 기준</li><li>과적합</li><li>Pruning</li><li>Cost Complexity</li></ul><hr><h2 id=05-모델-평가>05. 모델 평가</h2><p>모델을 만드는 것만큼 중요한 <strong>평가 방법</strong>을 공부한다.</p><p>주요 내용:</p><ul><li>Confusion Matrix</li><li>TP / TN / FP / FN</li><li>Accuracy</li><li>Precision</li><li>Recall</li><li>F1 Score</li><li>Threshold</li><li>ROC Curve</li><li>FPR / TPR</li><li>AUC</li></ul><hr><h2 id=06-ensemble-learning>06. Ensemble Learning</h2><p>마지막으로 여러 모델을 결합하여 성능을 높이는 방법을 공부한다.</p><p>주요 내용:</p><ul><li>Ensemble Learning</li><li>Majority Voting</li><li>Hard Voting</li><li>Soft Voting</li><li>Bagging</li><li>Bootstrap</li><li>Random Forest</li><li>Feature Importance</li><li>Boosting</li><li>AdaBoost</li><li>Gradient Boosting</li></ul><hr><h1 id=11-공부할-때-가장-중요한-관점>11. 공부할 때 가장 중요한 관점</h1><p>이번 수업에서 모든 수식을 똑같이 외우려고 하면 오히려 더 어려워진다.</p><p>먼저 각 모델이 <strong>무엇을 해결하기 위해 등장했는지</strong>를 이해하는 것이 중요합니다.</p><h3 id=logistic-regression-1>Logistic Regression</h3><blockquote><p>분류 문제를 확률로 표현하고 싶습니다.</p></blockquote><h3 id=svm-1>SVM</h3><blockquote><p>클래스를 나누는 가장 좋은 결정경계를 찾고 싶습니다.</p></blockquote><h3 id=kernel-svm>Kernel SVM</h3><blockquote><p>직선으로 분리할 수 없는 데이터도 분류하고 싶습니다.</p></blockquote><h3 id=naive-bayes-1>Naive Bayes</h3><blockquote><p>확률과 Bayes 정리를 이용하여 클래스를 판단하고 싶습니다.</p></blockquote><h3 id=decision-tree-1>Decision Tree</h3><blockquote><p>질문을 반복하면서 데이터를 규칙적으로 나누고 싶습니다.</p></blockquote><h3 id=random-forest-1>Random Forest</h3><blockquote><p>여러 Tree의 결과를 결합하여 더 안정적인 예측을 만들고 싶습니다.</p></blockquote><h3 id=boosting-1>Boosting</h3><blockquote><p>이전 모델이 틀린 부분을 다음 모델이 보완하도록 만들고 싶습니다.</p></blockquote><hr><h1 id=12-가장-중요한-전체-정리>12. 가장 중요한 전체 정리</h1><p>결국 머신러닝 분류의 핵심은 다음 네 단계로 정리할 수 있습니다.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-text data-lang=text><span style=display:flex><span>① 분류
-</span></span><span style=display:flex><span>   ↓
-</span></span><span style=display:flex><span>어떤 방법으로 Class를 예측할 것인가?
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>② 학습
-</span></span><span style=display:flex><span>   ↓
-</span></span><span style=display:flex><span>데이터를 이용하여 모델의 파라미터를 어떻게 찾을 것인가?
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>③ 평가
-</span></span><span style=display:flex><span>   ↓
-</span></span><span style=display:flex><span>모델이 얼마나 잘 예측하는가?
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>④ 개선
-</span></span><span style=display:flex><span>   ↓
-</span></span><span style=display:flex><span>다른 모델을 사용하거나 여러 모델을 결합하면 더 좋아지는가?
-</span></span></code></pre></div><p>이를 52일 수업의 모델에 연결하면 다음과 같다.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-text data-lang=text><span style=display:flex><span>분류 방법
-</span></span><span style=display:flex><span>├── Logistic Regression
-</span></span><span style=display:flex><span>├── SVM
-</span></span><span style=display:flex><span>├── Kernel SVM
-</span></span><span style=display:flex><span>├── Naive Bayes
-</span></span><span style=display:flex><span>└── Decision Tree
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>       ↓
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>모델 평가
-</span></span><span style=display:flex><span>├── Accuracy
-</span></span><span style=display:flex><span>├── Precision
-</span></span><span style=display:flex><span>├── Recall
-</span></span><span style=display:flex><span>├── F1
-</span></span><span style=display:flex><span>└── ROC / AUC
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>       ↓
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>앙상블
-</span></span><span style=display:flex><span>├── Voting
-</span></span><span style=display:flex><span>├── Bagging
-</span></span><span style=display:flex><span>│   └── Random Forest
-</span></span><span style=display:flex><span>└── Boosting
-</span></span><span style=display:flex><span>    ├── AdaBoost
-</span></span><span style=display:flex><span>    └── Gradient Boosting
-</span></span></code></pre></div><hr><h1 id=13-마무리>13. 마무리</h1><p>처음에는 로지스틱 회귀와 SVM, Naive Bayes, Decision Tree가 서로 완전히 다른 내용처럼 보일 수 있습니다.</p><p>하지만 결국 모두 같은 질문에서 출발합니다.</p><blockquote><p><strong>&ldquo;주어진 데이터를 보고 어떤 Class에 속하는지 어떻게 판단할 것인가?&rdquo;</strong></p></blockquote><p>각 모델은 이 질문에 서로 다른 방식으로 답합니다.</p><ul><li>Logistic Regression은 <strong>확률</strong>을 사용하고,</li><li>SVM은 <strong>Margin과 결정경계</strong>를 사용하고,</li><li>Naive Bayes는 <strong>확률분포와 Bayes 정리</strong>를 사용하고,</li><li>Decision Tree는 <strong>질문과 분할 규칙</strong>을 사용한다.</li></ul><p>그리고 모델을 만든 뒤에는</p><blockquote><p><strong>&ldquo;얼마나 잘 맞추는가?&rdquo;</strong></p></blockquote><p>를 Accuracy, Precision, Recall, F1, ROC, AUC 등으로 평가한다.</p><p>마지막으로 여러 모델을 결합하는 Ensemble Learning을 이용하면 단일 모델의 한계를 보완할 수 있습니다.</p><p>따라서 이번 시리즈의 핵심은 모델 이름을 무작정 암기하는 것이 아니라,</p><p>$$
+$$</p>
+<p>로 표현한다.</p>
+<p>그리고 ROC Curve 아래의 면적을 <strong>AUC</strong>라고 한다.</p>
+<p>일반적으로 AUC가 1에 가까울수록 분류 성능이 좋다고 볼 수 있습니다.</p>
+<hr>
+<h1 id="9-그래서-전체-수업은-하나의-흐름이다">9. 그래서 전체 수업은 하나의 흐름이다
+</h1><p>52일 동안 배운 내용을 단순히 모델 이름으로 외우면 굉장히 복잡하게 느껴진다.</p>
+<p>하지만 다음과 같이 연결하면 훨씬 쉽게 이해할 수 있습니다.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>                    머신러닝
+</span></span><span style="display:flex;"><span>                       │
+</span></span><span style="display:flex;"><span>                 지도학습
+</span></span><span style="display:flex;"><span>                       │
+</span></span><span style="display:flex;"><span>                 분류 문제
+</span></span><span style="display:flex;"><span>                       │
+</span></span><span style="display:flex;"><span>        ┌──────────────┼──────────────┐
+</span></span><span style="display:flex;"><span>        ↓              ↓              ↓
+</span></span><span style="display:flex;"><span>     확률 기반       결정경계        규칙 기반
+</span></span><span style="display:flex;"><span>        │              │              │
+</span></span><span style="display:flex;"><span>   Naive Bayes    Logistic / SVM   Decision Tree
+</span></span><span style="display:flex;"><span>                       │
+</span></span><span style="display:flex;"><span>                  Kernel SVM
+</span></span><span style="display:flex;"><span>        │              │              │
+</span></span><span style="display:flex;"><span>        └──────────────┼──────────────┘
+</span></span><span style="display:flex;"><span>                       ↓
+</span></span><span style="display:flex;"><span>                  모델 평가
+</span></span><span style="display:flex;"><span>                       │
+</span></span><span style="display:flex;"><span>       Accuracy / Precision / Recall
+</span></span><span style="display:flex;"><span>                       │
+</span></span><span style="display:flex;"><span>                  F1 / ROC / AUC
+</span></span><span style="display:flex;"><span>                       │
+</span></span><span style="display:flex;"><span>                       ↓
+</span></span><span style="display:flex;"><span>                 Ensemble Learning
+</span></span><span style="display:flex;"><span>                       │
+</span></span><span style="display:flex;"><span>              ┌────────┴────────┐
+</span></span><span style="display:flex;"><span>              ↓                 ↓
+</span></span><span style="display:flex;"><span>           Bagging           Boosting
+</span></span><span style="display:flex;"><span>              ↓                 ↓
+</span></span><span style="display:flex;"><span>        Random Forest      AdaBoost
+</span></span><span style="display:flex;"><span>                         Gradient Boosting
+</span></span></code></pre></div><p>이 그림이 이번 시리즈 전체를 이해하는 <strong>가장 중요한 지도</strong>다.</p>
+<hr>
+<h1 id="10-6편-시리즈에서는-무엇을-공부할까">10. 6편 시리즈에서는 무엇을 공부할까?
+</h1><p>이제 이 전체 구조를 6개의 글로 나누어 자세하게 살펴본다.</p>
+<h2 id="01-로지스틱-회귀">01. 로지스틱 회귀
+</h2><p>가장 먼저 <strong>분류 문제를 확률로 표현하는 방법</strong>을 살펴본다.</p>
+<p>주요 내용:</p>
+<ul>
+<li>분류 문제란?</li>
+<li>비선형 함수가 필요한 이유</li>
+<li>Sigmoid / Logistic 함수</li>
+<li>Odds</li>
+<li>Logit</li>
+<li>로지스틱 분류기의 확률적 의미</li>
+<li>최대우도추정(MLE)</li>
+<li>로지스틱 분류기의 학습</li>
+</ul>
+<hr>
+<h2 id="02-svm과-kernel">02. SVM과 Kernel
+</h2><p>다음으로 <strong>결정경계를 찾는 방법</strong>을 살펴본다.</p>
+<p>주요 내용:</p>
+<ul>
+<li>SVM</li>
+<li>Decision Boundary</li>
+<li>Margin</li>
+<li>Support Vector</li>
+<li>Soft Margin</li>
+<li>C</li>
+<li>Kernel Trick</li>
+<li>RBF Kernel</li>
+<li>Gamma</li>
+</ul>
+<hr>
+<h2 id="03-naive-bayes">03. Naive Bayes
+</h2><p>확률을 이용한 또 다른 분류 방법을 공부한다.</p>
+<p>주요 내용:</p>
+<ul>
+<li>Bayes 정리</li>
+<li>Prior / Likelihood / Posterior</li>
+<li>Naive 가정</li>
+<li>조건부 독립</li>
+<li>Gaussian / Bernoulli / Multinomial 모델</li>
+<li>Laplace Smoothing</li>
+</ul>
+<hr>
+<h2 id="04-decision-tree">04. Decision Tree
+</h2><p>데이터를 질문으로 반복해서 나누는 방법을 공부한다.</p>
+<p>주요 내용:</p>
+<ul>
+<li>Decision Tree</li>
+<li>Entropy</li>
+<li>Information Gain</li>
+<li>분할 기준</li>
+<li>과적합</li>
+<li>Pruning</li>
+<li>Cost Complexity</li>
+</ul>
+<hr>
+<h2 id="05-모델-평가">05. 모델 평가
+</h2><p>모델을 만드는 것만큼 중요한 <strong>평가 방법</strong>을 공부한다.</p>
+<p>주요 내용:</p>
+<ul>
+<li>Confusion Matrix</li>
+<li>TP / TN / FP / FN</li>
+<li>Accuracy</li>
+<li>Precision</li>
+<li>Recall</li>
+<li>F1 Score</li>
+<li>Threshold</li>
+<li>ROC Curve</li>
+<li>FPR / TPR</li>
+<li>AUC</li>
+</ul>
+<hr>
+<h2 id="06-ensemble-learning">06. Ensemble Learning
+</h2><p>마지막으로 여러 모델을 결합하여 성능을 높이는 방법을 공부한다.</p>
+<p>주요 내용:</p>
+<ul>
+<li>Ensemble Learning</li>
+<li>Majority Voting</li>
+<li>Hard Voting</li>
+<li>Soft Voting</li>
+<li>Bagging</li>
+<li>Bootstrap</li>
+<li>Random Forest</li>
+<li>Feature Importance</li>
+<li>Boosting</li>
+<li>AdaBoost</li>
+<li>Gradient Boosting</li>
+</ul>
+<hr>
+<h1 id="11-공부할-때-가장-중요한-관점">11. 공부할 때 가장 중요한 관점
+</h1><p>이번 수업에서 모든 수식을 똑같이 외우려고 하면 오히려 더 어려워진다.</p>
+<p>먼저 각 모델이 <strong>무엇을 해결하기 위해 등장했는지</strong>를 이해하는 것이 중요합니다.</p>
+<h3 id="logistic-regression-1">Logistic Regression
+</h3>
+    <blockquote>
+        <p>분류 문제를 확률로 표현하고 싶습니다.</p>
+
+    </blockquote>
+<h3 id="svm-1">SVM
+</h3>
+    <blockquote>
+        <p>클래스를 나누는 가장 좋은 결정경계를 찾고 싶습니다.</p>
+
+    </blockquote>
+<h3 id="kernel-svm">Kernel SVM
+</h3>
+    <blockquote>
+        <p>직선으로 분리할 수 없는 데이터도 분류하고 싶습니다.</p>
+
+    </blockquote>
+<h3 id="naive-bayes-1">Naive Bayes
+</h3>
+    <blockquote>
+        <p>확률과 Bayes 정리를 이용하여 클래스를 판단하고 싶습니다.</p>
+
+    </blockquote>
+<h3 id="decision-tree-1">Decision Tree
+</h3>
+    <blockquote>
+        <p>질문을 반복하면서 데이터를 규칙적으로 나누고 싶습니다.</p>
+
+    </blockquote>
+<h3 id="random-forest-1">Random Forest
+</h3>
+    <blockquote>
+        <p>여러 Tree의 결과를 결합하여 더 안정적인 예측을 만들고 싶습니다.</p>
+
+    </blockquote>
+<h3 id="boosting-1">Boosting
+</h3>
+    <blockquote>
+        <p>이전 모델이 틀린 부분을 다음 모델이 보완하도록 만들고 싶습니다.</p>
+
+    </blockquote>
+<hr>
+<h1 id="12-가장-중요한-전체-정리">12. 가장 중요한 전체 정리
+</h1><p>결국 머신러닝 분류의 핵심은 다음 네 단계로 정리할 수 있습니다.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>① 분류
+</span></span><span style="display:flex;"><span>   ↓
+</span></span><span style="display:flex;"><span>어떤 방법으로 Class를 예측할 것인가?
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>② 학습
+</span></span><span style="display:flex;"><span>   ↓
+</span></span><span style="display:flex;"><span>데이터를 이용하여 모델의 파라미터를 어떻게 찾을 것인가?
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>③ 평가
+</span></span><span style="display:flex;"><span>   ↓
+</span></span><span style="display:flex;"><span>모델이 얼마나 잘 예측하는가?
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>④ 개선
+</span></span><span style="display:flex;"><span>   ↓
+</span></span><span style="display:flex;"><span>다른 모델을 사용하거나 여러 모델을 결합하면 더 좋아지는가?
+</span></span></code></pre></div><p>이를 52일 수업의 모델에 연결하면 다음과 같다.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>분류 방법
+</span></span><span style="display:flex;"><span>├── Logistic Regression
+</span></span><span style="display:flex;"><span>├── SVM
+</span></span><span style="display:flex;"><span>├── Kernel SVM
+</span></span><span style="display:flex;"><span>├── Naive Bayes
+</span></span><span style="display:flex;"><span>└── Decision Tree
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>       ↓
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>모델 평가
+</span></span><span style="display:flex;"><span>├── Accuracy
+</span></span><span style="display:flex;"><span>├── Precision
+</span></span><span style="display:flex;"><span>├── Recall
+</span></span><span style="display:flex;"><span>├── F1
+</span></span><span style="display:flex;"><span>└── ROC / AUC
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>       ↓
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>앙상블
+</span></span><span style="display:flex;"><span>├── Voting
+</span></span><span style="display:flex;"><span>├── Bagging
+</span></span><span style="display:flex;"><span>│   └── Random Forest
+</span></span><span style="display:flex;"><span>└── Boosting
+</span></span><span style="display:flex;"><span>    ├── AdaBoost
+</span></span><span style="display:flex;"><span>    └── Gradient Boosting
+</span></span></code></pre></div><hr>
+<h1 id="13-마무리">13. 마무리
+</h1><p>처음에는 로지스틱 회귀와 SVM, Naive Bayes, Decision Tree가 서로 완전히 다른 내용처럼 보일 수 있습니다.</p>
+<p>하지만 결국 모두 같은 질문에서 출발합니다.</p>
+
+    <blockquote>
+        <p><strong>&ldquo;주어진 데이터를 보고 어떤 Class에 속하는지 어떻게 판단할 것인가?&rdquo;</strong></p>
+
+    </blockquote>
+<p>각 모델은 이 질문에 서로 다른 방식으로 답합니다.</p>
+<ul>
+<li>Logistic Regression은 <strong>확률</strong>을 사용하고,</li>
+<li>SVM은 <strong>Margin과 결정경계</strong>를 사용하고,</li>
+<li>Naive Bayes는 <strong>확률분포와 Bayes 정리</strong>를 사용하고,</li>
+<li>Decision Tree는 <strong>질문과 분할 규칙</strong>을 사용한다.</li>
+</ul>
+<p>그리고 모델을 만든 뒤에는</p>
+
+    <blockquote>
+        <p><strong>&ldquo;얼마나 잘 맞추는가?&rdquo;</strong></p>
+
+    </blockquote>
+<p>를 Accuracy, Precision, Recall, F1, ROC, AUC 등으로 평가한다.</p>
+<p>마지막으로 여러 모델을 결합하는 Ensemble Learning을 이용하면 단일 모델의 한계를 보완할 수 있습니다.</p>
+<p>따라서 이번 시리즈의 핵심은 모델 이름을 무작정 암기하는 것이 아니라,</p>
+<p>$$
 \boxed{
 \text{분류 방법}
 \rightarrow
@@ -166,8 +756,112 @@ $$</p><p>로 표현한다.</p><p>그리고 ROC Curve 아래의 면적을 <strong
 \rightarrow
 \text{앙상블}
 }
-$$</p><p>이라는 전체 흐름을 이해하는 것입니다.</p><hr><h1 id=전체-시리즈-목차>전체 시리즈 목차</h1><ol><li><strong>[머신러닝] 분류 모델부터 앙상블까지 — 전체 개념 잡기</strong></li><li><strong>[머신러닝] 로지스틱 회귀 — 확률로 분류하기</strong></li><li><strong>[머신러닝] SVM과 Kernel — 가장 좋은 결정경계 찾기</strong></li><li><strong>[머신러닝] Naive Bayes — 확률로 분류하기</strong></li><li><strong>[머신러닝] Decision Tree — 질문으로 분류하기</strong></li><li><strong>[머신러닝] 분류 모델 평가 — Accuracy부터 AUC까지</strong></li><li><strong>[머신러닝] Ensemble Learning — 여러 모델을 결합하기</strong></li></ol></section><footer class="article-meta article-footer"></footer><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css integrity=sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV crossorigin=anonymous><script src=https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js integrity=sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG+vnGctmUb0ZY0l8 crossorigin=anonymous defer></script><script src=https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js integrity=sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05 crossorigin=anonymous defer></script><script>window.addEventListener("DOMContentLoaded",()=>{const e=[".main-article",".widget--toc"];e.forEach(e=>{const t=document.querySelector(e);t&&renderMathInElement(t,{delimiters:[{left:"$$",right:"$$",display:!0},{left:"$",right:"$",display:!1},{left:"\\(",right:"\\)",display:!1},{left:"\\[",right:"\\]",display:!0}],ignoredClasses:["gist"]})})})</script></article><nav class=article-prev-next><a class="prev-next-card prev" href=/data-analysis/python_data_analysis_33/><div class=direction>← 이전 글</div><div class=title>[PyTorch] MNIST 데이터셋 분류 모델 구현하기</div></a><a class="prev-next-card next" href=/data-analysis/python_data_analysis_35/><div class=direction>다음 글 →</div><div class=title>[머신러닝 분류 모델] 로지스틱 회귀</div></a></nav><footer class=site-footer><section class=copyright>&copy;
-2026 LucasPark Blog</section><section class=powerby>Built with <a href=https://gohugo.io/ target=_blank rel=noopener>Hugo</a><br>Theme <b><a href=https://github.com/CaiJimmy/hugo-theme-stack target=_blank rel=noopener data-version=4.0.3>Stack</a></b> designed by <a href=https://jimmycai.com target=_blank rel=noopener>Jimmy</a></section></footer><script type=module>
+$$</p>
+<p>이라는 전체 흐름을 이해하는 것입니다.</p>
+<hr>
+<h1 id="전체-시리즈-목차">전체 시리즈 목차
+</h1><ol>
+<li><strong>[머신러닝] 분류 모델부터 앙상블까지 — 전체 개념 잡기</strong></li>
+<li><strong>[머신러닝] 로지스틱 회귀 — 확률로 분류하기</strong></li>
+<li><strong>[머신러닝] SVM과 Kernel — 가장 좋은 결정경계 찾기</strong></li>
+<li><strong>[머신러닝] Naive Bayes — 확률로 분류하기</strong></li>
+<li><strong>[머신러닝] Decision Tree — 질문으로 분류하기</strong></li>
+<li><strong>[머신러닝] 분류 모델 평가 — Accuracy부터 AUC까지</strong></li>
+<li><strong>[머신러닝] Ensemble Learning — 여러 모델을 결합하기</strong></li>
+</ol>
+
+</section>
+
+
+    <footer class="article-meta article-footer">
+    
+
+    </footer>
+
+
+    
+        <link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI&#43;WdtXRGWt2kTvGFasHpSy3SV"crossorigin="anonymous"
+            ><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG&#43;vnGctmUb0ZY0l8"crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"integrity="sha384-&#43;VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4&#43;/RRE05"crossorigin="anonymous"
+                defer
+                >
+            </script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        const elementsToRender = [".main-article", ".widget--toc"];
+
+        elementsToRender.forEach(selector => {
+            const element = document.querySelector(selector);
+            if (element) {
+                renderMathInElement(element, {
+                    delimiters: [
+                        { left: "$$", right: "$$", display: true },
+                        { left: "$", right: "$", display: false },
+                        { left: "\\(", right: "\\)", display: false },
+                        { left: "\\[", right: "\\]", display: true }
+                    ],
+                    ignoredClasses: ["gist"]
+                });
+            }
+        });
+    });
+</script>
+    
+</article>
+
+    
+
+    
+<nav class="article-prev-next">
+  
+  <a class="prev-next-card prev" href="/data-analysis/python_data_analysis_33/">
+    <div class="direction">← 이전 글</div>
+    <div class="title">[PyTorch] MNIST 데이터셋 분류 모델 구현하기</div>
+  </a>
+  
+
+  
+  <a class="prev-next-card next" href="/data-analysis/python_data_analysis_35/">
+    <div class="direction">다음 글 →</div>
+    <div class="title">[머신러닝 분류 모델] 로지스틱 회귀</div>
+  </a>
+  
+</nav>
+
+
+    
+
+     
+    
+        
+
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2026 LucasPark Blog
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="4.0.3">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+
+
+
+<script type="module">
     import gallery from '\/ts\/gallery.js';
 
     const articleContent = document.querySelector('.article-content');
@@ -191,4 +885,15 @@ $$</p><p>이라는 전체 흐름을 이해하는 것입니다.</p><hr><h1 id=전
         });
         lightbox.init();
     }
-</script></main></div><script type=text/javascript src=/ts/main.1ff1e5fdc4e178ed422e50aa407526dc552f26342d729343fded19416194382c.js defer></script></body></html>
+</script>
+
+    
+
+            </main>
+        </div>
+        
+<script type="text/javascript" src="/ts/main.1ff1e5fdc4e178ed422e50aa407526dc552f26342d729343fded19416194382c.js" defer></script>
+
+
+    </body>
+</html>
