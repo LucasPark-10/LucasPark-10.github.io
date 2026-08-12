@@ -1,24 +1,24 @@
 <!DOCTYPE html>
 <html lang="ko-kr" dir="ltr">
     <head><meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content=" 이번 글에서는 Bayes 정리 → 조건부 독립 → Naive Bayes → Laplace Smoothing → 텍스트 분류를 정리합니다.\n1. Bayes 정리 Naive Bayes의 출발점은 Bayes 정리다.\n$$ P(Y|X) = \\frac{P(X|Y)P(Y)}{P(X)} $$\n각 항의 의미는 다음과 같습니다.\n기호 의미 $P(Y|X)$ 사후확률 $P(X|Y)$ 가능도 $P(Y)$ 사전확률 $P(X)$ 증거 분류에서는 각 클래스의 사후확률을 비교하여 가장 높은 클래스를 선택합니다.\n2. Naive Bayes란? Naive Bayes는 Bayes 정리를 이용하는 확률 기반 분류 모델입니다.\n핵심은 특징들이 조건부 독립이라고 가정한다는 것입니다.\n">
-<title>[머신러닝 분류 모델] 확률로 분류하기 - Naive Bayes</title>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content=" 이번 글에서는 Decision Tree → Entropy → Information Gain → Overfitting → Pruning의 흐름을 정리합니다.\n1. Decision Tree란? Decision Tree는 데이터를 질문으로 계속 나누면서 분류하는 모델입니다.\n예:\n나이 &gt; 30? / \\ Yes No / \\ 소득 &gt; ? 구매 안 함 / \\ Yes No 구매 ... 사람이 의사결정을 하는 방식과 비슷하기 때문에 해석하기 쉽다는 장점이 있습니다.\n2. Tree의 핵심 질문 Decision Tree는 계속해서 다음 질문을 합니다.\n">
+<title>[머신러닝 분류 모델] 질문으로 분류하기 - Decision Tree</title>
 
 
-<link rel="canonical" href="https://lucaspark-10.github.io/data-analysis/python_data_analysis_37/">
+<link rel="canonical" href="https://lucaspark-10.github.io/data-analysis/python_data_analysis_38/">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
 
 
-<link rel="stylesheet" href="/scss/style.min.de7e6698ac54e40edf7f3d56f131b6bbacde7bdf742f829e1185371a8af17315.css"><meta property='og:title' content="[머신러닝 분류 모델] 확률로 분류하기 - Naive Bayes">
-<meta property='og:description' content=" 이번 글에서는 Bayes 정리 → 조건부 독립 → Naive Bayes → Laplace Smoothing → 텍스트 분류를 정리합니다.\n1. Bayes 정리 Naive Bayes의 출발점은 Bayes 정리다.\n$$ P(Y|X) = \\frac{P(X|Y)P(Y)}{P(X)} $$\n각 항의 의미는 다음과 같습니다.\n기호 의미 $P(Y|X)$ 사후확률 $P(X|Y)$ 가능도 $P(Y)$ 사전확률 $P(X)$ 증거 분류에서는 각 클래스의 사후확률을 비교하여 가장 높은 클래스를 선택합니다.\n2. Naive Bayes란? Naive Bayes는 Bayes 정리를 이용하는 확률 기반 분류 모델입니다.\n핵심은 특징들이 조건부 독립이라고 가정한다는 것입니다.\n">
-<meta property='og:url' content='https://lucaspark-10.github.io/data-analysis/python_data_analysis_37/'>
+<link rel="stylesheet" href="/scss/style.min.de7e6698ac54e40edf7f3d56f131b6bbacde7bdf742f829e1185371a8af17315.css"><meta property='og:title' content="[머신러닝 분류 모델] 질문으로 분류하기 - Decision Tree">
+<meta property='og:description' content=" 이번 글에서는 Decision Tree → Entropy → Information Gain → Overfitting → Pruning의 흐름을 정리합니다.\n1. Decision Tree란? Decision Tree는 데이터를 질문으로 계속 나누면서 분류하는 모델입니다.\n예:\n나이 &gt; 30? / \\ Yes No / \\ 소득 &gt; ? 구매 안 함 / \\ Yes No 구매 ... 사람이 의사결정을 하는 방식과 비슷하기 때문에 해석하기 쉽다는 장점이 있습니다.\n2. Tree의 핵심 질문 Decision Tree는 계속해서 다음 질문을 합니다.\n">
+<meta property='og:url' content='https://lucaspark-10.github.io/data-analysis/python_data_analysis_38/'>
 <meta property='og:site_name' content='LucasPark Blog'>
 <meta property='og:type' content='article'><meta property='article:section' content='Data-Analysis' /><meta property='article:published_time' content='2026-08-11T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2026-08-11T00:00:00&#43;00:00'/>
-<meta name="twitter:title" content="[머신러닝 분류 모델] 확률로 분류하기 - Naive Bayes">
-<meta name="twitter:description" content=" 이번 글에서는 Bayes 정리 → 조건부 독립 → Naive Bayes → Laplace Smoothing → 텍스트 분류를 정리합니다.\n1. Bayes 정리 Naive Bayes의 출발점은 Bayes 정리다.\n$$ P(Y|X) = \\frac{P(X|Y)P(Y)}{P(X)} $$\n각 항의 의미는 다음과 같습니다.\n기호 의미 $P(Y|X)$ 사후확률 $P(X|Y)$ 가능도 $P(Y)$ 사전확률 $P(X)$ 증거 분류에서는 각 클래스의 사후확률을 비교하여 가장 높은 클래스를 선택합니다.\n2. Naive Bayes란? Naive Bayes는 Bayes 정리를 이용하는 확률 기반 분류 모델입니다.\n핵심은 특징들이 조건부 독립이라고 가정한다는 것입니다.\n">
+<meta name="twitter:title" content="[머신러닝 분류 모델] 질문으로 분류하기 - Decision Tree">
+<meta name="twitter:description" content=" 이번 글에서는 Decision Tree → Entropy → Information Gain → Overfitting → Pruning의 흐름을 정리합니다.\n1. Decision Tree란? Decision Tree는 데이터를 질문으로 계속 나누면서 분류하는 모델입니다.\n예:\n나이 &gt; 30? / \\ Yes No / \\ 소득 &gt; ? 구매 안 함 / \\ Yes No 구매 ... 사람이 의사결정을 하는 방식과 비슷하기 때문에 해석하기 쉽다는 장점이 있습니다.\n2. Tree의 핵심 질문 Decision Tree는 계속해서 다음 질문을 합니다.\n">
       <script async src="https://www.googletagmanager.com/gtag/js?id=G-EVK5B22CB3"></script>
       <script>
         var doNotTrack = false;
@@ -164,7 +164,7 @@
 
     <div class="article-title-wrapper">
         <h2 class="article-title">
-            <a href="/data-analysis/python_data_analysis_37/">[머신러닝 분류 모델] 확률로 분류하기 - Naive Bayes</a>
+            <a href="/data-analysis/python_data_analysis_38/">[머신러닝 분류 모델] 질문으로 분류하기 - Decision Tree</a>
         </h2>
     
         
@@ -213,181 +213,152 @@
     
     
     <blockquote>
-        <p>이번 글에서는 Bayes 정리 → 조건부 독립 → Naive Bayes → Laplace Smoothing → 텍스트 분류를 정리합니다.</p>
+        <p>이번 글에서는 Decision Tree → Entropy → Information Gain → Overfitting → Pruning의 흐름을 정리합니다.</p>
 
     </blockquote>
 <hr>
-<h1 id="1-bayes-정리">1. Bayes 정리
-</h1><p>Naive Bayes의 출발점은 Bayes 정리다.</p>
-<p>$$
-P(Y|X) = \frac{P(X|Y)P(Y)}{P(X)}
-$$</p>
-<p>각 항의 의미는 다음과 같습니다.</p>
-<div class="table-wrapper"><table>
-  <thead>
-      <tr>
-          <th>기호</th>
-          <th>의미</th>
-      </tr>
-  </thead>
-  <tbody>
-      <tr>
-          <td>$P(Y|X)$</td>
-          <td>사후확률</td>
-      </tr>
-      <tr>
-          <td>$P(X|Y)$</td>
-          <td>가능도</td>
-      </tr>
-      <tr>
-          <td>$P(Y)$</td>
-          <td>사전확률</td>
-      </tr>
-      <tr>
-          <td>$P(X)$</td>
-          <td>증거</td>
-      </tr>
-  </tbody>
-</table></div>
-<p>분류에서는 각 클래스의 사후확률을 비교하여 가장 높은 클래스를 선택합니다.</p>
+<h1 id="1-decision-tree란">1. Decision Tree란?
+</h1><p>Decision Tree는 데이터를 질문으로 계속 나누면서 분류하는 모델입니다.</p>
+<p>예:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>       나이 &gt; 30?
+</span></span><span style="display:flex;"><span>        /      \
+</span></span><span style="display:flex;"><span>      Yes       No
+</span></span><span style="display:flex;"><span>      /          \
+</span></span><span style="display:flex;"><span>소득 &gt; ?       구매 안 함
+</span></span><span style="display:flex;"><span> /    \
+</span></span><span style="display:flex;"><span>Yes    No
+</span></span><span style="display:flex;"><span>구매   ...
+</span></span></code></pre></div><p>사람이 의사결정을 하는 방식과 비슷하기 때문에 해석하기 쉽다는 장점이 있습니다.</p>
 <hr>
-<h1 id="2-naive-bayes란">2. Naive Bayes란?
-</h1><p>Naive Bayes는 Bayes 정리를 이용하는 확률 기반 분류 모델입니다.</p>
-<p>핵심은 <strong>특징들이 조건부 독립이라고 가정한다는 것</strong>입니다.</p>
-<p>예를 들어 이메일에</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>무료
-</span></span><span style="display:flex;"><span>당첨
-</span></span><span style="display:flex;"><span>쿠폰
-</span></span></code></pre></div><p>이라는 단어가 있다면</p>
-<p>$$
-P(X|Y) = P(x_1|Y)P(x_2|Y)P(x_3|Y)
-$$</p>
-<p>처럼 계산할 수 있습니다.</p>
-<p>현실에서 단어들이 완전히 독립인 것은 아니지만, 이 가정 덕분에 계산이 매우 단순해진다.</p>
-<hr>
-<h1 id="3-naive-bayes의-종류">3. Naive Bayes의 종류
-</h1><div class="table-wrapper"><table>
-  <thead>
-      <tr>
-          <th>모델</th>
-          <th>주로 사용하는 데이터</th>
-      </tr>
-  </thead>
-  <tbody>
-      <tr>
-          <td>GaussianNB</td>
-          <td>연속형 데이터</td>
-      </tr>
-      <tr>
-          <td>BernoulliNB</td>
-          <td>0/1 데이터</td>
-      </tr>
-      <tr>
-          <td>MultinomialNB</td>
-          <td>빈도/count 데이터, 텍스트</td>
-      </tr>
-  </tbody>
-</table></div>
-<p>특히 문서나 스팸 메일 같은 텍스트 분류에서는 Multinomial Naive Bayes가 자주 사용됩니다.</p>
-<hr>
-<h1 id="4-laplace-smoothing">4. Laplace Smoothing
-</h1><p>Naive Bayes에서 중요한 문제가 있습니다.</p>
-<p>훈련 데이터에 한 번도 등장하지 않은 단어가 있다면</p>
-<p>$$
-P(word|class)=0
-$$</p>
-<p>이 됩니다.</p>
-<p>확률을 여러 개 곱하기 때문에 하나라도 0이면 전체 확률도 0이 됩니다.</p>
-<p>이를 해결하기 위한 방법이 <strong>Laplace Smoothing</strong>입니다.</p>
-<p>대표적인 형태는</p>
-<p>$$
-P = \frac{N+\alpha}{N_{total}+\alpha V}
-$$</p>
-<p>입니다.</p>
-<h3 id="핵심">핵심
-</h3>
+<h1 id="2-tree의-핵심-질문">2. Tree의 핵심 질문
+</h1><p>Decision Tree는 계속해서 다음 질문을 합니다.</p>
+
     <blockquote>
-        <p>Laplace Smoothing = 0 확률 방지</p>
+        <p><strong>&ldquo;어떤 기준으로 데이터를 나누면 가장 잘 분리될까?&rdquo;</strong></p>
 
     </blockquote>
+<p>이를 판단하는 데 중요한 개념이 <strong>Entropy</strong>와 <strong>Information Gain</strong>입니다.</p>
 <hr>
-<h1 id="5-텍스트-분류와-로그-확률">5. 텍스트 분류와 로그 확률
-</h1><p>텍스트에서는 수많은 단어의 확률을 곱해야 합니다.</p>
-<p>예를 들어</p>
+<h1 id="3-entropy">3. Entropy
+</h1><p>Entropy는 데이터의 <strong>불확실성 또는 혼잡도</strong>를 나타냅니다.</p>
 <p>$$
-0.001\times0.002\times0.0001\times&hellip;
+H(Y) = -\sum_i P(e_i)\log_2P(e_i)
 $$</p>
-<p>처럼 값이 매우 작아질 수 있습니다.</p>
-<p>이런 문제를 <strong>Underflow</strong>라고 합니다.</p>
-<p>그래서 로그를 사용합니다.</p>
+<h2 id="직관적으로-이해하기">직관적으로 이해하기
+</h2><p>한 클래스만 있는 경우:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>A A A A A
+</span></span></code></pre></div><p>불확실성이 낮습니다.</p>
+<p>→ Entropy 낮음</p>
+<p>여러 클래스가 섞여 있는 경우:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>A B A B A B
+</span></span></code></pre></div><p>불확실성이 높습니다.</p>
+<p>→ Entropy 높음</p>
+<p>따라서 Tree는 데이터를 분할하여 Entropy를 낮추려고 합니다.</p>
+<hr>
+<h1 id="4-information-gain">4. Information Gain
+</h1><p>Information Gain은 분할을 통해 <strong>불확실성이 얼마나 줄어드는지</strong>를 나타냅니다.</p>
 <p>$$
-\log(ab)=\log a+\log b
+IG(Y,R) = H(Y)-H(Y|R)
 $$</p>
 <p>즉,</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>확률 곱셈
-</span></span><span style="display:flex;"><span> ↓
-</span></span><span style="display:flex;"><span>로그 변환
-</span></span><span style="display:flex;"><span> ↓
-</span></span><span style="display:flex;"><span>로그 확률 덧셈
-</span></span></code></pre></div><p>으로 바꿀 수 있습니다.</p>
+<p>$$
+정보획득량 = 분할\ 전\ 엔트로피 - 분할\ 후\ 엔트로피
+$$</p>
+<p>Decision Tree는 일반적으로</p>
+
+    <blockquote>
+        <p>Information Gain이 큰 분할</p>
+
+    </blockquote>
+<p>을 선택합니다.</p>
 <hr>
-<h1 id="6-naive-bayes의-장점">6. Naive Bayes의 장점
+<h1 id="5-tree가-너무-커지면">5. Tree가 너무 커지면?
+</h1><p>Decision Tree는 계속 분기할 수 있습니다.</p>
+<p>하지만 지나치게 깊은 Tree는 훈련 데이터의 세부적인 특징까지 외워버릴 수 있습니다.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>Tree
+</span></span><span style="display:flex;"><span> ↓
+</span></span><span style="display:flex;"><span>분기 증가
+</span></span><span style="display:flex;"><span> ↓
+</span></span><span style="display:flex;"><span>훈련 데이터에 매우 잘 맞음
+</span></span><span style="display:flex;"><span> ↓
+</span></span><span style="display:flex;"><span>새로운 데이터에서 성능 하락
+</span></span><span style="display:flex;"><span> ↓
+</span></span><span style="display:flex;"><span>Overfitting
+</span></span></code></pre></div><p>따라서 Tree의 복잡도를 적절히 제한해야 합니다.</p>
+<hr>
+<h1 id="6-pruning">6. Pruning
+</h1><p>Pruning은 <strong>가지치기</strong>다.</p>
+<p>너무 복잡한 Tree의 일부 가지를 제거하여 일반화 성능을 높이는 방법입니다.</p>
+<p>Cost Complexity 관점에서는</p>
+<p>$$
+CC(T) = ERR(T)+\alpha L(T)
+$$</p>
+<p>를 생각할 수 있습니다.</p>
+<ul>
+<li>$ERR(T)$: 오류</li>
+<li>$L(T)$: Leaf 개수</li>
+<li>$\alpha$: 복잡도에 대한 페널티</li>
+</ul>
+<p>즉,</p>
+
+    <blockquote>
+        <p>오류가 작으면서 지나치게 복잡하지 않은 Tree를 선택합니다.</p>
+
+    </blockquote>
+<hr>
+<h1 id="7-decision-tree의-장점">7. Decision Tree의 장점
 </h1><ul>
-<li>학습과 예측이 빠르다.</li>
-<li>비교적 적은 데이터에서도 잘 작동할 수 있습니다.</li>
-<li>텍스트 분류에 강하다.</li>
-<li>구현이 간단하다.</li>
-<li>확률 기반 모델이라 결과를 확률적으로 해석할 수 있습니다.</li>
-</ul>
-<h2 id="단점">단점
-</h2><ul>
-<li>조건부 독립 가정이 현실과 다를 수 있습니다.</li>
-<li>변수 간 상호작용을 충분히 반영하지 못할 수 있습니다.</li>
-<li>확률이 0이 되는 문제를 별도로 처리해야 합니다.</li>
+<li>해석하기 쉽습니다.</li>
+<li>규칙 형태로 설명하기 쉽습니다.</li>
+<li>비선형 관계를 처리할 수 있습니다.</li>
+<li>변수의 스케일에 민감하지 않다.</li>
+<li>범주형/수치형 데이터를 모두 다룰 수 있습니다.</li>
 </ul>
 <hr>
-<h1 id="7-전체-흐름">7. 전체 흐름
-</h1><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>입력 데이터
+<h1 id="8-decision-tree의-단점">8. Decision Tree의 단점
+</h1><ul>
+<li>과적합하기 쉽습니다.</li>
+<li>데이터가 조금만 바뀌어도 Tree 구조가 크게 바뀔 수 있습니다.</li>
+<li>단일 Tree의 성능이 불안정할 수 있습니다.</li>
+<li>지나치게 깊은 Tree는 일반화 성능이 떨어질 수 있습니다.</li>
+</ul>
+<p>이러한 문제를 해결하기 위해 여러 Tree를 결합하는 <strong>Random Forest</strong>가 등장합니다.</p>
+<hr>
+<h1 id="9-전체-흐름">9. 전체 흐름
+</h1><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>전체 데이터
 </span></span><span style="display:flex;"><span> ↓
-</span></span><span style="display:flex;"><span>Bayes 정리
+</span></span><span style="display:flex;"><span>Entropy 계산
 </span></span><span style="display:flex;"><span> ↓
-</span></span><span style="display:flex;"><span>각 클래스의 사후확률 계산
+</span></span><span style="display:flex;"><span>여러 후보 분할 평가
 </span></span><span style="display:flex;"><span> ↓
-</span></span><span style="display:flex;"><span>조건부 독립 가정으로 계산 단순화
+</span></span><span style="display:flex;"><span>Information Gain 계산
 </span></span><span style="display:flex;"><span> ↓
-</span></span><span style="display:flex;"><span>가장 높은 확률의 클래스 선택
-</span></span></code></pre></div><p>텍스트라면 추가로</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>단어 빈도
+</span></span><span style="display:flex;"><span>가장 좋은 분할 선택
 </span></span><span style="display:flex;"><span> ↓
-</span></span><span style="display:flex;"><span>Naive Bayes
+</span></span><span style="display:flex;"><span>다시 분할
 </span></span><span style="display:flex;"><span> ↓
-</span></span><span style="display:flex;"><span>Laplace Smoothing
+</span></span><span style="display:flex;"><span>반복
 </span></span><span style="display:flex;"><span> ↓
-</span></span><span style="display:flex;"><span>로그 확률 계산
-</span></span><span style="display:flex;"><span> ↓
-</span></span><span style="display:flex;"><span>스팸 / 정상 등 분류
+</span></span><span style="display:flex;"><span>Leaf
 </span></span></code></pre></div><hr>
-<h2 id="핵심-암기">핵심 암기
-</h2>
-    <blockquote>
-        <p>Naive Bayes = Bayes 정리 + 조건부 독립 가정</p>
-
-    </blockquote>
-
-    <blockquote>
-        <p>Laplace Smoothing = 0 확률 방지</p>
-
-    </blockquote>
-
-    <blockquote>
-        <p>로그 확률 = Underflow 방지</p>
-
-    </blockquote>
+<h1 id="10-핵심-공식">10. 핵심 공식
+</h1><h3 id="entropy">Entropy
+</h3><p>$$
+H(Y) = -\sum_iP_i\log_2P_i
+$$</p>
+<h3 id="information-gain">Information Gain
+</h3><p>$$
+IG = H(Y)-H(Y|R)
+$$</p>
+<h3 id="cost-complexity">Cost Complexity
+</h3><p>$$
+CC(T)=ERR(T)+\alpha L(T)
+$$</p>
 <hr>
 <h2 id="한-문장-정리">한 문장 정리
 </h2>
     <blockquote>
-        <p>Naive Bayes는 Bayes 정리와 조건부 독립 가정을 이용하여 각 클래스의 확률을 계산하는 빠르고 간단한 분류 모델이며, 특히 텍스트 분류에서 유용하다.</p>
+        <p>Decision Tree는 데이터를 질문으로 반복해서 나누며 Entropy를 줄이고 Information Gain을 높이는 방향으로 분기하는 모델이며, 과도한 복잡도는 Pruning으로 제어합니다.</p>
 
     </blockquote>
 
@@ -440,17 +411,14 @@ $$</p>
     
 <nav class="article-prev-next">
   
-  <a class="prev-next-card prev" href="/data-analysis/python_data_analysis_36/">
+  <a class="prev-next-card prev" href="/data-analysis/python_data_analysis_37/">
     <div class="direction">← 이전 글</div>
-    <div class="title">[머신러닝 분류 모델] SVM과 커널 - 결정경계를 찾기</div>
+    <div class="title">[머신러닝 분류 모델] 확률로 분류하기 - Naive Bayes</div>
   </a>
   
 
   
-  <a class="prev-next-card next" href="/data-analysis/python_data_analysis_38/">
-    <div class="direction">다음 글 →</div>
-    <div class="title">[머신러닝 분류 모델] 질문으로 분류하기 - Decision Tree</div>
-  </a>
+  <div class="prev-next-card empty"></div>
   
 </nav>
 
