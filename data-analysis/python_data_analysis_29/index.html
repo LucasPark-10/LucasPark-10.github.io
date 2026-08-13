@@ -1,581 +1,78 @@
-<!DOCTYPE html>
-<html lang="ko-kr" dir="ltr">
-    <head><meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="들어가며 이번 글에서는 딥러닝 모델이 어떻게 학습되는지, 그리고 텐서플로우(TensorFlow)를 활용해 딥러닝 모델을 어떻게 구현하는지 정리해 보겠습니다.\n1. 딥러닝 모델의 학습 방법 딥러닝 모델이란 딥러닝 모델은 입력층(Input Layer), 은닉층(Hidden Layer), 출력층(Output Layer)으로 구성된 신경망입니다.\n은닉층이 3층 이상일 경우, 깊은 신경망이라는 의미에서 &lsquo;딥러닝(Deep Learning)&lsquo;이라는 용어를 사용합니다.\n딥러닝 모델의 구성 요소 구성 요소 설명 Node/Unit 각 층을 구성하는 요소 Layer 모델을 구성하는 층 가중치(Weight) 노드 간의 연결 강도 딥러닝 모델의 학습 방법 딥러닝 모델의 학습은 손실 함수(Loss Function)를 최소화하기 위해 최적화(Optimization) 알고리즘을 적용하는 과정입니다.\n">
-<title>[딥러닝 기초] 텐서플로우와 딥러닝 학습</title>
-
-
-<link rel="canonical" href="https://lucaspark-10.github.io/data-analysis/python_data_analysis_29/">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
-
-
-<link rel="stylesheet" href="/scss/style.min.de7e6698ac54e40edf7f3d56f131b6bbacde7bdf742f829e1185371a8af17315.css"><meta property='og:title' content="[딥러닝 기초] 텐서플로우와 딥러닝 학습">
-<meta property='og:description' content="들어가며 이번 글에서는 딥러닝 모델이 어떻게 학습되는지, 그리고 텐서플로우(TensorFlow)를 활용해 딥러닝 모델을 어떻게 구현하는지 정리해 보겠습니다.\n1. 딥러닝 모델의 학습 방법 딥러닝 모델이란 딥러닝 모델은 입력층(Input Layer), 은닉층(Hidden Layer), 출력층(Output Layer)으로 구성된 신경망입니다.\n은닉층이 3층 이상일 경우, 깊은 신경망이라는 의미에서 &lsquo;딥러닝(Deep Learning)&lsquo;이라는 용어를 사용합니다.\n딥러닝 모델의 구성 요소 구성 요소 설명 Node/Unit 각 층을 구성하는 요소 Layer 모델을 구성하는 층 가중치(Weight) 노드 간의 연결 강도 딥러닝 모델의 학습 방법 딥러닝 모델의 학습은 손실 함수(Loss Function)를 최소화하기 위해 최적화(Optimization) 알고리즘을 적용하는 과정입니다.\n">
-<meta property='og:url' content='https://lucaspark-10.github.io/data-analysis/python_data_analysis_29/'>
-<meta property='og:site_name' content='LucasPark Blog'>
-<meta property='og:type' content='article'><meta property='article:section' content='Data-Analysis' /><meta property='article:published_time' content='2026-08-01T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2026-08-01T00:00:00&#43;00:00'/>
-<meta name="twitter:title" content="[딥러닝 기초] 텐서플로우와 딥러닝 학습">
-<meta name="twitter:description" content="들어가며 이번 글에서는 딥러닝 모델이 어떻게 학습되는지, 그리고 텐서플로우(TensorFlow)를 활용해 딥러닝 모델을 어떻게 구현하는지 정리해 보겠습니다.\n1. 딥러닝 모델의 학습 방법 딥러닝 모델이란 딥러닝 모델은 입력층(Input Layer), 은닉층(Hidden Layer), 출력층(Output Layer)으로 구성된 신경망입니다.\n은닉층이 3층 이상일 경우, 깊은 신경망이라는 의미에서 &lsquo;딥러닝(Deep Learning)&lsquo;이라는 용어를 사용합니다.\n딥러닝 모델의 구성 요소 구성 요소 설명 Node/Unit 각 층을 구성하는 요소 Layer 모델을 구성하는 층 가중치(Weight) 노드 간의 연결 강도 딥러닝 모델의 학습 방법 딥러닝 모델의 학습은 손실 함수(Loss Function)를 최소화하기 위해 최적화(Optimization) 알고리즘을 적용하는 과정입니다.\n">
-      <script async src="https://www.googletagmanager.com/gtag/js?id=G-EVK5B22CB3"></script>
-      <script>
-        var doNotTrack = false;
-        if ( true ) {
-          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
-          var doNotTrack = (dnt == "1" || dnt == "yes");
-        }
-        if (!doNotTrack) {
-          window.dataLayer = window.dataLayer || [];
-          function gtag(){dataLayer.push(arguments);}
-          gtag('js', new Date());
-          gtag('config', 'G-EVK5B22CB3');
-        }
-      </script>
-    </head>
-    <body class="
-    article-page
-    ">
-    <script>
-        (function() {
-            const colorSchemeKey = 'StackColorScheme';
-            if(!localStorage.getItem(colorSchemeKey)){
-                localStorage.setItem(colorSchemeKey, "auto");
-            }
-        })();
-    </script><script>
-    (function() {
-        const colorSchemeKey = 'StackColorScheme';
-        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
-        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
-
-        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
-            
-
-            document.documentElement.dataset.scheme = 'dark';
-        } else {
-            document.documentElement.dataset.scheme = 'light';
-        }
-    })();
-</script>
-<div class="container main-container flex on-phone--column compact"><aside class="sidebar left-sidebar sticky ">
-    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
-        <span class="hamburger-box">
-            <span class="hamburger-inner"></span>
-        </span>
-    </button>
-
-    <header>
-        
-        
-        <div class="site-meta">
-            <h1 class="site-name"><a href="/">LucasPark Blog</a></h1>
-            <h2 class="site-description">Lucas Park의 개인 블로그</h2>
-        </div>
-    </header><ol class="menu" id="main-menu">
-        
-        
-        
-        <li >
-            <a href='/' >
-                
-                <span>Home</span>
-            </a>
-        </li>
-        
-        
-        <li >
-            <a href='/posts/' >
-                
-                <span>Posts</span>
-            </a>
-        </li>
-        
-        
-        <li >
-            <a href='/git-study/' >
-                
-                <span>Git-study</span>
-            </a>
-        </li>
-        
-        
-        <li >
-            <a href='/data-analysis/' >
-                
-                <span>Data Analysis</span>
-            </a>
-        </li>
-        
-        
-        <li >
-            <a href='/gold-news-and-analysis/' >
-                
-                <span>Gold Price Check &amp; Analysis</span>
-            </a>
-        </li>
-        
-        
-        <li >
-            <a href='/atmospheric-environment/' >
-                
-                <span>Atmospheric Environment</span>
-            </a>
-        </li>
-        
-        <li class="menu-bottom-section">
-            <ol class="menu">
-
-                
-                    <li id="dark-mode-toggle">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-  <path stroke="none" d="M0 0h24v24H0z"/>
-  <circle cx="8" cy="12" r="2" />
-  <rect x="2" y="6" width="20" height="12" rx="6" />
-</svg>
-
-
-
-                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-  <path stroke="none" d="M0 0h24v24H0z"/>
-  <circle cx="16" cy="12" r="2" />
-  <rect x="2" y="6" width="20" height="12" rx="6" />
-</svg>
-
-
-
-                        <span>Dark Mode</span>
-                    </li>
-                
-            </ol>
-        </li>
-    </ol>
-</aside>
-
-    
-
-            <main class="main full-width">
-    <article class="main-article">
-    <header class="article-header">
-
-    <div class="article-details">
-    
-
-    <div class="article-title-wrapper">
-        <h2 class="article-title">
-            <a href="/data-analysis/python_data_analysis_29/">[딥러닝 기초] 텐서플로우와 딥러닝 학습</a>
-        </h2>
-    
-        
-    </div>
-
-    
-    
-    
-    
-    
-    
-    
-    <footer class="article-meta">
-        
-            <div class="inline-meta">
-                
-                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-  <path stroke="none" d="M0 0h24v24H0z"/>
-  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
-  <circle cx="18" cy="18" r="4" />
-  <path d="M15 3v4" />
-  <path d="M7 3v4" />
-  <path d="M3 11h16" />
-  <path d="M18 16.496v1.504l1 1" />
-</svg>
-                    <time class="article-time--published" datetime='2026-08-01T00:00:00Z'>2026년 8월 1일 토요일</time>
-                
-
-                
-            </div>
-        
-
-        
-
-        
-    </footer>
-    
-</div>
-
-</header>
-
-    
-
-    <section class="article-content">
-    
-    
-    <h1 id="들어가며">들어가며
-</h1><p>이번 글에서는 딥러닝 모델이 어떻게 학습되는지, 그리고 텐서플로우(TensorFlow)를 활용해 딥러닝 모델을 어떻게 구현하는지 정리해 보겠습니다.</p>
-<hr>
-<h2 id="1-딥러닝-모델의-학습-방법">1. 딥러닝 모델의 학습 방법
-</h2><h3 id="딥러닝-모델이란">딥러닝 모델이란
-</h3><p>딥러닝 모델은 입력층(Input Layer), 은닉층(Hidden Layer), 출력층(Output Layer)으로 구성된 신경망입니다.</p>
-<p>은닉층이 3층 이상일 경우, 깊은 신경망이라는 의미에서 &lsquo;딥러닝(Deep Learning)&lsquo;이라는 용어를 사용합니다.</p>
-<h3 id="딥러닝-모델의-구성-요소">딥러닝 모델의 구성 요소
-</h3><div class="table-wrapper"><table>
-  <thead>
-      <tr>
-          <th>구성 요소</th>
-          <th>설명</th>
-      </tr>
-  </thead>
-  <tbody>
-      <tr>
-          <td>Node/Unit</td>
-          <td>각 층을 구성하는 요소</td>
-      </tr>
-      <tr>
-          <td>Layer</td>
-          <td>모델을 구성하는 층</td>
-      </tr>
-      <tr>
-          <td>가중치(Weight)</td>
-          <td>노드 간의 연결 강도</td>
-      </tr>
-  </tbody>
-</table></div>
-<h3 id="딥러닝-모델의-학습-방법">딥러닝 모델의 학습 방법
-</h3><p>딥러닝 모델의 학습은 <strong>손실 함수(Loss Function)를 최소화하기 위해 최적화(Optimization) 알고리즘을 적용</strong>하는 과정입니다.</p>
-<ul>
-<li><strong>Loss Function</strong>: 예측값과 실제값 간의 오차값</li>
-<li><strong>Optimization</strong>: 오차값을 최소화하는 모델의 인자(가중치)를 찾는 것</li>
-</ul>
-<p>즉, 예측값과 실제값 간의 오차값을 최소화하기 위해, 오차값을 최소화하는 모델의 인자를 찾는 알고리즘을 적용하는 것이 딥러닝 모델의 학습 방법입니다.</p>
-<h3 id="가장-기본적인-최적화-알고리즘-경사하강법gradient-descent-gd">가장 기본적인 최적화 알고리즘, 경사하강법(Gradient Descent, GD)
-</h3><p>신경망의 가중치들을 $W$라고 했을 때, 손실함수 $Loss(W)$의 값을 최소화하기 위해 기울기 $\nabla Loss(W)$를 이용하는 방법입니다.</p>
-<p>$$W_{t+1} = W_t - \alpha \nabla Loss(W)$$</p>
-<ul>
-<li><strong>Gradient</strong> ($\nabla Loss(W)$): 특정 가중치에서의 기울기</li>
-<li><strong>학습률(Learning Rate, $\alpha$)</strong>: 가중치를 업데이트하는 보폭의 크기</li>
-</ul>
-<h3 id="각-가중치들의-기울기를-구하는-방법--역전파backpropagation">각 가중치들의 기울기를 구하는 방법 : 역전파(Backpropagation)
-</h3><p>딥러닝에서는 역전파(Backpropagation)를 통해 각 가중치들의 기울기를 구할 수 있습니다.</p>
-
-    <blockquote>
-        <p>역전파는 나의 목표(target) 값과 실제 모델이 예측한 출력(output) 값이 얼마나 차이나는지 구한 후, 오차값을 다시 뒤로 전파해가며 변수들을 갱신하는 알고리즘입니다.</p>
-
-    </blockquote>
-<p><strong>Boom times의 배경 : 역전파</strong></p>
-<p>역전파 알고리즘은 신경망 연구의 역사에서 중요한 전환점이 되었습니다.</p>
-<ul>
-<li>1950년: 퍼셉트론(Perceptron) 등장</li>
-<li>1973년: 첫 번째 AI 겨울(First AI winter)</li>
-<li>1980년: 역전파를 통한 Boom times</li>
-<li>1988년: 두 번째 AI 겨울(Second AI winter)</li>
-<li>2012년: 딥러닝 혁명(Deep learning revolution)</li>
-</ul>
-<h3 id="순전파forward-propagation">순전파(Forward Propagation)
-</h3><p><strong>순전파</strong>는 입력 값을 바탕으로 출력 값을 계산하는 과정입니다.</p>
-<p>각 퍼셉트론에서 입력값과 가중치를 곱하고 더한 뒤, 활성화 함수를 거쳐 다음 층으로 전달합니다.</p>
-<h3 id="역전파backpropagation">역전파(Backpropagation)
-</h3><p><strong>역전파</strong>는 순전파의 반대 방향으로 이루어지는 과정입니다.</p>
-<p>특정 가중치의 기울기(gradient)를 구하기 위해서는 그 전단의 계산 값이 필요하며, 출력층에서부터 입력층 방향으로 오차를 거슬러 전파하면서 각 가중치의 기울기를 계산합니다.</p>
-<hr>
-<h2 id="2-텐서플로우tensorflow">2. 텐서플로우(TensorFlow)
-</h2><h3 id="딥러닝-모델-구현을-위해-학습해야-할-분야">딥러닝 모델 구현을 위해 학습해야 할 분야
-</h3><p>딥러닝 모델을 직접 구현하려면 다음과 같은 다양한 분야를 학습해야 합니다.</p>
-<ul>
-<li><strong>파이썬</strong>: 딥러닝 모델을 작성하는 언어</li>
-<li><strong>하드웨어</strong>: 좋은 연산 장치</li>
-<li><strong>C/C++</strong>: 연산 장치를 제어하는 언어</li>
-</ul>
-<p>이처럼 배워야 할 것이 매우 많기 때문에, 이를 쉽게 도와주는 프레임워크가 필요합니다.</p>
-<h3 id="프레임워크를-통한-딥러닝-모델-구현">프레임워크를 통한 딥러닝 모델 구현
-</h3><p>Caffe, Chainer, DL4J, Keras, CNTK, MatConvNet, MINERVA, MXNet, Purine, TensorFlow, Theano, Torch 등 다양한 딥러닝 프레임워크가 존재합니다.</p>
-<p>프레임워크는 딥러닝 모델의 <strong>학습과 추론을 위한 프로그램</strong>으로, 딥러닝 모델을 쉽게 구현하고 사용할 수 있게 해줍니다.</p>
-<h3 id="프레임워크-선택하기">프레임워크 선택하기
-</h3><p>2019년 기준 Deep Learning Framework의 6개월 성장 지수를 보면 TensorFlow(83점)가 PyTorch(66점), Keras(47점), FastAI(10점)보다 압도적으로 높은 점수를 기록했습니다.</p>
-<p>이처럼 가장 많이 사용되고 빠른 성장률을 가진 프레임워크인 TensorFlow(텐서플로우)를 활용합니다.</p>
-<h3 id="텐서플로우tensorflow란">텐서플로우(TensorFlow)란
-</h3><p>텐서플로우는 유연하고, 효율적이며, 확장성 있는 딥러닝 프레임워크입니다.</p>
-<p>대형 클러스터 컴퓨터부터 스마트폰까지 다양한 디바이스에서 동작합니다.</p>
-<h3 id="텐서tensor">텐서(Tensor)
-</h3><p>텐서(Tensor)는 다차원 배열(Multidimensional Arrays)로 나타내는 데이터를 의미합니다.</p>
-<p>딥러닝에서 텐서는 1차원(1-D Tensor), 2차원(2-D Tensor), 3차원(3-D Tensor) 등 다양한 차원으로 표현될 수 있습니다.</p>
-<h3 id="플로우flow">플로우(Flow)
-</h3><p>플로우(Flow)는 데이터의 흐름을 의미합니다.</p>
-<p>텐서플로우에서 계산은 <strong>데이터 플로우 그래프</strong>로 수행되며, 그래프를 따라 데이터가 노드(Node)를 거쳐 흘러가면서 계산이 이루어집니다.</p>
-<h3 id="텐서--플로우">텐서 + 플로우
-</h3><p>&lsquo;텐서플로우&rsquo;라는 이름은 딥러닝에서 데이터를 의미하는 <strong>텐서</strong>(Tensor)와, 데이터 플로우 그래프를 따라 연산이 수행되는 형태를 의미하는 <strong>플로우</strong>(Flow)가 합쳐진 것입니다.</p>
-<h3 id="텐서플로우-버전별-특징">텐서플로우 버전별 특징
-</h3><p><strong>텐서플로우 version 1.x</strong></p>
-<p>이전 텐서플로우 1.x에서는 계산을 위해 그래프 및 세션(Session) 생성이 필요했습니다.</p>
-<p>Variable, Constant, Operation 등을 그래프로 미리 정의한 뒤 세션을 통해 실행하는 방식이었습니다.</p>
-<p><strong>텐서플로우 version 2.x</strong></p>
-<p>2019년 9월부터 배포된 2.0 버전 이후부터는 <strong>즉시 실행(Eager Execution)</strong> 기능을 통해 계산 그래프, 세션 생성 없이 바로 실행이 가능해졌습니다.</p>
-<p>이로 인해 더욱 직관적인 인터페이스로 사용할 수 있게 되었습니다.</p>
-<hr>
-<h2 id="3-텐서플로우-기초-사용법">3. 텐서플로우 기초 사용법
-</h2><h3 id="텐서-다뤄보기">텐서 다뤄보기
-</h3><p>텐서플로우에서는 다양한 타입의 기본 텐서를 다룰 수 있습니다.</p>
-<ul>
-<li><strong>Constant Tensor</strong> (상수 텐서)</li>
-<li><strong>Sequence Tensor</strong> (시퀀스 텐서)</li>
-<li><strong>Variable Tensor</strong> (변수 텐서)</li>
-</ul>
-<h3 id="상수-텐서constant-tensor">상수 텐서(Constant Tensor)
-</h3><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> tensorflow <span style="color:#66d9ef">as</span> tf
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># 상수형 텐서 생성</span>
-</span></span><span style="display:flex;"><span>tensor_a <span style="color:#f92672">=</span> tf<span style="color:#f92672">.</span>constant(value, dtype<span style="color:#f92672">=</span><span style="color:#66d9ef">None</span>, shape<span style="color:#f92672">=</span><span style="color:#66d9ef">None</span>, name<span style="color:#f92672">=</span><span style="color:#66d9ef">None</span>)
-</span></span></code></pre></div><ul>
-<li><code>value</code>: 반환되는 상수값</li>
-<li><code>dtype</code>: 반환되는 Tensor 타입</li>
-<li><code>shape</code>: Tensor의 차원</li>
-<li><code>name</code>: 텐서 이름</li>
-</ul>
-<h3 id="다양한-상수-텐서-생성하기">다양한 상수 텐서 생성하기
-</h3><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> tensorflow <span style="color:#66d9ef">as</span> tf
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># 모든 원소 값이 0인 텐서 생성</span>
-</span></span><span style="display:flex;"><span>tensor_b <span style="color:#f92672">=</span> tf<span style="color:#f92672">.</span>zeros(shape, dtype<span style="color:#f92672">=</span>tf<span style="color:#f92672">.</span>float32, name<span style="color:#f92672">=</span><span style="color:#66d9ef">None</span>)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># 모든 원소 값이 1인 텐서 생성</span>
-</span></span><span style="display:flex;"><span>tensor_c <span style="color:#f92672">=</span> tf<span style="color:#f92672">.</span>ones(shape, dtype<span style="color:#f92672">=</span>tf<span style="color:#f92672">.</span>float32, name<span style="color:#f92672">=</span><span style="color:#66d9ef">None</span>)
-</span></span></code></pre></div><h3 id="시퀀스-텐서sequence-tensor">시퀀스 텐서(Sequence Tensor)
-</h3><p><code>tf.linspace</code>는 시작 값에서 끝 값까지 지정한 개수만큼 균등하게 증가하는 텐서를 생성합니다.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> tensorflow <span style="color:#66d9ef">as</span> tf
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># start에서 stop까지 증가하는 num 개수 데이터를 가진 텐서 생성</span>
-</span></span><span style="display:flex;"><span>tensor_d <span style="color:#f92672">=</span> tf<span style="color:#f92672">.</span>linspace(start, stop, num, name<span style="color:#f92672">=</span><span style="color:#66d9ef">None</span>)
-</span></span></code></pre></div><ul>
-<li><code>start</code>: 시작 값</li>
-<li><code>stop</code>: 끝 값</li>
-<li><code>num</code>: 생성할 데이터 개수</li>
-<li><code>name</code>: 텐서의 이름</li>
-</ul>
-<p><code>tf.range</code>는 시작 값에서 끝 값까지 지정한 증가량만큼 증가하는 텐서를 생성합니다.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> tensorflow <span style="color:#66d9ef">as</span> tf
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># start에서 limit까지 delta씩 증가하는 데이터를 가진 텐서 생성</span>
-</span></span><span style="display:flex;"><span>tensor_e <span style="color:#f92672">=</span> tf<span style="color:#f92672">.</span>range(start, limit, delta, name<span style="color:#f92672">=</span><span style="color:#66d9ef">None</span>)
-</span></span></code></pre></div><ul>
-<li><code>start</code>: 시작 값</li>
-<li><code>limit</code>: 끝 값</li>
-<li><code>delta</code>: 증가량</li>
-<li><code>name</code>: 텐서의 이름</li>
-</ul>
-<h3 id="변수-텐서variable-tensor">변수 텐서(Variable Tensor)
-</h3><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> tensorflow <span style="color:#66d9ef">as</span> tf
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># 변수형 텐서 생성</span>
-</span></span><span style="display:flex;"><span>tensor_f <span style="color:#f92672">=</span> tf<span style="color:#f92672">.</span>Variable(initial_value<span style="color:#f92672">=</span><span style="color:#66d9ef">None</span>, dtype<span style="color:#f92672">=</span><span style="color:#66d9ef">None</span>, name<span style="color:#f92672">=</span><span style="color:#66d9ef">None</span>)
-</span></span></code></pre></div><ul>
-<li><code>initial_value</code>: 초기 값</li>
-<li><code>dtype</code>: 반환되는 Tensor 타입</li>
-<li><code>name</code>: 텐서의 이름</li>
-</ul>
-<h3 id="상수-텐서-생성-및-수식-정의">상수 텐서 생성 및 수식 정의
-</h3><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> tensorflow <span style="color:#66d9ef">as</span> tf
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># 상수 텐서 생성</span>
-</span></span><span style="display:flex;"><span>a <span style="color:#f92672">=</span> tf<span style="color:#f92672">.</span>constant([<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>], dtype<span style="color:#f92672">=</span>tf<span style="color:#f92672">.</span>float32)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># 수식 정의</span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">forward</span>(x):
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> W <span style="color:#f92672">*</span> x <span style="color:#f92672">+</span> b
-</span></span></code></pre></div><h3 id="정의된-수식을-활용한-연산">정의된 수식을 활용한 연산
-</h3><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># 텐서 계산 및 출력</span>
-</span></span><span style="display:flex;"><span>output <span style="color:#f92672">=</span> forward(a)
-</span></span><span style="display:flex;"><span>print(output)
-</span></span></code></pre></div><pre tabindex="0"><code>tf.Tensor(
+<!doctype html><html lang=ko-kr dir=ltr><head><meta charset=utf-8><meta name=viewport content='width=device-width,initial-scale=1'><meta name=description content="들어가며 이번 글에서는 딥러닝 모델이 어떻게 학습되는지, 그리고 텐서플로우(TensorFlow)를 활용해 딥러닝 모델을 어떻게 구현하는지 정리해 보겠습니다.\n1. 딥러닝 모델의 학습 방법 딥러닝 모델이란 딥러닝 모델은 입력층(Input Layer), 은닉층(Hidden Layer), 출력층(Output Layer)으로 구성된 신경망입니다.\n은닉층이 3층 이상일 경우, 깊은 신경망이라는 의미에서 &lsquo;딥러닝(Deep Learning)&lsquo;이라는 용어를 사용합니다.\n딥러닝 모델의 구성 요소 구성 요소 설명 Node/Unit 각 층을 구성하는 요소 Layer 모델을 구성하는 층 가중치(Weight) 노드 간의 연결 강도 딥러닝 모델의 학습 방법 딥러닝 모델의 학습은 손실 함수(Loss Function)를 최소화하기 위해 최적화(Optimization) 알고리즘을 적용하는 과정입니다.\n"><title>[딥러닝 기초] 텐서플로우와 딥러닝 학습</title><link rel=canonical href=https://lucaspark-10.github.io/data-analysis/python_data_analysis_29/><link rel=preconnect href=https://fonts.googleapis.com><link rel=preconnect href=https://fonts.gstatic.com crossorigin><link rel=preload as=style href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap"><link rel=stylesheet href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap"><link rel=stylesheet href=/scss/style.min.3049ac8d8671fdccd37d32eed156f0c2ce601cd496f803d522b9f41943b21821.css><meta property='og:title' content="[딥러닝 기초] 텐서플로우와 딥러닝 학습"><meta property='og:description' content="들어가며 이번 글에서는 딥러닝 모델이 어떻게 학습되는지, 그리고 텐서플로우(TensorFlow)를 활용해 딥러닝 모델을 어떻게 구현하는지 정리해 보겠습니다.\n1. 딥러닝 모델의 학습 방법 딥러닝 모델이란 딥러닝 모델은 입력층(Input Layer), 은닉층(Hidden Layer), 출력층(Output Layer)으로 구성된 신경망입니다.\n은닉층이 3층 이상일 경우, 깊은 신경망이라는 의미에서 &lsquo;딥러닝(Deep Learning)&lsquo;이라는 용어를 사용합니다.\n딥러닝 모델의 구성 요소 구성 요소 설명 Node/Unit 각 층을 구성하는 요소 Layer 모델을 구성하는 층 가중치(Weight) 노드 간의 연결 강도 딥러닝 모델의 학습 방법 딥러닝 모델의 학습은 손실 함수(Loss Function)를 최소화하기 위해 최적화(Optimization) 알고리즘을 적용하는 과정입니다.\n"><meta property='og:url' content='https://lucaspark-10.github.io/data-analysis/python_data_analysis_29/'><meta property='og:site_name' content='LucasPark Blog'><meta property='og:type' content='article'><meta property='article:section' content='Data-Analysis'><meta property='article:published_time' content='2026-08-01T00:00:00+00:00'><meta property='article:modified_time' content='2026-08-01T00:00:00+00:00'><meta name=twitter:title content="[딥러닝 기초] 텐서플로우와 딥러닝 학습"><meta name=twitter:description content="들어가며 이번 글에서는 딥러닝 모델이 어떻게 학습되는지, 그리고 텐서플로우(TensorFlow)를 활용해 딥러닝 모델을 어떻게 구현하는지 정리해 보겠습니다.\n1. 딥러닝 모델의 학습 방법 딥러닝 모델이란 딥러닝 모델은 입력층(Input Layer), 은닉층(Hidden Layer), 출력층(Output Layer)으로 구성된 신경망입니다.\n은닉층이 3층 이상일 경우, 깊은 신경망이라는 의미에서 &lsquo;딥러닝(Deep Learning)&lsquo;이라는 용어를 사용합니다.\n딥러닝 모델의 구성 요소 구성 요소 설명 Node/Unit 각 층을 구성하는 요소 Layer 모델을 구성하는 층 가중치(Weight) 노드 간의 연결 강도 딥러닝 모델의 학습 방법 딥러닝 모델의 학습은 손실 함수(Loss Function)를 최소화하기 위해 최적화(Optimization) 알고리즘을 적용하는 과정입니다.\n"><script async src="https://www.googletagmanager.com/gtag/js?id=G-EVK5B22CB3"></script><script>var doNotTrack=!1,dnt=navigator.doNotTrack||window.doNotTrack||navigator.msDoNotTrack,doNotTrack=dnt=="1"||dnt=="yes";if(!doNotTrack){window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag("js",new Date),gtag("config","G-EVK5B22CB3")}</script></head><body class=article-page><script>(function(){const e="StackColorScheme";localStorage.getItem(e)||localStorage.setItem(e,"auto")})()</script><script>(function(){const t="StackColorScheme",e=localStorage.getItem(t),n=window.matchMedia("(prefers-color-scheme: dark)").matches===!0;e=="dark"||e==="auto"&&n?document.documentElement.dataset.scheme="dark":document.documentElement.dataset.scheme="light"})()</script><div class="container main-container flex on-phone--column compact"><aside class="sidebar left-sidebar sticky"><button class="hamburger hamburger--spin" type=button id=toggle-menu aria-label="Toggle Menu">
+<span class=hamburger-box><span class=hamburger-inner></span></span></button><header><div class=site-meta><h1 class=site-name><a href=/>LucasPark Blog</a></h1><h2 class=site-description>Lucas Park의 개인 블로그</h2></div></header><ol class=menu id=main-menu><li><a href=/><span>Home</span></a></li><li><a href=/posts/><span>Posts</span></a></li><li><a href=/git-study/><span>Git-study</span></a></li><li><a href=/data-analysis/><span>Data Analysis</span></a></li><li><a href=/gold-news-and-analysis/><span>Gold Price Check & Analysis</span></a></li><li><a href=/atmospheric-environment/><span>Atmospheric Environment</span></a></li><li class=menu-bottom-section><ol class=menu><li id=dark-mode-toggle><svg class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="8" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<svg class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="16" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<span>Dark Mode</span></li></ol></li></ol></aside><main class="main full-width"><article class=main-article><header class=article-header><div class=article-details><div class=article-title-wrapper><h2 class=article-title><a href=/data-analysis/python_data_analysis_29/>[딥러닝 기초] 텐서플로우와 딥러닝 학습</a></h2></div><footer class=article-meta><div class=inline-meta><svg class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M11.795 21H5a2 2 0 01-2-2V7a2 2 0 012-2h12a2 2 0 012 2v4"/><circle cx="18" cy="18" r="4"/><path d="M15 3v4"/><path d="M7 3v4"/><path d="M3 11h16"/><path d="M18 16.496V18l1 1"/></svg>
+<time class=article-time--published datetime=2026-08-01T00:00:00Z>2026년 8월 1일 토요일</time></div></footer></div></header><section class=article-content><h1 id=들어가며>들어가며</h1><p>이번 글에서는 딥러닝 모델이 어떻게 학습되는지, 그리고 텐서플로우(TensorFlow)를 활용해 딥러닝 모델을 어떻게 구현하는지 정리해 보겠습니다.</p><hr><h2 id=1-딥러닝-모델의-학습-방법>1. 딥러닝 모델의 학습 방법</h2><h3 id=딥러닝-모델이란>딥러닝 모델이란</h3><p>딥러닝 모델은 입력층(Input Layer), 은닉층(Hidden Layer), 출력층(Output Layer)으로 구성된 신경망입니다.</p><p>은닉층이 3층 이상일 경우, 깊은 신경망이라는 의미에서 &lsquo;딥러닝(Deep Learning)&lsquo;이라는 용어를 사용합니다.</p><h3 id=딥러닝-모델의-구성-요소>딥러닝 모델의 구성 요소</h3><div class=table-wrapper><table><thead><tr><th>구성 요소</th><th>설명</th></tr></thead><tbody><tr><td>Node/Unit</td><td>각 층을 구성하는 요소</td></tr><tr><td>Layer</td><td>모델을 구성하는 층</td></tr><tr><td>가중치(Weight)</td><td>노드 간의 연결 강도</td></tr></tbody></table></div><h3 id=딥러닝-모델의-학습-방법>딥러닝 모델의 학습 방법</h3><p>딥러닝 모델의 학습은 <strong>손실 함수(Loss Function)를 최소화하기 위해 최적화(Optimization) 알고리즘을 적용</strong>하는 과정입니다.</p><ul><li><strong>Loss Function</strong>: 예측값과 실제값 간의 오차값</li><li><strong>Optimization</strong>: 오차값을 최소화하는 모델의 인자(가중치)를 찾는 것</li></ul><p>즉, 예측값과 실제값 간의 오차값을 최소화하기 위해, 오차값을 최소화하는 모델의 인자를 찾는 알고리즘을 적용하는 것이 딥러닝 모델의 학습 방법입니다.</p><h3 id=가장-기본적인-최적화-알고리즘-경사하강법gradient-descent-gd>가장 기본적인 최적화 알고리즘, 경사하강법(Gradient Descent, GD)</h3><p>신경망의 가중치들을 $W$라고 했을 때, 손실함수 $Loss(W)$의 값을 최소화하기 위해 기울기 $\nabla Loss(W)$를 이용하는 방법입니다.</p><p>$$W_{t+1} = W_t - \alpha \nabla Loss(W)$$</p><ul><li><strong>Gradient</strong> ($\nabla Loss(W)$): 특정 가중치에서의 기울기</li><li><strong>학습률(Learning Rate, $\alpha$)</strong>: 가중치를 업데이트하는 보폭의 크기</li></ul><h3 id=각-가중치들의-기울기를-구하는-방법--역전파backpropagation>각 가중치들의 기울기를 구하는 방법 : 역전파(Backpropagation)</h3><p>딥러닝에서는 역전파(Backpropagation)를 통해 각 가중치들의 기울기를 구할 수 있습니다.</p><blockquote><p>역전파는 나의 목표(target) 값과 실제 모델이 예측한 출력(output) 값이 얼마나 차이나는지 구한 후, 오차값을 다시 뒤로 전파해가며 변수들을 갱신하는 알고리즘입니다.</p></blockquote><p><strong>Boom times의 배경 : 역전파</strong></p><p>역전파 알고리즘은 신경망 연구의 역사에서 중요한 전환점이 되었습니다.</p><ul><li>1950년: 퍼셉트론(Perceptron) 등장</li><li>1973년: 첫 번째 AI 겨울(First AI winter)</li><li>1980년: 역전파를 통한 Boom times</li><li>1988년: 두 번째 AI 겨울(Second AI winter)</li><li>2012년: 딥러닝 혁명(Deep learning revolution)</li></ul><h3 id=순전파forward-propagation>순전파(Forward Propagation)</h3><p><strong>순전파</strong>는 입력 값을 바탕으로 출력 값을 계산하는 과정입니다.</p><p>각 퍼셉트론에서 입력값과 가중치를 곱하고 더한 뒤, 활성화 함수를 거쳐 다음 층으로 전달합니다.</p><h3 id=역전파backpropagation>역전파(Backpropagation)</h3><p><strong>역전파</strong>는 순전파의 반대 방향으로 이루어지는 과정입니다.</p><p>특정 가중치의 기울기(gradient)를 구하기 위해서는 그 전단의 계산 값이 필요하며, 출력층에서부터 입력층 방향으로 오차를 거슬러 전파하면서 각 가중치의 기울기를 계산합니다.</p><hr><h2 id=2-텐서플로우tensorflow>2. 텐서플로우(TensorFlow)</h2><h3 id=딥러닝-모델-구현을-위해-학습해야-할-분야>딥러닝 모델 구현을 위해 학습해야 할 분야</h3><p>딥러닝 모델을 직접 구현하려면 다음과 같은 다양한 분야를 학습해야 합니다.</p><ul><li><strong>파이썬</strong>: 딥러닝 모델을 작성하는 언어</li><li><strong>하드웨어</strong>: 좋은 연산 장치</li><li><strong>C/C++</strong>: 연산 장치를 제어하는 언어</li></ul><p>이처럼 배워야 할 것이 매우 많기 때문에, 이를 쉽게 도와주는 프레임워크가 필요합니다.</p><h3 id=프레임워크를-통한-딥러닝-모델-구현>프레임워크를 통한 딥러닝 모델 구현</h3><p>Caffe, Chainer, DL4J, Keras, CNTK, MatConvNet, MINERVA, MXNet, Purine, TensorFlow, Theano, Torch 등 다양한 딥러닝 프레임워크가 존재합니다.</p><p>프레임워크는 딥러닝 모델의 <strong>학습과 추론을 위한 프로그램</strong>으로, 딥러닝 모델을 쉽게 구현하고 사용할 수 있게 해줍니다.</p><h3 id=프레임워크-선택하기>프레임워크 선택하기</h3><p>2019년 기준 Deep Learning Framework의 6개월 성장 지수를 보면 TensorFlow(83점)가 PyTorch(66점), Keras(47점), FastAI(10점)보다 압도적으로 높은 점수를 기록했습니다.</p><p>이처럼 가장 많이 사용되고 빠른 성장률을 가진 프레임워크인 TensorFlow(텐서플로우)를 활용합니다.</p><h3 id=텐서플로우tensorflow란>텐서플로우(TensorFlow)란</h3><p>텐서플로우는 유연하고, 효율적이며, 확장성 있는 딥러닝 프레임워크입니다.</p><p>대형 클러스터 컴퓨터부터 스마트폰까지 다양한 디바이스에서 동작합니다.</p><h3 id=텐서tensor>텐서(Tensor)</h3><p>텐서(Tensor)는 다차원 배열(Multidimensional Arrays)로 나타내는 데이터를 의미합니다.</p><p>딥러닝에서 텐서는 1차원(1-D Tensor), 2차원(2-D Tensor), 3차원(3-D Tensor) 등 다양한 차원으로 표현될 수 있습니다.</p><h3 id=플로우flow>플로우(Flow)</h3><p>플로우(Flow)는 데이터의 흐름을 의미합니다.</p><p>텐서플로우에서 계산은 <strong>데이터 플로우 그래프</strong>로 수행되며, 그래프를 따라 데이터가 노드(Node)를 거쳐 흘러가면서 계산이 이루어집니다.</p><h3 id=텐서--플로우>텐서 + 플로우</h3><p>&lsquo;텐서플로우&rsquo;라는 이름은 딥러닝에서 데이터를 의미하는 <strong>텐서</strong>(Tensor)와, 데이터 플로우 그래프를 따라 연산이 수행되는 형태를 의미하는 <strong>플로우</strong>(Flow)가 합쳐진 것입니다.</p><h3 id=텐서플로우-버전별-특징>텐서플로우 버전별 특징</h3><p><strong>텐서플로우 version 1.x</strong></p><p>이전 텐서플로우 1.x에서는 계산을 위해 그래프 및 세션(Session) 생성이 필요했습니다.</p><p>Variable, Constant, Operation 등을 그래프로 미리 정의한 뒤 세션을 통해 실행하는 방식이었습니다.</p><p><strong>텐서플로우 version 2.x</strong></p><p>2019년 9월부터 배포된 2.0 버전 이후부터는 <strong>즉시 실행(Eager Execution)</strong> 기능을 통해 계산 그래프, 세션 생성 없이 바로 실행이 가능해졌습니다.</p><p>이로 인해 더욱 직관적인 인터페이스로 사용할 수 있게 되었습니다.</p><hr><h2 id=3-텐서플로우-기초-사용법>3. 텐서플로우 기초 사용법</h2><h3 id=텐서-다뤄보기>텐서 다뤄보기</h3><p>텐서플로우에서는 다양한 타입의 기본 텐서를 다룰 수 있습니다.</p><ul><li><strong>Constant Tensor</strong> (상수 텐서)</li><li><strong>Sequence Tensor</strong> (시퀀스 텐서)</li><li><strong>Variable Tensor</strong> (변수 텐서)</li></ul><h3 id=상수-텐서constant-tensor>상수 텐서(Constant Tensor)</h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#f92672>import</span> tensorflow <span style=color:#66d9ef>as</span> tf
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 상수형 텐서 생성</span>
+</span></span><span style=display:flex><span>tensor_a <span style=color:#f92672>=</span> tf<span style=color:#f92672>.</span>constant(value, dtype<span style=color:#f92672>=</span><span style=color:#66d9ef>None</span>, shape<span style=color:#f92672>=</span><span style=color:#66d9ef>None</span>, name<span style=color:#f92672>=</span><span style=color:#66d9ef>None</span>)
+</span></span></code></pre></div><ul><li><code>value</code>: 반환되는 상수값</li><li><code>dtype</code>: 반환되는 Tensor 타입</li><li><code>shape</code>: Tensor의 차원</li><li><code>name</code>: 텐서 이름</li></ul><h3 id=다양한-상수-텐서-생성하기>다양한 상수 텐서 생성하기</h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#f92672>import</span> tensorflow <span style=color:#66d9ef>as</span> tf
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 모든 원소 값이 0인 텐서 생성</span>
+</span></span><span style=display:flex><span>tensor_b <span style=color:#f92672>=</span> tf<span style=color:#f92672>.</span>zeros(shape, dtype<span style=color:#f92672>=</span>tf<span style=color:#f92672>.</span>float32, name<span style=color:#f92672>=</span><span style=color:#66d9ef>None</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 모든 원소 값이 1인 텐서 생성</span>
+</span></span><span style=display:flex><span>tensor_c <span style=color:#f92672>=</span> tf<span style=color:#f92672>.</span>ones(shape, dtype<span style=color:#f92672>=</span>tf<span style=color:#f92672>.</span>float32, name<span style=color:#f92672>=</span><span style=color:#66d9ef>None</span>)
+</span></span></code></pre></div><h3 id=시퀀스-텐서sequence-tensor>시퀀스 텐서(Sequence Tensor)</h3><p><code>tf.linspace</code>는 시작 값에서 끝 값까지 지정한 개수만큼 균등하게 증가하는 텐서를 생성합니다.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#f92672>import</span> tensorflow <span style=color:#66d9ef>as</span> tf
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># start에서 stop까지 증가하는 num 개수 데이터를 가진 텐서 생성</span>
+</span></span><span style=display:flex><span>tensor_d <span style=color:#f92672>=</span> tf<span style=color:#f92672>.</span>linspace(start, stop, num, name<span style=color:#f92672>=</span><span style=color:#66d9ef>None</span>)
+</span></span></code></pre></div><ul><li><code>start</code>: 시작 값</li><li><code>stop</code>: 끝 값</li><li><code>num</code>: 생성할 데이터 개수</li><li><code>name</code>: 텐서의 이름</li></ul><p><code>tf.range</code>는 시작 값에서 끝 값까지 지정한 증가량만큼 증가하는 텐서를 생성합니다.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#f92672>import</span> tensorflow <span style=color:#66d9ef>as</span> tf
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># start에서 limit까지 delta씩 증가하는 데이터를 가진 텐서 생성</span>
+</span></span><span style=display:flex><span>tensor_e <span style=color:#f92672>=</span> tf<span style=color:#f92672>.</span>range(start, limit, delta, name<span style=color:#f92672>=</span><span style=color:#66d9ef>None</span>)
+</span></span></code></pre></div><ul><li><code>start</code>: 시작 값</li><li><code>limit</code>: 끝 값</li><li><code>delta</code>: 증가량</li><li><code>name</code>: 텐서의 이름</li></ul><h3 id=변수-텐서variable-tensor>변수 텐서(Variable Tensor)</h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#f92672>import</span> tensorflow <span style=color:#66d9ef>as</span> tf
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 변수형 텐서 생성</span>
+</span></span><span style=display:flex><span>tensor_f <span style=color:#f92672>=</span> tf<span style=color:#f92672>.</span>Variable(initial_value<span style=color:#f92672>=</span><span style=color:#66d9ef>None</span>, dtype<span style=color:#f92672>=</span><span style=color:#66d9ef>None</span>, name<span style=color:#f92672>=</span><span style=color:#66d9ef>None</span>)
+</span></span></code></pre></div><ul><li><code>initial_value</code>: 초기 값</li><li><code>dtype</code>: 반환되는 Tensor 타입</li><li><code>name</code>: 텐서의 이름</li></ul><h3 id=상수-텐서-생성-및-수식-정의>상수 텐서 생성 및 수식 정의</h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#f92672>import</span> tensorflow <span style=color:#66d9ef>as</span> tf
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 상수 텐서 생성</span>
+</span></span><span style=display:flex><span>a <span style=color:#f92672>=</span> tf<span style=color:#f92672>.</span>constant([<span style=color:#ae81ff>1</span>, <span style=color:#ae81ff>0</span>], dtype<span style=color:#f92672>=</span>tf<span style=color:#f92672>.</span>float32)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 수식 정의</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>def</span> <span style=color:#a6e22e>forward</span>(x):
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> W <span style=color:#f92672>*</span> x <span style=color:#f92672>+</span> b
+</span></span></code></pre></div><h3 id=정의된-수식을-활용한-연산>정의된 수식을 활용한 연산</h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#75715e># 텐서 계산 및 출력</span>
+</span></span><span style=display:flex><span>output <span style=color:#f92672>=</span> forward(a)
+</span></span><span style=display:flex><span>print(output)
+</span></span></code></pre></div><pre tabindex=0><code>tf.Tensor(
 [[1. 0.]
  [1. 0.]], shape=(2, 2), dtype=float32)
-</code></pre><hr>
-<h2 id="4-텐서플로우로-딥러닝-모델-구현하기">4. 텐서플로우로 딥러닝 모델 구현하기
-</h2><h3 id="딥러닝-모델-구현-순서">딥러닝 모델 구현 순서
-</h3><p>딥러닝 모델은 다음과 같은 순서로 구현합니다.</p>
-<ol>
-<li>데이터셋 준비하기</li>
-<li>딥러닝 모델 구축하기</li>
-<li>모델 학습시키기</li>
-<li>평가 및 예측하기</li>
-</ol>
-<h3 id="1-데이터셋-준비하기--epoch와-batch">1. 데이터셋 준비하기 : Epoch와 Batch
-</h3><ul>
-<li><strong>Epoch</strong>: 한 번의 epoch는 전체 데이터 셋에 대해 한 번 학습을 완료한 상태를 의미합니다.</li>
-<li><strong>Batch</strong>: 나뉘어진 데이터 셋으로, 보통 mini-batch라고 표현합니다. <strong>iteration</strong>은 epoch를 나누어서 실행하는 횟수를 의미합니다.</li>
-</ul>
-<p><strong>예시</strong>: 총 데이터가 1,000개이고 Batch size가 100이라면</p>
-<ul>
-<li>1 iteration = 100개 데이터에 대해서 학습</li>
-<li>1 epoch = 1000 / 100 = 10 iteration</li>
-</ul>
-<p><strong>데이터셋 준비하기 코드 예시</strong></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>data <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>random<span style="color:#f92672">.</span>sample((<span style="color:#ae81ff">100</span>, <span style="color:#ae81ff">2</span>))
-</span></span><span style="display:flex;"><span>labels <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>random<span style="color:#f92672">.</span>sample((<span style="color:#ae81ff">100</span>, <span style="color:#ae81ff">1</span>))
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># numpy array로부터 데이터셋 생성</span>
-</span></span><span style="display:flex;"><span>dataset <span style="color:#f92672">=</span> tf<span style="color:#f92672">.</span>data<span style="color:#f92672">.</span>Dataset<span style="color:#f92672">.</span>from_tensor_slices((data, labels))
-</span></span><span style="display:flex;"><span>dataset <span style="color:#f92672">=</span> dataset<span style="color:#f92672">.</span>batch(<span style="color:#ae81ff">32</span>)
-</span></span></code></pre></div><p>Dataset API를 사용하여 딥러닝 모델용 데이터 셋을 생성합니다.</p>
-<h3 id="2-딥러닝-모델-구축하기--고수준-api-활용-keras">2. 딥러닝 모델 구축하기 : 고수준 API 활용 (Keras)
-</h3><p><strong>Keras</strong>는 텐서플로우의 패키지로 제공되는 고수준 API로, 딥러닝 모델을 간단하고 빠르게 구현할 수 있게 해줍니다.</p>
-<p><strong>딥러닝 모델 구축을 위한 Keras 메소드</strong></p>
-<p>모델 클래스 객체 생성:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>tf<span style="color:#f92672">.</span>keras<span style="color:#f92672">.</span>models<span style="color:#f92672">.</span>Sequential()
-</span></span></code></pre></div><p>모델의 각 Layer 구성:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>tf<span style="color:#f92672">.</span>keras<span style="color:#f92672">.</span>layers<span style="color:#f92672">.</span>Dense(units, activation)
-</span></span></code></pre></div><ul>
-<li><code>units</code>: 레이어 안의 Node의 수</li>
-<li><code>activation</code>: 적용할 activation 함수 설정</li>
-</ul>
-<p><strong>Input Layer의 입력 형태 지정하기</strong></p>
-<p>가장 첫 번째 층인 Input Layer는 입력 형태에 대한 정보가 필요하므로, <code>input_shape</code> 또는 <code>input_dim</code> 인자를 설정해야 합니다.</p>
-<p><strong>모델 구축하기 코드 예시 (1) : 리스트 방식</strong></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>model <span style="color:#f92672">=</span> tf<span style="color:#f92672">.</span>keras<span style="color:#f92672">.</span>models<span style="color:#f92672">.</span>Sequential([
-</span></span><span style="display:flex;"><span>    tf<span style="color:#f92672">.</span>keras<span style="color:#f92672">.</span>layers<span style="color:#f92672">.</span>Dense(<span style="color:#ae81ff">10</span>, input_dim<span style="color:#f92672">=</span><span style="color:#ae81ff">2</span>, activation<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;sigmoid&#39;</span>),
-</span></span><span style="display:flex;"><span>    tf<span style="color:#f92672">.</span>keras<span style="color:#f92672">.</span>layers<span style="color:#f92672">.</span>Dense(<span style="color:#ae81ff">10</span>, activation<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;sigmoid&#39;</span>),
-</span></span><span style="display:flex;"><span>    tf<span style="color:#f92672">.</span>keras<span style="color:#f92672">.</span>layers<span style="color:#f92672">.</span>Dense(<span style="color:#ae81ff">1</span>, activation<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;sigmoid&#39;</span>),
-</span></span><span style="display:flex;"><span>])
-</span></span></code></pre></div><p><strong>모델에 Layer 추가하기</strong></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>[model]<span style="color:#f92672">.</span>add(tf<span style="color:#f92672">.</span>keras<span style="color:#f92672">.</span>layers<span style="color:#f92672">.</span>Dense(units, activation))
-</span></span></code></pre></div><p><strong>모델 구축하기 코드 예시 (2) : add() 방식</strong></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>model <span style="color:#f92672">=</span> tf<span style="color:#f92672">.</span>keras<span style="color:#f92672">.</span>models<span style="color:#f92672">.</span>Sequential()
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>model<span style="color:#f92672">.</span>add(tf<span style="color:#f92672">.</span>keras<span style="color:#f92672">.</span>layers<span style="color:#f92672">.</span>Dense(<span style="color:#ae81ff">10</span>, input_dim<span style="color:#f92672">=</span><span style="color:#ae81ff">2</span>, activation<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;sigmoid&#39;</span>))
-</span></span><span style="display:flex;"><span>model<span style="color:#f92672">.</span>add(tf<span style="color:#f92672">.</span>keras<span style="color:#f92672">.</span>layers<span style="color:#f92672">.</span>Dense(<span style="color:#ae81ff">10</span>, activation<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;sigmoid&#39;</span>))
-</span></span><span style="display:flex;"><span>model<span style="color:#f92672">.</span>add(tf<span style="color:#f92672">.</span>keras<span style="color:#f92672">.</span>layers<span style="color:#f92672">.</span>Dense(<span style="color:#ae81ff">1</span>, activation<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;sigmoid&#39;</span>))
-</span></span></code></pre></div><h3 id="3-딥러닝-모델-학습시키기--keras-메소드">3. 딥러닝 모델 학습시키기 : Keras 메소드
-</h3><p><strong>모델 학습 방식을 설정하기 위한 함수</strong></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>[model]<span style="color:#f92672">.</span>compile(optimizer, loss)
-</span></span></code></pre></div><ul>
-<li><code>optimizer</code>: 모델 학습 최적화 방법</li>
-<li><code>loss</code>: 손실 함수 설정</li>
-</ul>
-<p><strong>모델을 학습시키기 위한 함수</strong></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>[model]<span style="color:#f92672">.</span>fit(x, y)
-</span></span></code></pre></div><ul>
-<li><code>x</code>: 학습 데이터</li>
-<li><code>y</code>: 학습 데이터의 label</li>
-</ul>
-<p><strong>딥러닝 모델 학습시키기 코드 예시</strong></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>model<span style="color:#f92672">.</span>compile(loss<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;mean_squared_error&#39;</span>, optimizer<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;SGD&#39;</span>)
-</span></span><span style="display:flex;"><span>model<span style="color:#f92672">.</span>fit(dataset, epochs<span style="color:#f92672">=</span><span style="color:#ae81ff">100</span>)
-</span></span></code></pre></div><h3 id="4-평가-및-예측하기--keras-메소드">4. 평가 및 예측하기 : Keras 메소드
-</h3><p><strong>모델을 평가하기 위한 메소드</strong></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>[model]<span style="color:#f92672">.</span>evaluate(x, y)
-</span></span></code></pre></div><ul>
-<li><code>x</code>: 테스트 데이터</li>
-<li><code>y</code>: 테스트 데이터의 label</li>
-</ul>
-<p><strong>모델로 예측을 수행하기 위한 함수</strong></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>[model]<span style="color:#f92672">.</span>predict(x)
-</span></span></code></pre></div><ul>
-<li><code>x</code>: 예측하고자 하는 데이터</li>
-</ul>
-<p><strong>평가 및 예측하기 코드 예시</strong></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># 테스트 데이터 준비하기</span>
-</span></span><span style="display:flex;"><span>dataset_test <span style="color:#f92672">=</span> tf<span style="color:#f92672">.</span>data<span style="color:#f92672">.</span>Dataset<span style="color:#f92672">.</span>from_tensor_slices((data_test, labels_test))
-</span></span><span style="display:flex;"><span>dataset_test <span style="color:#f92672">=</span> dataset<span style="color:#f92672">.</span>batch(<span style="color:#ae81ff">32</span>)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># 모델 평가 및 예측하기</span>
-</span></span><span style="display:flex;"><span>model<span style="color:#f92672">.</span>evaluate(dataset_test)
-</span></span><span style="display:flex;"><span>predicted_labels_test <span style="color:#f92672">=</span> model<span style="color:#f92672">.</span>predict(data_test)
-</span></span></code></pre></div><hr>
-<h2 id="마무리-정리">마무리 정리
-</h2><p>이번 글에서는 딥러닝 모델의 학습 원리(손실 함수와 최적화, 순전파와 역전파)부터 텐서플로우의 개념, 그리고 Keras를 활용한 실제 딥러닝 모델 구현 순서(데이터셋 준비 → 모델 구축 → 학습 → 평가 및 예측)까지 정리해 보았습니다.</p>
-<p>다음은 딥러닝 학습의 문제점에서 살펴보겠습니다.</p>
-
-</section>
-
-
-    <footer class="article-meta article-footer">
-    
-
-    </footer>
-
-
-    
-        <link 
-                rel="stylesheet" 
-                href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI&#43;WdtXRGWt2kTvGFasHpSy3SV"crossorigin="anonymous"
-            ><script 
-                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG&#43;vnGctmUb0ZY0l8"crossorigin="anonymous"
-                defer
-                >
-            </script><script 
-                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"integrity="sha384-&#43;VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4&#43;/RRE05"crossorigin="anonymous"
-                defer
-                >
-            </script><script>
-    window.addEventListener("DOMContentLoaded", () => {
-        const elementsToRender = [".main-article", ".widget--toc"];
-
-        elementsToRender.forEach(selector => {
-            const element = document.querySelector(selector);
-            if (element) {
-                renderMathInElement(element, {
-                    delimiters: [
-                        { left: "$$", right: "$$", display: true },
-                        { left: "$", right: "$", display: false },
-                        { left: "\\(", right: "\\)", display: false },
-                        { left: "\\[", right: "\\]", display: true }
-                    ],
-                    ignoredClasses: ["gist"]
-                });
-            }
-        });
-    });
-</script>
-    
-</article>
-
-    
-
-    
-<nav class="article-prev-next">
-  
-  <a class="prev-next-card prev" href="/data-analysis/python_data_analysis_28/">
-    <div class="direction">← 이전 글</div>
-    <div class="title">[딥러닝 기초] 퍼셉트론(Perceptron)</div>
-  </a>
-  
-
-  
-  <a class="prev-next-card next" href="/data-analysis/python_data_analysis_30/">
-    <div class="direction">다음 글 →</div>
-    <div class="title">[딥러닝 기초] 딥러닝 학습의 문제점</div>
-  </a>
-  
-</nav>
-
-
-    
-
-     
-    
-        
-
-
-    
-
-    <footer class="site-footer">
-    <section class="copyright">
-        &copy; 
-        
-        2026 LucasPark Blog
-    </section>
-    
-    <section class="powerby">
-        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
-        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="4.0.3">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
-    </section>
-</footer>
-
-
-    
-
-
-
-<script type="module">
+</code></pre><hr><h2 id=4-텐서플로우로-딥러닝-모델-구현하기>4. 텐서플로우로 딥러닝 모델 구현하기</h2><h3 id=딥러닝-모델-구현-순서>딥러닝 모델 구현 순서</h3><p>딥러닝 모델은 다음과 같은 순서로 구현합니다.</p><ol><li>데이터셋 준비하기</li><li>딥러닝 모델 구축하기</li><li>모델 학습시키기</li><li>평가 및 예측하기</li></ol><h3 id=1-데이터셋-준비하기--epoch와-batch>1. 데이터셋 준비하기 : Epoch와 Batch</h3><ul><li><strong>Epoch</strong>: 한 번의 epoch는 전체 데이터 셋에 대해 한 번 학습을 완료한 상태를 의미합니다.</li><li><strong>Batch</strong>: 나뉘어진 데이터 셋으로, 보통 mini-batch라고 표현합니다. <strong>iteration</strong>은 epoch를 나누어서 실행하는 횟수를 의미합니다.</li></ul><p><strong>예시</strong>: 총 데이터가 1,000개이고 Batch size가 100이라면</p><ul><li>1 iteration = 100개 데이터에 대해서 학습</li><li>1 epoch = 1000 / 100 = 10 iteration</li></ul><p><strong>데이터셋 준비하기 코드 예시</strong></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-python data-lang=python><span style=display:flex><span>data <span style=color:#f92672>=</span> np<span style=color:#f92672>.</span>random<span style=color:#f92672>.</span>sample((<span style=color:#ae81ff>100</span>, <span style=color:#ae81ff>2</span>))
+</span></span><span style=display:flex><span>labels <span style=color:#f92672>=</span> np<span style=color:#f92672>.</span>random<span style=color:#f92672>.</span>sample((<span style=color:#ae81ff>100</span>, <span style=color:#ae81ff>1</span>))
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># numpy array로부터 데이터셋 생성</span>
+</span></span><span style=display:flex><span>dataset <span style=color:#f92672>=</span> tf<span style=color:#f92672>.</span>data<span style=color:#f92672>.</span>Dataset<span style=color:#f92672>.</span>from_tensor_slices((data, labels))
+</span></span><span style=display:flex><span>dataset <span style=color:#f92672>=</span> dataset<span style=color:#f92672>.</span>batch(<span style=color:#ae81ff>32</span>)
+</span></span></code></pre></div><p>Dataset API를 사용하여 딥러닝 모델용 데이터 셋을 생성합니다.</p><h3 id=2-딥러닝-모델-구축하기--고수준-api-활용-keras>2. 딥러닝 모델 구축하기 : 고수준 API 활용 (Keras)</h3><p><strong>Keras</strong>는 텐서플로우의 패키지로 제공되는 고수준 API로, 딥러닝 모델을 간단하고 빠르게 구현할 수 있게 해줍니다.</p><p><strong>딥러닝 모델 구축을 위한 Keras 메소드</strong></p><p>모델 클래스 객체 생성:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-python data-lang=python><span style=display:flex><span>tf<span style=color:#f92672>.</span>keras<span style=color:#f92672>.</span>models<span style=color:#f92672>.</span>Sequential()
+</span></span></code></pre></div><p>모델의 각 Layer 구성:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-python data-lang=python><span style=display:flex><span>tf<span style=color:#f92672>.</span>keras<span style=color:#f92672>.</span>layers<span style=color:#f92672>.</span>Dense(units, activation)
+</span></span></code></pre></div><ul><li><code>units</code>: 레이어 안의 Node의 수</li><li><code>activation</code>: 적용할 activation 함수 설정</li></ul><p><strong>Input Layer의 입력 형태 지정하기</strong></p><p>가장 첫 번째 층인 Input Layer는 입력 형태에 대한 정보가 필요하므로, <code>input_shape</code> 또는 <code>input_dim</code> 인자를 설정해야 합니다.</p><p><strong>모델 구축하기 코드 예시 (1) : 리스트 방식</strong></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-python data-lang=python><span style=display:flex><span>model <span style=color:#f92672>=</span> tf<span style=color:#f92672>.</span>keras<span style=color:#f92672>.</span>models<span style=color:#f92672>.</span>Sequential([
+</span></span><span style=display:flex><span>    tf<span style=color:#f92672>.</span>keras<span style=color:#f92672>.</span>layers<span style=color:#f92672>.</span>Dense(<span style=color:#ae81ff>10</span>, input_dim<span style=color:#f92672>=</span><span style=color:#ae81ff>2</span>, activation<span style=color:#f92672>=</span><span style=color:#e6db74>&#39;sigmoid&#39;</span>),
+</span></span><span style=display:flex><span>    tf<span style=color:#f92672>.</span>keras<span style=color:#f92672>.</span>layers<span style=color:#f92672>.</span>Dense(<span style=color:#ae81ff>10</span>, activation<span style=color:#f92672>=</span><span style=color:#e6db74>&#39;sigmoid&#39;</span>),
+</span></span><span style=display:flex><span>    tf<span style=color:#f92672>.</span>keras<span style=color:#f92672>.</span>layers<span style=color:#f92672>.</span>Dense(<span style=color:#ae81ff>1</span>, activation<span style=color:#f92672>=</span><span style=color:#e6db74>&#39;sigmoid&#39;</span>),
+</span></span><span style=display:flex><span>])
+</span></span></code></pre></div><p><strong>모델에 Layer 추가하기</strong></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-python data-lang=python><span style=display:flex><span>[model]<span style=color:#f92672>.</span>add(tf<span style=color:#f92672>.</span>keras<span style=color:#f92672>.</span>layers<span style=color:#f92672>.</span>Dense(units, activation))
+</span></span></code></pre></div><p><strong>모델 구축하기 코드 예시 (2) : add() 방식</strong></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-python data-lang=python><span style=display:flex><span>model <span style=color:#f92672>=</span> tf<span style=color:#f92672>.</span>keras<span style=color:#f92672>.</span>models<span style=color:#f92672>.</span>Sequential()
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>model<span style=color:#f92672>.</span>add(tf<span style=color:#f92672>.</span>keras<span style=color:#f92672>.</span>layers<span style=color:#f92672>.</span>Dense(<span style=color:#ae81ff>10</span>, input_dim<span style=color:#f92672>=</span><span style=color:#ae81ff>2</span>, activation<span style=color:#f92672>=</span><span style=color:#e6db74>&#39;sigmoid&#39;</span>))
+</span></span><span style=display:flex><span>model<span style=color:#f92672>.</span>add(tf<span style=color:#f92672>.</span>keras<span style=color:#f92672>.</span>layers<span style=color:#f92672>.</span>Dense(<span style=color:#ae81ff>10</span>, activation<span style=color:#f92672>=</span><span style=color:#e6db74>&#39;sigmoid&#39;</span>))
+</span></span><span style=display:flex><span>model<span style=color:#f92672>.</span>add(tf<span style=color:#f92672>.</span>keras<span style=color:#f92672>.</span>layers<span style=color:#f92672>.</span>Dense(<span style=color:#ae81ff>1</span>, activation<span style=color:#f92672>=</span><span style=color:#e6db74>&#39;sigmoid&#39;</span>))
+</span></span></code></pre></div><h3 id=3-딥러닝-모델-학습시키기--keras-메소드>3. 딥러닝 모델 학습시키기 : Keras 메소드</h3><p><strong>모델 학습 방식을 설정하기 위한 함수</strong></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-python data-lang=python><span style=display:flex><span>[model]<span style=color:#f92672>.</span>compile(optimizer, loss)
+</span></span></code></pre></div><ul><li><code>optimizer</code>: 모델 학습 최적화 방법</li><li><code>loss</code>: 손실 함수 설정</li></ul><p><strong>모델을 학습시키기 위한 함수</strong></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-python data-lang=python><span style=display:flex><span>[model]<span style=color:#f92672>.</span>fit(x, y)
+</span></span></code></pre></div><ul><li><code>x</code>: 학습 데이터</li><li><code>y</code>: 학습 데이터의 label</li></ul><p><strong>딥러닝 모델 학습시키기 코드 예시</strong></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-python data-lang=python><span style=display:flex><span>model<span style=color:#f92672>.</span>compile(loss<span style=color:#f92672>=</span><span style=color:#e6db74>&#39;mean_squared_error&#39;</span>, optimizer<span style=color:#f92672>=</span><span style=color:#e6db74>&#39;SGD&#39;</span>)
+</span></span><span style=display:flex><span>model<span style=color:#f92672>.</span>fit(dataset, epochs<span style=color:#f92672>=</span><span style=color:#ae81ff>100</span>)
+</span></span></code></pre></div><h3 id=4-평가-및-예측하기--keras-메소드>4. 평가 및 예측하기 : Keras 메소드</h3><p><strong>모델을 평가하기 위한 메소드</strong></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-python data-lang=python><span style=display:flex><span>[model]<span style=color:#f92672>.</span>evaluate(x, y)
+</span></span></code></pre></div><ul><li><code>x</code>: 테스트 데이터</li><li><code>y</code>: 테스트 데이터의 label</li></ul><p><strong>모델로 예측을 수행하기 위한 함수</strong></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-python data-lang=python><span style=display:flex><span>[model]<span style=color:#f92672>.</span>predict(x)
+</span></span></code></pre></div><ul><li><code>x</code>: 예측하고자 하는 데이터</li></ul><p><strong>평가 및 예측하기 코드 예시</strong></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#75715e># 테스트 데이터 준비하기</span>
+</span></span><span style=display:flex><span>dataset_test <span style=color:#f92672>=</span> tf<span style=color:#f92672>.</span>data<span style=color:#f92672>.</span>Dataset<span style=color:#f92672>.</span>from_tensor_slices((data_test, labels_test))
+</span></span><span style=display:flex><span>dataset_test <span style=color:#f92672>=</span> dataset<span style=color:#f92672>.</span>batch(<span style=color:#ae81ff>32</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 모델 평가 및 예측하기</span>
+</span></span><span style=display:flex><span>model<span style=color:#f92672>.</span>evaluate(dataset_test)
+</span></span><span style=display:flex><span>predicted_labels_test <span style=color:#f92672>=</span> model<span style=color:#f92672>.</span>predict(data_test)
+</span></span></code></pre></div><hr><h2 id=마무리-정리>마무리 정리</h2><p>이번 글에서는 딥러닝 모델의 학습 원리(손실 함수와 최적화, 순전파와 역전파)부터 텐서플로우의 개념, 그리고 Keras를 활용한 실제 딥러닝 모델 구현 순서(데이터셋 준비 → 모델 구축 → 학습 → 평가 및 예측)까지 정리해 보았습니다.</p><p>다음은 딥러닝 학습의 문제점에서 살펴보겠습니다.</p></section><footer class="article-meta article-footer"></footer><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css integrity=sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV crossorigin=anonymous><script src=https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js integrity=sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG+vnGctmUb0ZY0l8 crossorigin=anonymous defer></script><script src=https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js integrity=sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05 crossorigin=anonymous defer></script><script>window.addEventListener("DOMContentLoaded",()=>{const e=[".main-article",".widget--toc"];e.forEach(e=>{const t=document.querySelector(e);t&&renderMathInElement(t,{delimiters:[{left:"$$",right:"$$",display:!0},{left:"$",right:"$",display:!1},{left:"\\(",right:"\\)",display:!1},{left:"\\[",right:"\\]",display:!0}],ignoredClasses:["gist"]})})})</script></article><nav class=article-prev-next><a class="prev-next-card prev" href=/data-analysis/python_data_analysis_28/><div class=direction>← 이전 글</div><div class=title>[딥러닝 기초] 퍼셉트론(Perceptron)</div></a><a class="prev-next-card next" href=/data-analysis/python_data_analysis_30/><div class=direction>다음 글 →</div><div class=title>[딥러닝 기초] 딥러닝 학습의 문제점</div></a></nav><footer class=site-footer><section class=copyright>&copy;
+2026 LucasPark Blog</section><section class=powerby>Built with <a href=https://gohugo.io/ target=_blank rel=noopener>Hugo</a><br>Theme <b><a href=https://github.com/CaiJimmy/hugo-theme-stack target=_blank rel=noopener data-version=4.0.3>Stack</a></b> designed by <a href=https://jimmycai.com target=_blank rel=noopener>Jimmy</a></section></footer><script type=module>
     import gallery from '\/ts\/gallery.js';
 
     const articleContent = document.querySelector('.article-content');
@@ -599,15 +96,4 @@
         });
         lightbox.init();
     }
-</script>
-
-    
-
-            </main>
-        </div>
-        
-<script type="text/javascript" src="/ts/main.1ff1e5fdc4e178ed422e50aa407526dc552f26342d729343fded19416194382c.js" defer></script>
-
-
-    </body>
-</html>
+</script></main></div><script type=text/javascript src=/ts/main.1ff1e5fdc4e178ed422e50aa407526dc552f26342d729343fded19416194382c.js defer></script></body></html>
