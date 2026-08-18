@@ -1,757 +1,151 @@
-<!DOCTYPE html>
-<html lang="ko-kr" dir="ltr">
-    <head><meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content=" Voting → Bagging → Random Forest → Boosting → AdaBoost → Gradient Boosting\n1. Ensemble Learning이란? 하나의 모델만 사용하는 대신\n여러 모델의 예측을 결합하여 더 안정적이거나 강력한 모델을 만드는 방법\n입니다.\n예:\nLogistic → 고양이 SVM → 고양이 Tree → 강아지 RF → 고양이 다수결을 사용하면 최종 결과는 고양이가 됩니다.\n2. Ensemble의 큰 두 종류 앙상블을 크게 보면 두 방향으로 나눌 수 있습니다.\nAggregation 여러 모델의 결과를 합친다.\n대표:\nVoting Bagging Random Forest Boosting 모델을 순차적으로 학습하면서 이전 모델의 약점을 보완합니다.\n">
-<title>[머신러닝 분류 모델] Ensemble Learning</title>
-
-
-<link rel="canonical" href="https://lucaspark-10.github.io/data-analysis/python_data_analysis_40/">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
-
-
-<link rel="stylesheet" href="/scss/style.min.de7e6698ac54e40edf7f3d56f131b6bbacde7bdf742f829e1185371a8af17315.css"><meta property='og:title' content="[머신러닝 분류 모델] Ensemble Learning">
-<meta property='og:description' content=" Voting → Bagging → Random Forest → Boosting → AdaBoost → Gradient Boosting\n1. Ensemble Learning이란? 하나의 모델만 사용하는 대신\n여러 모델의 예측을 결합하여 더 안정적이거나 강력한 모델을 만드는 방법\n입니다.\n예:\nLogistic → 고양이 SVM → 고양이 Tree → 강아지 RF → 고양이 다수결을 사용하면 최종 결과는 고양이가 됩니다.\n2. Ensemble의 큰 두 종류 앙상블을 크게 보면 두 방향으로 나눌 수 있습니다.\nAggregation 여러 모델의 결과를 합친다.\n대표:\nVoting Bagging Random Forest Boosting 모델을 순차적으로 학습하면서 이전 모델의 약점을 보완합니다.\n">
-<meta property='og:url' content='https://lucaspark-10.github.io/data-analysis/python_data_analysis_40/'>
-<meta property='og:site_name' content='LucasPark Blog'>
-<meta property='og:type' content='article'><meta property='article:section' content='Data-Analysis' /><meta property='article:published_time' content='2026-08-17T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2026-08-17T00:00:00&#43;00:00'/>
-<meta name="twitter:title" content="[머신러닝 분류 모델] Ensemble Learning">
-<meta name="twitter:description" content=" Voting → Bagging → Random Forest → Boosting → AdaBoost → Gradient Boosting\n1. Ensemble Learning이란? 하나의 모델만 사용하는 대신\n여러 모델의 예측을 결합하여 더 안정적이거나 강력한 모델을 만드는 방법\n입니다.\n예:\nLogistic → 고양이 SVM → 고양이 Tree → 강아지 RF → 고양이 다수결을 사용하면 최종 결과는 고양이가 됩니다.\n2. Ensemble의 큰 두 종류 앙상블을 크게 보면 두 방향으로 나눌 수 있습니다.\nAggregation 여러 모델의 결과를 합친다.\n대표:\nVoting Bagging Random Forest Boosting 모델을 순차적으로 학습하면서 이전 모델의 약점을 보완합니다.\n">
-      <script async src="https://www.googletagmanager.com/gtag/js?id=G-EVK5B22CB3"></script>
-      <script>
-        var doNotTrack = false;
-        if ( true ) {
-          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
-          var doNotTrack = (dnt == "1" || dnt == "yes");
-        }
-        if (!doNotTrack) {
-          window.dataLayer = window.dataLayer || [];
-          function gtag(){dataLayer.push(arguments);}
-          gtag('js', new Date());
-          gtag('config', 'G-EVK5B22CB3');
-        }
-      </script>
-    </head>
-    <body class="
-    article-page
-    ">
-    <script>
-        (function() {
-            const colorSchemeKey = 'StackColorScheme';
-            if(!localStorage.getItem(colorSchemeKey)){
-                localStorage.setItem(colorSchemeKey, "auto");
-            }
-        })();
-    </script><script>
-    (function() {
-        const colorSchemeKey = 'StackColorScheme';
-        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
-        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
-
-        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
-            
-
-            document.documentElement.dataset.scheme = 'dark';
-        } else {
-            document.documentElement.dataset.scheme = 'light';
-        }
-    })();
-</script>
-<div class="container main-container flex on-phone--column compact"><aside class="sidebar left-sidebar sticky ">
-    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
-        <span class="hamburger-box">
-            <span class="hamburger-inner"></span>
-        </span>
-    </button>
-
-    <header>
-        
-        
-        <div class="site-meta">
-            <h1 class="site-name"><a href="/">LucasPark Blog</a></h1>
-            <h2 class="site-description">Lucas Park의 개인 블로그</h2>
-        </div>
-    </header><ol class="menu" id="main-menu">
-        
-        
-        
-        <li >
-            <a href='/' >
-                
-                <span>Home</span>
-            </a>
-        </li>
-        
-        
-        <li >
-            <a href='/posts/' >
-                
-                <span>Posts</span>
-            </a>
-        </li>
-        
-        
-        <li >
-            <a href='/git-study/' >
-                
-                <span>Git-study</span>
-            </a>
-        </li>
-        
-        
-        <li >
-            <a href='/data-analysis/' >
-                
-                <span>Data Analysis</span>
-            </a>
-        </li>
-        
-        
-        <li >
-            <a href='/gold-news-and-analysis/' >
-                
-                <span>Gold Price Check &amp; Analysis</span>
-            </a>
-        </li>
-        
-        
-        <li >
-            <a href='/atmospheric-environment/' >
-                
-                <span>Atmospheric Environment</span>
-            </a>
-        </li>
-        
-        <li class="menu-bottom-section">
-            <ol class="menu">
-
-                
-                    <li id="dark-mode-toggle">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-  <path stroke="none" d="M0 0h24v24H0z"/>
-  <circle cx="8" cy="12" r="2" />
-  <rect x="2" y="6" width="20" height="12" rx="6" />
-</svg>
-
-
-
-                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-  <path stroke="none" d="M0 0h24v24H0z"/>
-  <circle cx="16" cy="12" r="2" />
-  <rect x="2" y="6" width="20" height="12" rx="6" />
-</svg>
-
-
-
-                        <span>Dark Mode</span>
-                    </li>
-                
-            </ol>
-        </li>
-    </ol>
-</aside>
-
-    
-
-            <main class="main full-width">
-    <article class="main-article">
-    <header class="article-header">
-
-    <div class="article-details">
-    
-
-    <div class="article-title-wrapper">
-        <h2 class="article-title">
-            <a href="/data-analysis/python_data_analysis_40/">[머신러닝 분류 모델] Ensemble Learning</a>
-        </h2>
-    
-        
-    </div>
-
-    
-    
-    
-    
-    
-    
-    
-    <footer class="article-meta">
-        
-            <div class="inline-meta">
-                
-                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-  <path stroke="none" d="M0 0h24v24H0z"/>
-  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
-  <circle cx="18" cy="18" r="4" />
-  <path d="M15 3v4" />
-  <path d="M7 3v4" />
-  <path d="M3 11h16" />
-  <path d="M18 16.496v1.504l1 1" />
-</svg>
-                    <time class="article-time--published" datetime='2026-08-17T00:00:00Z'>2026년 8월 17일 월요일</time>
-                
-
-                
-            </div>
-        
-
-        
-
-        
-    </footer>
-    
-</div>
-
-</header>
-
-    
-
-    <section class="article-content">
-    
-    
-    
-    <blockquote>
-        <p>Voting → Bagging → Random Forest → Boosting → AdaBoost → Gradient Boosting</p>
-
-    </blockquote>
-<hr>
-<h1 id="1-ensemble-learning이란">1. Ensemble Learning이란?
-</h1><p>하나의 모델만 사용하는 대신</p>
-
-    <blockquote>
-        <p><strong>여러 모델의 예측을 결합하여 더 안정적이거나 강력한 모델을 만드는 방법</strong></p>
-
-    </blockquote>
-<p>입니다.</p>
-<p>예:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>Logistic → 고양이
-</span></span><span style="display:flex;"><span>SVM      → 고양이
-</span></span><span style="display:flex;"><span>Tree     → 강아지
-</span></span><span style="display:flex;"><span>RF       → 고양이
-</span></span></code></pre></div><p>다수결을 사용하면 최종 결과는 고양이가 됩니다.</p>
-<hr>
-<h1 id="2-ensemble의-큰-두-종류">2. Ensemble의 큰 두 종류
-</h1><p>앙상블을 크게 보면 두 방향으로 나눌 수 있습니다.</p>
-<h2 id="aggregation">Aggregation
-</h2><p>여러 모델의 결과를 <strong>합친다.</strong></p>
-<p>대표:</p>
-<ul>
-<li>Voting</li>
-<li>Bagging</li>
-<li>Random Forest</li>
-</ul>
-<h2 id="boosting">Boosting
-</h2><p>모델을 순차적으로 학습하면서 <strong>이전 모델의 약점을 보완합니다.</strong></p>
-<p>대표:</p>
-<ul>
-<li>AdaBoost</li>
-<li>Gradient Boosting</li>
-</ul>
-<hr>
-<h1 id="3-voting">3. Voting
-</h1><h2 id="hard-voting">Hard Voting
-</h2><p>각 모델의 최종 클래스를 투표합니다.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>모델 1 → A
-</span></span><span style="display:flex;"><span>모델 2 → A
-</span></span><span style="display:flex;"><span>모델 3 → B
-</span></span></code></pre></div><p>→ A</p>
-<h2 id="soft-voting">Soft Voting
-</h2><p>각 모델이 출력한 확률을 이용합니다.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>Model 1
-</span></span><span style="display:flex;"><span>A = 0.8
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>Model 2
-</span></span><span style="display:flex;"><span>A = 0.7
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>Model 3
-</span></span><span style="display:flex;"><span>A = 0.6
-</span></span></code></pre></div><p>각 모델의 확률을 평균 또는 가중 평균하여 최종 클래스를 결정합니다.</p>
-
-    <blockquote>
-        <p>Soft Voting은 모델의 확률 정보를 활용한다는 점이 핵심입니다.</p>
-
-    </blockquote>
-<hr>
-<h1 id="4-bagging">4. Bagging
-</h1><p>Bagging은 <strong>Bootstrap Aggregating</strong>의 줄임말입니다.</p>
-<p>핵심은</p>
-
-    <blockquote>
-        <p>같은 종류의 모델을 여러 개 만들되 서로 다른 Bootstrap 데이터로 학습시키고 결과를 결합하는 것</p>
-
-    </blockquote>
-<p>입니다.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>원본 데이터
-</span></span><span style="display:flex;"><span>     ↓
-</span></span><span style="display:flex;"><span>Bootstrap Sampling
-</span></span><span style="display:flex;"><span>     ↓
-</span></span><span style="display:flex;"><span> ┌──────┬──────┬──────┐
-</span></span><span style="display:flex;"><span> ↓      ↓      ↓
-</span></span><span style="display:flex;"><span>Tree1  Tree2  Tree3 ...
-</span></span><span style="display:flex;"><span> └──────┴──────┴──────┘
-</span></span><span style="display:flex;"><span>          ↓
-</span></span><span style="display:flex;"><span>       결과 취합
-</span></span></code></pre></div><hr>
-<h1 id="5-bootstrap">5. Bootstrap
-</h1><p>Bootstrap은 <strong>복원 추출</strong>입니다.</p>
-<p>원본 데이터가</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>A B C D E
-</span></span></code></pre></div><p>라면 Bootstrap Sample은</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>A C C E B
-</span></span></code></pre></div><p>처럼 같은 데이터가 여러 번 선택될 수 있습니다.</p>
-<p>반대로 선택되지 않은 데이터도 생긴다.</p>
-<p>이 데이터가 OOB(Out-of-Bag) 데이터다.</p>
-<p>데이터 수가 충분히 크면 약 **36.8%**의 데이터가 하나의 Bootstrap 표본에 선택되지 않는 성질이 있습니다.</p>
-<hr>
-<h1 id="6-random-forest">6. Random Forest
-</h1><p>Random Forest는 쉽게 말해</p>
-
-    <blockquote>
-        <p>Decision Tree 여러 개를 결합한 모델</p>
-
-    </blockquote>
-<p>입니다.</p>
-<p>좀 더 정확하게는</p>
-
-    <blockquote>
-        <p><strong>Decision Tree + Bootstrap Sampling + Random Feature Selection + Aggregation</strong></p>
-
-    </blockquote>
-<p>으로 이해하면 좋습니다.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>Bootstrap 데이터
-</span></span><span style="display:flex;"><span>      ↓
-</span></span><span style="display:flex;"><span>Tree 1 ← 일부 Feature
-</span></span><span style="display:flex;"><span>Tree 2 ← 일부 Feature
-</span></span><span style="display:flex;"><span>Tree 3 ← 일부 Feature
-</span></span><span style="display:flex;"><span>Tree 4 ← 일부 Feature
-</span></span><span style="display:flex;"><span>...
-</span></span><span style="display:flex;"><span>      ↓
-</span></span><span style="display:flex;"><span>Voting
-</span></span><span style="display:flex;"><span>      ↓
-</span></span><span style="display:flex;"><span>최종 예측
-</span></span></code></pre></div><p>각 Tree가 서로 다른 데이터와 Feature를 사용하게 하여 모델의 다양성을 높인다.</p>
-<hr>
-<h1 id="7-random-forest의-장점">7. Random Forest의 장점
-</h1><ul>
-<li>단일 Decision Tree보다 안정적인 경우가 많다.</li>
-<li>과적합을 줄이는 데 도움이 됩니다.</li>
-<li>비선형 관계를 처리할 수 있습니다.</li>
-<li>Feature Importance를 확인할 수 있습니다.</li>
-<li>별도의 복잡한 Feature Scaling이 필수적이지 않다.</li>
-</ul>
-<hr>
-<h1 id="8-feature-importance">8. Feature Importance
-</h1><p>Random Forest에서는 각 Feature의 상대적인 중요도를 확인할 수 있습니다.</p>
-<p>예:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>age             0.32
-</span></span><span style="display:flex;"><span>income          0.25
-</span></span><span style="display:flex;"><span>education       0.18
-</span></span><span style="display:flex;"><span>...
-</span></span></code></pre></div><p>이를 통해 모델이 어떤 변수를 중요하게 사용했는지 살펴볼 수 있습니다.</p>
-<p>다만 주의해야 합니다.</p>
-
-    <blockquote>
-        <p>Feature Importance가 높다고 해서 그 변수가 결과의 원인이라는 뜻은 아니다.</p>
-
-    </blockquote>
-<p>즉, 중요도와 인과관계는 다르다.</p>
-<hr>
-<h1 id="9-boosting">9. Boosting
-</h1><p>Bagging과 Boosting의 차이가 중요합니다.</p>
-<h2 id="bagging">Bagging
-</h2><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>Tree 1
-</span></span><span style="display:flex;"><span>Tree 2
-</span></span><span style="display:flex;"><span>Tree 3
-</span></span><span style="display:flex;"><span>Tree 4
-</span></span><span style="display:flex;"><span> ↓
-</span></span><span style="display:flex;"><span>상대적으로 독립적으로 학습
-</span></span><span style="display:flex;"><span> ↓
-</span></span><span style="display:flex;"><span>결과 취합
-</span></span></code></pre></div><h2 id="boosting-1">Boosting
-</h2><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>Model 1
-</span></span><span style="display:flex;"><span> ↓
-</span></span><span style="display:flex;"><span>오류 확인
-</span></span><span style="display:flex;"><span> ↓
-</span></span><span style="display:flex;"><span>Model 2
-</span></span><span style="display:flex;"><span> ↓
-</span></span><span style="display:flex;"><span>오류 보완
-</span></span><span style="display:flex;"><span> ↓
-</span></span><span style="display:flex;"><span>Model 3
-</span></span><span style="display:flex;"><span> ↓
-</span></span><span style="display:flex;"><span>계속 보완
-</span></span></code></pre></div><p>즉,</p>
-
-    <blockquote>
-        <p>Boosting = 이전 모델의 약점을 다음 모델이 보완</p>
-
-    </blockquote>
-<hr>
-<h1 id="10-adaboost">10. AdaBoost
-</h1><p>AdaBoost에서는 데이터마다 가중치가 있습니다.</p>
-<p>처음에는 모든 데이터가 동일한 가중치를 가진다.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>모든 데이터
-</span></span><span style="display:flex;"><span>↓
-</span></span><span style="display:flex;"><span>동일한 가중치
-</span></span></code></pre></div><p>첫 번째 모델을 학습한 뒤 틀린 데이터의 가중치를 높인다.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>모델 1
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>A 맞음
-</span></span><span style="display:flex;"><span>B 맞음
-</span></span><span style="display:flex;"><span>C 틀림
-</span></span><span style="display:flex;"><span>D 맞음
-</span></span><span style="display:flex;"><span>E 틀림
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>↓
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>C와 E의 가중치 ↑
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>↓
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>모델 2가 C와 E를 더 중요하게 학습
-</span></span></code></pre></div><h2 id="adaboost의-핵심">AdaBoost의 핵심
-</h2>
-    <blockquote>
-        <p><strong>잘못 분류된 데이터에 더 집중하면서 다음 모델을 학습합니다.</strong></p>
-
-    </blockquote>
-<hr>
-<h1 id="11-adaboost-수식">11. AdaBoost 수식
-</h1><p>가중치가 적용된 오류율:</p>
-<p>$$
+<!doctype html><html lang=ko-kr dir=ltr><head><meta charset=utf-8><meta name=viewport content='width=device-width,initial-scale=1'><meta name=description content=" Voting → Bagging → Random Forest → Boosting → AdaBoost → Gradient Boosting\n1. Ensemble Learning이란? 하나의 모델만 사용하는 대신\n여러 모델의 예측을 결합하여 더 안정적이거나 강력한 모델을 만드는 방법\n입니다.\n예:\nLogistic → 고양이 SVM → 고양이 Tree → 강아지 RF → 고양이 다수결을 사용하면 최종 결과는 고양이가 됩니다.\n2. Ensemble의 큰 두 종류 앙상블을 크게 보면 두 방향으로 나눌 수 있습니다.\nAggregation 여러 모델의 결과를 합친다.\n대표:\nVoting Bagging Random Forest Boosting 모델을 순차적으로 학습하면서 이전 모델의 약점을 보완합니다.\n"><title>[머신러닝 분류 모델] Ensemble Learning</title><link rel=canonical href=https://lucaspark-10.github.io/data-analysis/python_data_analysis_40/><link rel=preconnect href=https://fonts.googleapis.com><link rel=preconnect href=https://fonts.gstatic.com crossorigin><link rel=preload as=style href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap"><link rel=stylesheet href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap"><link rel=stylesheet href=/scss/style.min.3049ac8d8671fdccd37d32eed156f0c2ce601cd496f803d522b9f41943b21821.css><meta property='og:title' content="[머신러닝 분류 모델] Ensemble Learning"><meta property='og:description' content=" Voting → Bagging → Random Forest → Boosting → AdaBoost → Gradient Boosting\n1. Ensemble Learning이란? 하나의 모델만 사용하는 대신\n여러 모델의 예측을 결합하여 더 안정적이거나 강력한 모델을 만드는 방법\n입니다.\n예:\nLogistic → 고양이 SVM → 고양이 Tree → 강아지 RF → 고양이 다수결을 사용하면 최종 결과는 고양이가 됩니다.\n2. Ensemble의 큰 두 종류 앙상블을 크게 보면 두 방향으로 나눌 수 있습니다.\nAggregation 여러 모델의 결과를 합친다.\n대표:\nVoting Bagging Random Forest Boosting 모델을 순차적으로 학습하면서 이전 모델의 약점을 보완합니다.\n"><meta property='og:url' content='https://lucaspark-10.github.io/data-analysis/python_data_analysis_40/'><meta property='og:site_name' content='LucasPark Blog'><meta property='og:type' content='article'><meta property='article:section' content='Data-Analysis'><meta property='article:published_time' content='2026-08-17T00:00:00+00:00'><meta property='article:modified_time' content='2026-08-17T00:00:00+00:00'><meta name=twitter:title content="[머신러닝 분류 모델] Ensemble Learning"><meta name=twitter:description content=" Voting → Bagging → Random Forest → Boosting → AdaBoost → Gradient Boosting\n1. Ensemble Learning이란? 하나의 모델만 사용하는 대신\n여러 모델의 예측을 결합하여 더 안정적이거나 강력한 모델을 만드는 방법\n입니다.\n예:\nLogistic → 고양이 SVM → 고양이 Tree → 강아지 RF → 고양이 다수결을 사용하면 최종 결과는 고양이가 됩니다.\n2. Ensemble의 큰 두 종류 앙상블을 크게 보면 두 방향으로 나눌 수 있습니다.\nAggregation 여러 모델의 결과를 합친다.\n대표:\nVoting Bagging Random Forest Boosting 모델을 순차적으로 학습하면서 이전 모델의 약점을 보완합니다.\n"><script async src="https://www.googletagmanager.com/gtag/js?id=G-EVK5B22CB3"></script><script>var doNotTrack=!1,dnt=navigator.doNotTrack||window.doNotTrack||navigator.msDoNotTrack,doNotTrack=dnt=="1"||dnt=="yes";if(!doNotTrack){window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag("js",new Date),gtag("config","G-EVK5B22CB3")}</script></head><body class=article-page><script>(function(){const e="StackColorScheme";localStorage.getItem(e)||localStorage.setItem(e,"auto")})()</script><script>(function(){const t="StackColorScheme",e=localStorage.getItem(t),n=window.matchMedia("(prefers-color-scheme: dark)").matches===!0;e=="dark"||e==="auto"&&n?document.documentElement.dataset.scheme="dark":document.documentElement.dataset.scheme="light"})()</script><div class="container main-container flex on-phone--column compact"><aside class="sidebar left-sidebar sticky"><button class="hamburger hamburger--spin" type=button id=toggle-menu aria-label="Toggle Menu">
+<span class=hamburger-box><span class=hamburger-inner></span></span></button><header><div class=site-meta><h1 class=site-name><a href=/>LucasPark Blog</a></h1><h2 class=site-description>Lucas Park의 개인 블로그</h2></div></header><ol class=menu id=main-menu><li><a href=/><span>Home</span></a></li><li><a href=/posts/><span>Posts</span></a></li><li><a href=/git-study/><span>Git-study</span></a></li><li><a href=/data-analysis/><span>Data Analysis</span></a></li><li><a href=/gold-news-and-analysis/><span>Gold Price Check & Analysis</span></a></li><li><a href=/atmospheric-environment/><span>Atmospheric Environment</span></a></li><li class=menu-bottom-section><ol class=menu><li id=dark-mode-toggle><svg class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="8" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<svg class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="16" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<span>Dark Mode</span></li></ol></li></ol></aside><main class="main full-width"><article class=main-article><header class=article-header><div class=article-details><div class=article-title-wrapper><h2 class=article-title><a href=/data-analysis/python_data_analysis_40/>[머신러닝 분류 모델] Ensemble Learning</a></h2></div><footer class=article-meta><div class=inline-meta><svg class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M11.795 21H5a2 2 0 01-2-2V7a2 2 0 012-2h12a2 2 0 012 2v4"/><circle cx="18" cy="18" r="4"/><path d="M15 3v4"/><path d="M7 3v4"/><path d="M3 11h16"/><path d="M18 16.496V18l1 1"/></svg>
+<time class=article-time--published datetime=2026-08-17T00:00:00Z>2026년 8월 17일 월요일</time></div></footer></div></header><section class=article-content><blockquote><p>Voting → Bagging → Random Forest → Boosting → AdaBoost → Gradient Boosting</p></blockquote><hr><h1 id=1-ensemble-learning이란>1. Ensemble Learning이란?</h1><p>하나의 모델만 사용하는 대신</p><blockquote><p><strong>여러 모델의 예측을 결합하여 더 안정적이거나 강력한 모델을 만드는 방법</strong></p></blockquote><p>입니다.</p><p>예:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-text data-lang=text><span style=display:flex><span>Logistic → 고양이
+</span></span><span style=display:flex><span>SVM      → 고양이
+</span></span><span style=display:flex><span>Tree     → 강아지
+</span></span><span style=display:flex><span>RF       → 고양이
+</span></span></code></pre></div><p>다수결을 사용하면 최종 결과는 고양이가 됩니다.</p><hr><h1 id=2-ensemble의-큰-두-종류>2. Ensemble의 큰 두 종류</h1><p>앙상블을 크게 보면 두 방향으로 나눌 수 있습니다.</p><h2 id=aggregation>Aggregation</h2><p>여러 모델의 결과를 <strong>합친다.</strong></p><p>대표:</p><ul><li>Voting</li><li>Bagging</li><li>Random Forest</li></ul><h2 id=boosting>Boosting</h2><p>모델을 순차적으로 학습하면서 <strong>이전 모델의 약점을 보완합니다.</strong></p><p>대표:</p><ul><li>AdaBoost</li><li>Gradient Boosting</li></ul><hr><h1 id=3-voting>3. Voting</h1><h2 id=hard-voting>Hard Voting</h2><p>각 모델의 최종 클래스를 투표합니다.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-text data-lang=text><span style=display:flex><span>모델 1 → A
+</span></span><span style=display:flex><span>모델 2 → A
+</span></span><span style=display:flex><span>모델 3 → B
+</span></span></code></pre></div><p>→ A</p><h2 id=soft-voting>Soft Voting</h2><p>각 모델이 출력한 확률을 이용합니다.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-text data-lang=text><span style=display:flex><span>Model 1
+</span></span><span style=display:flex><span>A = 0.8
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>Model 2
+</span></span><span style=display:flex><span>A = 0.7
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>Model 3
+</span></span><span style=display:flex><span>A = 0.6
+</span></span></code></pre></div><p>각 모델의 확률을 평균 또는 가중 평균하여 최종 클래스를 결정합니다.</p><blockquote><p>Soft Voting은 모델의 확률 정보를 활용한다는 점이 핵심입니다.</p></blockquote><hr><h1 id=4-bagging>4. Bagging</h1><p>Bagging은 <strong>Bootstrap Aggregating</strong>의 줄임말입니다.</p><p>핵심은</p><blockquote><p>같은 종류의 모델을 여러 개 만들되 서로 다른 Bootstrap 데이터로 학습시키고 결과를 결합하는 것</p></blockquote><p>입니다.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-text data-lang=text><span style=display:flex><span>원본 데이터
+</span></span><span style=display:flex><span>     ↓
+</span></span><span style=display:flex><span>Bootstrap Sampling
+</span></span><span style=display:flex><span>     ↓
+</span></span><span style=display:flex><span> ┌──────┬──────┬──────┐
+</span></span><span style=display:flex><span> ↓      ↓      ↓
+</span></span><span style=display:flex><span>Tree1  Tree2  Tree3 ...
+</span></span><span style=display:flex><span> └──────┴──────┴──────┘
+</span></span><span style=display:flex><span>          ↓
+</span></span><span style=display:flex><span>       결과 취합
+</span></span></code></pre></div><hr><h1 id=5-bootstrap>5. Bootstrap</h1><p>Bootstrap은 <strong>복원 추출</strong>입니다.</p><p>원본 데이터가</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-text data-lang=text><span style=display:flex><span>A B C D E
+</span></span></code></pre></div><p>라면 Bootstrap Sample은</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-text data-lang=text><span style=display:flex><span>A C C E B
+</span></span></code></pre></div><p>처럼 같은 데이터가 여러 번 선택될 수 있습니다.</p><p>반대로 선택되지 않은 데이터도 생긴다.</p><p>이 데이터가 OOB(Out-of-Bag) 데이터다.</p><p>데이터 수가 충분히 크면 약 **36.8%**의 데이터가 하나의 Bootstrap 표본에 선택되지 않는 성질이 있습니다.</p><hr><h1 id=6-random-forest>6. Random Forest</h1><p>Random Forest는 쉽게 말해</p><blockquote><p>Decision Tree 여러 개를 결합한 모델</p></blockquote><p>입니다.</p><p>좀 더 정확하게는</p><blockquote><p><strong>Decision Tree + Bootstrap Sampling + Random Feature Selection + Aggregation</strong></p></blockquote><p>으로 이해하면 좋습니다.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-text data-lang=text><span style=display:flex><span>Bootstrap 데이터
+</span></span><span style=display:flex><span>      ↓
+</span></span><span style=display:flex><span>Tree 1 ← 일부 Feature
+</span></span><span style=display:flex><span>Tree 2 ← 일부 Feature
+</span></span><span style=display:flex><span>Tree 3 ← 일부 Feature
+</span></span><span style=display:flex><span>Tree 4 ← 일부 Feature
+</span></span><span style=display:flex><span>...
+</span></span><span style=display:flex><span>      ↓
+</span></span><span style=display:flex><span>Voting
+</span></span><span style=display:flex><span>      ↓
+</span></span><span style=display:flex><span>최종 예측
+</span></span></code></pre></div><p>각 Tree가 서로 다른 데이터와 Feature를 사용하게 하여 모델의 다양성을 높인다.</p><hr><h1 id=7-random-forest의-장점>7. Random Forest의 장점</h1><ul><li>단일 Decision Tree보다 안정적인 경우가 많다.</li><li>과적합을 줄이는 데 도움이 됩니다.</li><li>비선형 관계를 처리할 수 있습니다.</li><li>Feature Importance를 확인할 수 있습니다.</li><li>별도의 복잡한 Feature Scaling이 필수적이지 않다.</li></ul><hr><h1 id=8-feature-importance>8. Feature Importance</h1><p>Random Forest에서는 각 Feature의 상대적인 중요도를 확인할 수 있습니다.</p><p>예:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-text data-lang=text><span style=display:flex><span>age             0.32
+</span></span><span style=display:flex><span>income          0.25
+</span></span><span style=display:flex><span>education       0.18
+</span></span><span style=display:flex><span>...
+</span></span></code></pre></div><p>이를 통해 모델이 어떤 변수를 중요하게 사용했는지 살펴볼 수 있습니다.</p><p>다만 주의해야 합니다.</p><blockquote><p>Feature Importance가 높다고 해서 그 변수가 결과의 원인이라는 뜻은 아니다.</p></blockquote><p>즉, 중요도와 인과관계는 다르다.</p><hr><h1 id=9-boosting>9. Boosting</h1><p>Bagging과 Boosting의 차이가 중요합니다.</p><h2 id=bagging>Bagging</h2><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-text data-lang=text><span style=display:flex><span>Tree 1
+</span></span><span style=display:flex><span>Tree 2
+</span></span><span style=display:flex><span>Tree 3
+</span></span><span style=display:flex><span>Tree 4
+</span></span><span style=display:flex><span> ↓
+</span></span><span style=display:flex><span>상대적으로 독립적으로 학습
+</span></span><span style=display:flex><span> ↓
+</span></span><span style=display:flex><span>결과 취합
+</span></span></code></pre></div><h2 id=boosting-1>Boosting</h2><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-text data-lang=text><span style=display:flex><span>Model 1
+</span></span><span style=display:flex><span> ↓
+</span></span><span style=display:flex><span>오류 확인
+</span></span><span style=display:flex><span> ↓
+</span></span><span style=display:flex><span>Model 2
+</span></span><span style=display:flex><span> ↓
+</span></span><span style=display:flex><span>오류 보완
+</span></span><span style=display:flex><span> ↓
+</span></span><span style=display:flex><span>Model 3
+</span></span><span style=display:flex><span> ↓
+</span></span><span style=display:flex><span>계속 보완
+</span></span></code></pre></div><p>즉,</p><blockquote><p>Boosting = 이전 모델의 약점을 다음 모델이 보완</p></blockquote><hr><h1 id=10-adaboost>10. AdaBoost</h1><p>AdaBoost에서는 데이터마다 가중치가 있습니다.</p><p>처음에는 모든 데이터가 동일한 가중치를 가진다.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-text data-lang=text><span style=display:flex><span>모든 데이터
+</span></span><span style=display:flex><span>↓
+</span></span><span style=display:flex><span>동일한 가중치
+</span></span></code></pre></div><p>첫 번째 모델을 학습한 뒤 틀린 데이터의 가중치를 높인다.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-text data-lang=text><span style=display:flex><span>모델 1
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>A 맞음
+</span></span><span style=display:flex><span>B 맞음
+</span></span><span style=display:flex><span>C 틀림
+</span></span><span style=display:flex><span>D 맞음
+</span></span><span style=display:flex><span>E 틀림
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>↓
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>C와 E의 가중치 ↑
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>↓
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>모델 2가 C와 E를 더 중요하게 학습
+</span></span></code></pre></div><h2 id=adaboost의-핵심>AdaBoost의 핵심</h2><blockquote><p><strong>잘못 분류된 데이터에 더 집중하면서 다음 모델을 학습합니다.</strong></p></blockquote><hr><h1 id=11-adaboost-수식>11. AdaBoost 수식</h1><p>가중치가 적용된 오류율:</p><p>$$
 \epsilon_m = \frac{\sum_i w_{m,i} , I(k_m(x_i) \neq y_i)}{\sum_i w_{m,i}}
-$$</p>
-<p>모델 가중치:</p>
-<p>$$
+$$</p><p>모델 가중치:</p><p>$$
 \alpha_m = \frac{1}{2} \log \frac{1-\epsilon_m}{\epsilon_m}
-$$</p>
-<p>잘 맞추는 모델일수록 더 큰 영향력을 갖는다.</p>
-<hr>
-<h1 id="12-gradient-boosting">12. Gradient Boosting
-</h1><p>Gradient Boosting도 이전 모델이 부족한 부분을 다음 모델이 보완하는 방식입니다.</p>
-<p>핵심적으로 Residual(잔차)을 생각하면 이해하기 쉽습니다.</p>
-<p>예:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>실제값 = 100
-</span></span><span style="display:flex;"><span>현재 예측 = 70
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>Residual = 30
-</span></span></code></pre></div><p>다음 모델은 이 부족한 부분을 설명하도록 학습합니다.</p>
-<p>그래서 최종적으로</p>
-<p>$$
+$$</p><p>잘 맞추는 모델일수록 더 큰 영향력을 갖는다.</p><hr><h1 id=12-gradient-boosting>12. Gradient Boosting</h1><p>Gradient Boosting도 이전 모델이 부족한 부분을 다음 모델이 보완하는 방식입니다.</p><p>핵심적으로 Residual(잔차)을 생각하면 이해하기 쉽습니다.</p><p>예:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-text data-lang=text><span style=display:flex><span>실제값 = 100
+</span></span><span style=display:flex><span>현재 예측 = 70
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>Residual = 30
+</span></span></code></pre></div><p>다음 모델은 이 부족한 부분을 설명하도록 학습합니다.</p><p>그래서 최종적으로</p><p>$$
 \text{최종 모델} = \text{기존 모델} + \text{새로운 모델}
-$$</p>
-<p>형태로 모델을 점점 개선합니다.</p>
-<hr>
-<h1 id="13-adaboost-vs-gradient-boosting">13. AdaBoost vs Gradient Boosting
-</h1><div class="table-wrapper"><table>
-  <thead>
-      <tr>
-          <th></th>
-          <th>AdaBoost</th>
-          <th>Gradient Boosting</th>
-      </tr>
-  </thead>
-  <tbody>
-      <tr>
-          <td>핵심</td>
-          <td>틀린 데이터의 가중치 증가</td>
-          <td>이전 모델의 잔차 보완</td>
-      </tr>
-      <tr>
-          <td>학습 방식</td>
-          <td>순차적</td>
-          <td>순차적</td>
-      </tr>
-      <tr>
-          <td>관심 대상</td>
-          <td>잘못 분류된 샘플</td>
-          <td>현재 모델의 부족한 예측</td>
-      </tr>
-      <tr>
-          <td>대표 특징</td>
-          <td>Sample Weight</td>
-          <td>Residual / Gradient</td>
-      </tr>
-  </tbody>
-</table></div>
-<h3 id="한-줄-암기">한 줄 암기
-</h3>
-    <blockquote>
-        <p>AdaBoost → 틀린 데이터에 집중</p>
-
-    </blockquote>
-
-    <blockquote>
-        <p>Gradient Boosting → 잔차를 보완</p>
-
-    </blockquote>
-<hr>
-<h1 id="14-bagging-vs-boosting">14. Bagging vs Boosting
-</h1><div class="table-wrapper"><table>
-  <thead>
-      <tr>
-          <th></th>
-          <th>Bagging</th>
-          <th>Boosting</th>
-      </tr>
-  </thead>
-  <tbody>
-      <tr>
-          <td>핵심</td>
-          <td>여러 모델 결합</td>
-          <td>이전 모델 보완</td>
-      </tr>
-      <tr>
-          <td>학습</td>
-          <td>상대적으로 독립적</td>
-          <td>순차적</td>
-      </tr>
-      <tr>
-          <td>대표</td>
-          <td>Random Forest</td>
-          <td>AdaBoost, Gradient Boost</td>
-      </tr>
-      <tr>
-          <td>주요 목적</td>
-          <td>안정화 / 분산 감소</td>
-          <td>약점 보완 / 성능 향상</td>
-      </tr>
-  </tbody>
-</table></div>
-<p>이 둘을 헷갈리지 않는 것이 중요합니다.</p>
-<hr>
-<h1 id="15-6편-전체를-하나로-연결">15. 6편 전체를 하나로 연결
-</h1><p>지금까지 배운 모델을 전체 흐름으로 보면 다음과 같습니다.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>                 [분류 문제]
-</span></span><span style="display:flex;"><span>                      │
-</span></span><span style="display:flex;"><span>       ┌──────────────┼──────────────┐
-</span></span><span style="display:flex;"><span>       ↓              ↓              ↓
-</span></span><span style="display:flex;"><span>   확률 기반       경계 기반       규칙 기반
-</span></span><span style="display:flex;"><span>       │              │              │
-</span></span><span style="display:flex;"><span>  Naive Bayes    SVM / Logistic    Decision Tree
-</span></span><span style="display:flex;"><span>       │              │              │
-</span></span><span style="display:flex;"><span>       └──────────────┼──────────────┘
-</span></span><span style="display:flex;"><span>                      ↓
-</span></span><span style="display:flex;"><span>                 [모델 평가]
-</span></span><span style="display:flex;"><span>                      │
-</span></span><span style="display:flex;"><span>          Accuracy / Precision / Recall
-</span></span><span style="display:flex;"><span>                      │
-</span></span><span style="display:flex;"><span>                  F1 / ROC / AUC
-</span></span><span style="display:flex;"><span>                      │
-</span></span><span style="display:flex;"><span>                      ↓
-</span></span><span style="display:flex;"><span>                 [앙상블]
-</span></span><span style="display:flex;"><span>                      │
-</span></span><span style="display:flex;"><span>              ┌───────┴───────┐
-</span></span><span style="display:flex;"><span>              ↓               ↓
-</span></span><span style="display:flex;"><span>           Bagging          Boosting
-</span></span><span style="display:flex;"><span>              ↓               ↓
-</span></span><span style="display:flex;"><span>        Random Forest    AdaBoost
-</span></span><span style="display:flex;"><span>                        Gradient Boost
-</span></span></code></pre></div><hr>
-<h1 id="16-52일-수업-핵심-모델-비교">16. 52일 수업 핵심 모델 비교
-</h1><div class="table-wrapper"><table>
-  <thead>
-      <tr>
-          <th>모델</th>
-          <th>핵심 아이디어</th>
-          <th>장점</th>
-          <th>주의점</th>
-      </tr>
-  </thead>
-  <tbody>
-      <tr>
-          <td>Logistic</td>
-          <td>선형식 → 확률</td>
-          <td>빠르고 해석 쉬움</td>
-          <td>복잡한 경계에 약함</td>
-      </tr>
-      <tr>
-          <td>SVM</td>
-          <td>Margin 최대화</td>
-          <td>고차원 데이터에 강함</td>
-          <td>파라미터 중요</td>
-      </tr>
-      <tr>
-          <td>Kernel SVM</td>
-          <td>Kernel로 비선형 처리</td>
-          <td>복잡한 경계 가능</td>
-          <td>큰 데이터에서 느릴 수 있음</td>
-      </tr>
-      <tr>
-          <td>Naive Bayes</td>
-          <td>확률 기반</td>
-          <td>빠름, 텍스트에 강함</td>
-          <td>독립성 가정</td>
-      </tr>
-      <tr>
-          <td>Decision Tree</td>
-          <td>질문으로 분기</td>
-          <td>해석 쉬움</td>
-          <td>과적합</td>
-      </tr>
-      <tr>
-          <td>Random Forest</td>
-          <td>여러 Tree 결합</td>
-          <td>안정적, 강력한 baseline</td>
-          <td>단일 Tree보다 해석 어려움</td>
-      </tr>
-      <tr>
-          <td>AdaBoost</td>
-          <td>틀린 데이터에 집중</td>
-          <td>약한 모델 결합</td>
-          <td>노이즈에 민감할 수 있음</td>
-      </tr>
-      <tr>
-          <td>Gradient Boosting</td>
-          <td>잔차 보완</td>
-          <td>높은 성능</td>
-          <td>튜닝 중요</td>
-      </tr>
-  </tbody>
-</table></div>
-<hr>
-<h1 id="17-최종-암기-지도">17. 최종 암기 지도
-</h1><p>52일 수업 전체를 외우기 전에 다음 구조를 먼저 기억하면 됩니다.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>분류
-</span></span><span style="display:flex;"><span> ↓
-</span></span><span style="display:flex;"><span>┌────────────────────────────┐
-</span></span><span style="display:flex;"><span>│                            │
-</span></span><span style="display:flex;"><span>확률                         결정경계
-</span></span><span style="display:flex;"><span>│                            │
-</span></span><span style="display:flex;"><span>Naive Bayes             Logistic / SVM
-</span></span><span style="display:flex;"><span>                             │
-</span></span><span style="display:flex;"><span>                             ↓
-</span></span><span style="display:flex;"><span>                        Kernel SVM
-</span></span><span style="display:flex;"><span>│
-</span></span><span style="display:flex;"><span>└───────────────┬────────────┘
-</span></span><span style="display:flex;"><span>                ↓
-</span></span><span style="display:flex;"><span>         Decision Tree
-</span></span><span style="display:flex;"><span>                ↓
-</span></span><span style="display:flex;"><span>           모델 평가
-</span></span><span style="display:flex;"><span>                ↓
-</span></span><span style="display:flex;"><span> Accuracy / Precision / Recall
-</span></span><span style="display:flex;"><span>                ↓
-</span></span><span style="display:flex;"><span>          F1 / ROC / AUC
-</span></span><span style="display:flex;"><span>                ↓
-</span></span><span style="display:flex;"><span>            Ensemble
-</span></span><span style="display:flex;"><span>          ┌─────┴─────┐
-</span></span><span style="display:flex;"><span>          ↓           ↓
-</span></span><span style="display:flex;"><span>       Bagging     Boosting
-</span></span><span style="display:flex;"><span>          ↓           ↓
-</span></span><span style="display:flex;"><span>   Random Forest   AdaBoost
-</span></span><span style="display:flex;"><span>                  Gradient Boost
-</span></span></code></pre></div><hr>
-<h1 id="18-마지막-10문장">18. 마지막 10문장
-</h1><ol>
-<li><strong>로지스틱 회귀</strong>는 선형식을 Sigmoid에 넣어 확률을 만듭니다.</li>
-<li><strong>SVM</strong>은 클래스 사이의 Margin을 최대화합니다.</li>
-<li><strong>Support Vector</strong>는 결정경계를 결정하는 핵심 데이터다.</li>
-<li><strong>Kernel SVM</strong>은 Kernel Trick을 이용해 비선형 문제를 해결합니다.</li>
-<li><strong>Naive Bayes</strong>는 Bayes 정리와 조건부 독립 가정을 이용합니다.</li>
-<li><strong>Laplace Smoothing</strong>은 확률이 0이 되는 문제를 막는다.</li>
-<li><strong>Decision Tree</strong>는 Entropy를 줄이고 Information Gain을 크게 만드는 방향으로 분기합니다.</li>
-<li><strong>Accuracy만으로 모델을 평가하면 불균형 데이터에서 잘못된 판단을 할 수 있습니다.</strong></li>
-<li><strong>Random Forest는 여러 Decision Tree를 결합하는 Bagging 계열 모델입니다.</strong></li>
-<li><strong>Boosting은 이전 모델이 틀린 부분을 다음 모델이 보완하도록 만듭니다.</strong></li>
-</ol>
-<hr>
-<h1 id="한-문장으로-전체-수업-정리">한 문장으로 전체 수업 정리
-</h1>
-    <blockquote>
-        <p>머신러닝 분류에서는 여러 방법(Logistic, SVM, Naive Bayes, Tree)으로 데이터를 분류하고, Confusion Matrix 기반의 다양한 평가 지표로 모델을 비교한 뒤, Bagging이나 Boosting 같은 Ensemble 방법으로 성능과 안정성을 높인다.</p>
-
-    </blockquote>
-
-</section>
-
-
-    <footer class="article-meta article-footer">
-    
-
-    </footer>
-
-
-    
-        <link 
-                rel="stylesheet" 
-                href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI&#43;WdtXRGWt2kTvGFasHpSy3SV"crossorigin="anonymous"
-            ><script 
-                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG&#43;vnGctmUb0ZY0l8"crossorigin="anonymous"
-                defer
-                >
-            </script><script 
-                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"integrity="sha384-&#43;VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4&#43;/RRE05"crossorigin="anonymous"
-                defer
-                >
-            </script><script>
-    window.addEventListener("DOMContentLoaded", () => {
-        const elementsToRender = [".main-article", ".widget--toc"];
-
-        elementsToRender.forEach(selector => {
-            const element = document.querySelector(selector);
-            if (element) {
-                renderMathInElement(element, {
-                    delimiters: [
-                        { left: "$$", right: "$$", display: true },
-                        { left: "$", right: "$", display: false },
-                        { left: "\\(", right: "\\)", display: false },
-                        { left: "\\[", right: "\\]", display: true }
-                    ],
-                    ignoredClasses: ["gist"]
-                });
-            }
-        });
-    });
-</script>
-    
-</article>
-
-    
-
-    
-<nav class="article-prev-next">
-  
-  <a class="prev-next-card prev" href="/data-analysis/python_data_analysis_39/">
-    <div class="direction">← 이전 글</div>
-    <div class="title">[머신러닝 분류 모델] 모델 평가 - Classification Evaluation</div>
-  </a>
-  
-
-  
-  <div class="prev-next-card empty"></div>
-  
-</nav>
-
-
-    
-
-     
-    
-        
-
-
-    
-
-    <footer class="site-footer">
-    <section class="copyright">
-        &copy; 
-        
-        2026 LucasPark Blog
-    </section>
-    
-    <section class="powerby">
-        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
-        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="4.0.3">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
-    </section>
-</footer>
-
-
-    
-
-
-
-<script type="module">
+$$</p><p>형태로 모델을 점점 개선합니다.</p><hr><h1 id=13-adaboost-vs-gradient-boosting>13. AdaBoost vs Gradient Boosting</h1><div class=table-wrapper><table><thead><tr><th></th><th>AdaBoost</th><th>Gradient Boosting</th></tr></thead><tbody><tr><td>핵심</td><td>틀린 데이터의 가중치 증가</td><td>이전 모델의 잔차 보완</td></tr><tr><td>학습 방식</td><td>순차적</td><td>순차적</td></tr><tr><td>관심 대상</td><td>잘못 분류된 샘플</td><td>현재 모델의 부족한 예측</td></tr><tr><td>대표 특징</td><td>Sample Weight</td><td>Residual / Gradient</td></tr></tbody></table></div><h3 id=한-줄-암기>한 줄 암기</h3><blockquote><p>AdaBoost → 틀린 데이터에 집중</p></blockquote><blockquote><p>Gradient Boosting → 잔차를 보완</p></blockquote><hr><h1 id=14-bagging-vs-boosting>14. Bagging vs Boosting</h1><div class=table-wrapper><table><thead><tr><th></th><th>Bagging</th><th>Boosting</th></tr></thead><tbody><tr><td>핵심</td><td>여러 모델 결합</td><td>이전 모델 보완</td></tr><tr><td>학습</td><td>상대적으로 독립적</td><td>순차적</td></tr><tr><td>대표</td><td>Random Forest</td><td>AdaBoost, Gradient Boost</td></tr><tr><td>주요 목적</td><td>안정화 / 분산 감소</td><td>약점 보완 / 성능 향상</td></tr></tbody></table></div><p>이 둘을 헷갈리지 않는 것이 중요합니다.</p><hr><h1 id=15-6편-전체를-하나로-연결>15. 6편 전체를 하나로 연결</h1><p>지금까지 배운 모델을 전체 흐름으로 보면 다음과 같습니다.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-text data-lang=text><span style=display:flex><span>                 [분류 문제]
+</span></span><span style=display:flex><span>                      │
+</span></span><span style=display:flex><span>       ┌──────────────┼──────────────┐
+</span></span><span style=display:flex><span>       ↓              ↓              ↓
+</span></span><span style=display:flex><span>   확률 기반       경계 기반       규칙 기반
+</span></span><span style=display:flex><span>       │              │              │
+</span></span><span style=display:flex><span>  Naive Bayes    SVM / Logistic    Decision Tree
+</span></span><span style=display:flex><span>       │              │              │
+</span></span><span style=display:flex><span>       └──────────────┼──────────────┘
+</span></span><span style=display:flex><span>                      ↓
+</span></span><span style=display:flex><span>                 [모델 평가]
+</span></span><span style=display:flex><span>                      │
+</span></span><span style=display:flex><span>          Accuracy / Precision / Recall
+</span></span><span style=display:flex><span>                      │
+</span></span><span style=display:flex><span>                  F1 / ROC / AUC
+</span></span><span style=display:flex><span>                      │
+</span></span><span style=display:flex><span>                      ↓
+</span></span><span style=display:flex><span>                 [앙상블]
+</span></span><span style=display:flex><span>                      │
+</span></span><span style=display:flex><span>              ┌───────┴───────┐
+</span></span><span style=display:flex><span>              ↓               ↓
+</span></span><span style=display:flex><span>           Bagging          Boosting
+</span></span><span style=display:flex><span>              ↓               ↓
+</span></span><span style=display:flex><span>        Random Forest    AdaBoost
+</span></span><span style=display:flex><span>                        Gradient Boost
+</span></span></code></pre></div><hr><h1 id=16-52일-수업-핵심-모델-비교>16. 52일 수업 핵심 모델 비교</h1><div class=table-wrapper><table><thead><tr><th>모델</th><th>핵심 아이디어</th><th>장점</th><th>주의점</th></tr></thead><tbody><tr><td>Logistic</td><td>선형식 → 확률</td><td>빠르고 해석 쉬움</td><td>복잡한 경계에 약함</td></tr><tr><td>SVM</td><td>Margin 최대화</td><td>고차원 데이터에 강함</td><td>파라미터 중요</td></tr><tr><td>Kernel SVM</td><td>Kernel로 비선형 처리</td><td>복잡한 경계 가능</td><td>큰 데이터에서 느릴 수 있음</td></tr><tr><td>Naive Bayes</td><td>확률 기반</td><td>빠름, 텍스트에 강함</td><td>독립성 가정</td></tr><tr><td>Decision Tree</td><td>질문으로 분기</td><td>해석 쉬움</td><td>과적합</td></tr><tr><td>Random Forest</td><td>여러 Tree 결합</td><td>안정적, 강력한 baseline</td><td>단일 Tree보다 해석 어려움</td></tr><tr><td>AdaBoost</td><td>틀린 데이터에 집중</td><td>약한 모델 결합</td><td>노이즈에 민감할 수 있음</td></tr><tr><td>Gradient Boosting</td><td>잔차 보완</td><td>높은 성능</td><td>튜닝 중요</td></tr></tbody></table></div><hr><h1 id=17-최종-암기-지도>17. 최종 암기 지도</h1><p>52일 수업 전체를 외우기 전에 다음 구조를 먼저 기억하면 됩니다.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-text data-lang=text><span style=display:flex><span>분류
+</span></span><span style=display:flex><span> ↓
+</span></span><span style=display:flex><span>┌────────────────────────────┐
+</span></span><span style=display:flex><span>│                            │
+</span></span><span style=display:flex><span>확률                         결정경계
+</span></span><span style=display:flex><span>│                            │
+</span></span><span style=display:flex><span>Naive Bayes             Logistic / SVM
+</span></span><span style=display:flex><span>                             │
+</span></span><span style=display:flex><span>                             ↓
+</span></span><span style=display:flex><span>                        Kernel SVM
+</span></span><span style=display:flex><span>│
+</span></span><span style=display:flex><span>└───────────────┬────────────┘
+</span></span><span style=display:flex><span>                ↓
+</span></span><span style=display:flex><span>         Decision Tree
+</span></span><span style=display:flex><span>                ↓
+</span></span><span style=display:flex><span>           모델 평가
+</span></span><span style=display:flex><span>                ↓
+</span></span><span style=display:flex><span> Accuracy / Precision / Recall
+</span></span><span style=display:flex><span>                ↓
+</span></span><span style=display:flex><span>          F1 / ROC / AUC
+</span></span><span style=display:flex><span>                ↓
+</span></span><span style=display:flex><span>            Ensemble
+</span></span><span style=display:flex><span>          ┌─────┴─────┐
+</span></span><span style=display:flex><span>          ↓           ↓
+</span></span><span style=display:flex><span>       Bagging     Boosting
+</span></span><span style=display:flex><span>          ↓           ↓
+</span></span><span style=display:flex><span>   Random Forest   AdaBoost
+</span></span><span style=display:flex><span>                  Gradient Boost
+</span></span></code></pre></div><hr><h1 id=18-마지막-10문장>18. 마지막 10문장</h1><ol><li><strong>로지스틱 회귀</strong>는 선형식을 Sigmoid에 넣어 확률을 만듭니다.</li><li><strong>SVM</strong>은 클래스 사이의 Margin을 최대화합니다.</li><li><strong>Support Vector</strong>는 결정경계를 결정하는 핵심 데이터다.</li><li><strong>Kernel SVM</strong>은 Kernel Trick을 이용해 비선형 문제를 해결합니다.</li><li><strong>Naive Bayes</strong>는 Bayes 정리와 조건부 독립 가정을 이용합니다.</li><li><strong>Laplace Smoothing</strong>은 확률이 0이 되는 문제를 막는다.</li><li><strong>Decision Tree</strong>는 Entropy를 줄이고 Information Gain을 크게 만드는 방향으로 분기합니다.</li><li><strong>Accuracy만으로 모델을 평가하면 불균형 데이터에서 잘못된 판단을 할 수 있습니다.</strong></li><li><strong>Random Forest는 여러 Decision Tree를 결합하는 Bagging 계열 모델입니다.</strong></li><li><strong>Boosting은 이전 모델이 틀린 부분을 다음 모델이 보완하도록 만듭니다.</strong></li></ol><hr><h1 id=한-문장으로-전체-수업-정리>한 문장으로 전체 수업 정리</h1><blockquote><p>머신러닝 분류에서는 여러 방법(Logistic, SVM, Naive Bayes, Tree)으로 데이터를 분류하고, Confusion Matrix 기반의 다양한 평가 지표로 모델을 비교한 뒤, Bagging이나 Boosting 같은 Ensemble 방법으로 성능과 안정성을 높인다.</p></blockquote></section><footer class="article-meta article-footer"></footer><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css integrity=sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV crossorigin=anonymous><script src=https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js integrity=sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG+vnGctmUb0ZY0l8 crossorigin=anonymous defer></script><script src=https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js integrity=sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05 crossorigin=anonymous defer></script><script>window.addEventListener("DOMContentLoaded",()=>{const e=[".main-article",".widget--toc"];e.forEach(e=>{const t=document.querySelector(e);t&&renderMathInElement(t,{delimiters:[{left:"$$",right:"$$",display:!0},{left:"$",right:"$",display:!1},{left:"\\(",right:"\\)",display:!1},{left:"\\[",right:"\\]",display:!0}],ignoredClasses:["gist"]})})})</script></article><nav class=article-prev-next><a class="prev-next-card prev" href=/data-analysis/python_data_analysis_39/><div class=direction>← 이전 글</div><div class=title>[머신러닝 분류 모델] 모델 평가 - Classification Evaluation</div></a><div class="prev-next-card empty"></div></nav><footer class=site-footer><section class=copyright>&copy;
+2026 LucasPark Blog</section><section class=powerby>Built with <a href=https://gohugo.io/ target=_blank rel=noopener>Hugo</a><br>Theme <b><a href=https://github.com/CaiJimmy/hugo-theme-stack target=_blank rel=noopener data-version=4.0.3>Stack</a></b> designed by <a href=https://jimmycai.com target=_blank rel=noopener>Jimmy</a></section></footer><script type=module>
     import gallery from '\/ts\/gallery.js';
 
     const articleContent = document.querySelector('.article-content');
@@ -775,15 +169,4 @@ $$</p>
         });
         lightbox.init();
     }
-</script>
-
-    
-
-            </main>
-        </div>
-        
-<script type="text/javascript" src="/ts/main.1ff1e5fdc4e178ed422e50aa407526dc552f26342d729343fded19416194382c.js" defer></script>
-
-
-    </body>
-</html>
+</script></main></div><script type=text/javascript src=/ts/main.1ff1e5fdc4e178ed422e50aa407526dc552f26342d729343fded19416194382c.js defer></script></body></html>
